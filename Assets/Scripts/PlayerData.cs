@@ -5,13 +5,12 @@ using UnityEngine;
 
 public class PlayerData : MonoBehaviour {
 
-    public PlayerData Instance { get; private set; }
+    public static PlayerData Instance { get; private set; }
+
     [Header("Components")]
 
     public GameObject activeToolPoint;
-    public Transform checkGroundPoint;
-    public LayerMask groundLayer;
-    public Rigidbody rb { get; private set; }
+    public static Rigidbody rb { get; private set; }
 
     [Header("Abilities")]
 
