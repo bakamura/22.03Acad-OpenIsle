@@ -9,6 +9,8 @@ public class PlayerData : MonoBehaviour {
     [Header("Components")]
 
     public GameObject activeToolPoint;
+    public Transform checkGroundPoint;
+    public LayerMask groundLayer;
     public Rigidbody rb { get; private set; }
 
     [Header("Abilities")]
