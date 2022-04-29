@@ -16,7 +16,7 @@ public class PlatformSpring : MonoBehaviour {
     }
 
     private void OnCollisionEnter(Collision collision) {
-        if (collision.transform.tag == "Player") collision.transform.GetComponent<Rigidbody>().AddForce(transform.forward * _strengh, ForceMode.VelocityChange);
+        if (collision.transform.tag == "Player") collision.transform.GetComponent<Rigidbody>().AddForce(transform.up * _strengh, ForceMode.Acceleration);
     }
 
     public void Activate(bool activating) {

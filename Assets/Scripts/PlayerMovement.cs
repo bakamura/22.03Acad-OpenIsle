@@ -40,7 +40,20 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     void Update() {
-        UpdateInputs();
+        // Jump
+        if (PlayerInputs.jumpKeyPressed && _isGrounded) {
+            PlayerInputs.jumpKeyPressed = false;
+            PlayerData.rb.AddForce(transform.up * _jumpStrengh, ForceMode.Force); // Check forcemode
+
+            // Unused for now
+            _airVelocity = _jumpStrengh;
+        }
+
+        // Dash
+        if (PlayerInputs.dashKeyPressed) {
+            PlayerInputs.dashKeyPressed = false;
+            _currentDashSpeed = _dashSpeed;
+        }
     }
 
     private void FixedUpdate() {
@@ -49,20 +62,6 @@ public class PlayerMovement : MonoBehaviour {
         Vector3 TotalMovment = new Vector3(GroundMovment().x, /*AirMovment() / _movementSpeed */ PlayerData.rb.velocity.y, GroundMovment().z); // GRAVITY TOO HEAVY
         PlayerData.rb.velocity = TotalMovment * _movementSpeed * _currentDashSpeed;
         _currentDashSpeed = 1; // Instead, make player lose control while dashing, it's simpler
-    }
-
-    private void UpdateInputs() {
-        if (PlayerInputs.dashKeyPressed) {
-            PlayerInputs.dashKeyPressed = false;
-            _currentDashSpeed = _dashSpeed;
-        }
-        if (PlayerInputs.jumpKeyPressed && _isGrounded) {
-            PlayerInputs.jumpKeyPressed = false;
-            PlayerData.rb.AddForce(transform.up * _jumpStrengh, ForceMode.Force); // Check forcemode
-
-            // Unused for now
-            _airVelocity = _jumpStrengh;
-        }
     }
 
     private Vector3 GroundMovment() {

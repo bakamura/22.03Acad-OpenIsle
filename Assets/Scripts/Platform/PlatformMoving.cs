@@ -34,6 +34,14 @@ public class PlatformMoving : MonoBehaviour {
         }
     }
 
+    private void OnCollisionEnter(Collision collision) {
+        if (collision.transform.tag == "Player") collision.transform.parent = transform;
+    }
+
+    private void OnCollisionExit(Collision collision) {
+        if (collision.transform.tag == "Player" && collision.transform.parent == transform) collision.transform.parent = null;
+    }
+
     public void Activate(bool activating) {
         isActive = activating;
         _collider.enabled = activating;

@@ -32,4 +32,8 @@ public class PlayerData : MonoBehaviour {
     private void Start() {
         _currentHealth = _maxHealth; // Change to read memory when it's implemented
     }
+
+    private void TakeDamage(float amount) {
+        _currentHealth -= amount;
+    }
 }
