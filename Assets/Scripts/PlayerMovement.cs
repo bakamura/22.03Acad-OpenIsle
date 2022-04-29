@@ -41,12 +41,14 @@ public class PlayerMovement : MonoBehaviour {
 
     void Update() {
         // Jump
+        _isGrounded = Physics.OverlapBox(transform.position + groundCheckPoint, _boxSize / 2, Quaternion.identity, groundLayer).Length > 0 ; //
+
         if (PlayerInputs.jumpKeyPressed && _isGrounded) {
             PlayerInputs.jumpKeyPressed = false;
-            PlayerData.rb.AddForce(transform.up * _jumpStrengh, ForceMode.Force); // Check forcemode
+            if (_isGrounded) PlayerData.rb.AddForce(transform.up * _jumpStrengh, ForceMode.Force); // Check forcemode
 
             // Unused for now
-            _airVelocity = _jumpStrengh;
+            //_airVelocity = _jumpStrengh;
         }
 
         // Dash
@@ -57,17 +59,17 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        GroundCheck();
+        //GroundCheck();
 
         Vector3 TotalMovment = new Vector3(GroundMovment().x, /*AirMovment() / _movementSpeed */ PlayerData.rb.velocity.y, GroundMovment().z); // GRAVITY TOO HEAVY
-        PlayerData.rb.velocity = TotalMovment * _movementSpeed * _currentDashSpeed;
+        PlayerData.rb.velocity = TotalMovment;
         _currentDashSpeed = 1; // Instead, make player lose control while dashing, it's simpler
     }
 
     private Vector3 GroundMovment() {
         if (PlayerInputs.horizontalAxis != 0 || PlayerInputs.verticalAxis != 0) {
             Vector3 groundMovment = GetMovmentDirection(new Vector3(PlayerInputs.horizontalAxis, 0, PlayerInputs.verticalAxis)).normalized;
-            return groundMovment;
+            return groundMovment * _movementSpeed * _currentDashSpeed;
         }
         else return Vector3.zero;
     }
@@ -79,15 +81,17 @@ public class PlayerMovement : MonoBehaviour {
         return moveDirection;
     }
 
-    private void GroundCheck() {
-        _hit = Physics.OverlapBox(groundCheckPoint, _boxSize / 2, Quaternion.identity, groundLayer) != null;
-        // Physics.BoxCast(groundCheckPoint, _boxSize, -transform.up, out _hitinfo, Quaternion.identity, _distance, groundLayer);
-        if (_hit) {
-            _isGrounded = true;
-            if (_airVelocity < 0) _airVelocity = 0;
-        }
-        else _isGrounded = false;
-    }
+    //private void GroundCheck() {
+    //    _hit = Physics.OverlapBox(transform.position + groundCheckPoint, _boxSize / 2, Quaternion.identity, groundLayer) != null;
+    //    Collider[] collisions = Physics.OverlapBox(transform.position + groundCheckPoint, _boxSize / 2, Quaternion.identity, groundLayer);
+    //    foreach (Collider col in collisions) Debug.Log(col.name);
+    //     Physics.BoxCast(groundCheckPoint, _boxSize, -transform.up, out _hitinfo, Quaternion.identity, _distance, groundLayer);
+    //    if (_hit) {
+    //        _isGrounded = true;
+    //        if (_airVelocity < 0) _airVelocity = 0;
+    //    }
+    //    else _isGrounded = false;
+    //}
 
     private float AirMovment() {
         if (!_isGrounded) {
