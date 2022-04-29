@@ -12,7 +12,12 @@ public class PlayerData : MonoBehaviour {
     public GameObject activeToolPoint;
     public static Rigidbody rb { get; private set; }
 
-    [Header("Abilities")]
+    [Header("Stats")]
+
+    [SerializeField] private float _maxHealth;
+    private float _currentHealth;
+
+    [Header("Tools")]
 
     public bool hasSword;
     public bool hasHook;
@@ -22,5 +27,9 @@ public class PlayerData : MonoBehaviour {
         if (Instance == null) Instance = this;        
         else if (Instance != this) Destroy(this);
         rb = GetComponent<Rigidbody>();
+    }
+
+    private void Start() {
+        _currentHealth = _maxHealth; // Change to read memory when it's implemented
     }
 }

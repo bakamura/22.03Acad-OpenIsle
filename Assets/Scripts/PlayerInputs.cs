@@ -19,7 +19,6 @@ public class PlayerInputs : MonoBehaviour {
 
     [Header("Inputs")]
 
-    [System.NonSerialized] public static bool canInput = true;
     public KeyCode forwardKey;
     public KeyCode backwardKey;
     public KeyCode leftKey;
@@ -30,6 +29,7 @@ public class PlayerInputs : MonoBehaviour {
     public KeyCode hookKey;
     public KeyCode amuletKey;
     public KeyCode interactKey; // Use or not?
+    [System.NonSerialized] public static bool canInput = true;
 
     // TO DO: Change key codes for different platforms 
 
@@ -45,16 +45,19 @@ public class PlayerInputs : MonoBehaviour {
 
     private void Update() {
         if (canInput) {
-            // Make axis smoothing occur in this script
-            verticalAxis = (Input.GetKey(backwardKey) ? -1 : 0) + (Input.GetKey(backwardKey) ? 1 : 0);
+            // Axis
+            verticalAxis = (Input.GetKey(backwardKey) ? -1 : 0) + (Input.GetKey(forwardKey) ? 1 : 0);
             horizontalAxis = (Input.GetKey(leftKey) ? -1 : 0) + (Input.GetKey(rightKey) ? 1 : 0);
-            // !!! Think on how to store input for a few milliseconds to provide smoother gameplay
+            // Make axis smoothing occur in this script
+
+            // Triggers
             if (Input.GetKeyDown(jumpKey)) jumpKeyPressed = true;
             if (Input.GetKeyDown(dashKey)) dashKeyPressed = true;
             if (Input.GetKeyDown(swordKey)) swordKeyPressed = true;
             if (Input.GetKeyDown(hookKey)) hookKeyPressed = true;
             if (Input.GetKeyDown(amuletKey)) amuletKeyPressed = true;
             if (Input.GetKeyDown(interactKey)) interactKeyPressed = true;
+            // !!! Think on how to store input for a few milliseconds to provide smoother gameplay
         }
 
         // Debug
