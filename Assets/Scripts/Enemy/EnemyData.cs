@@ -13,6 +13,7 @@ public class EnemyData : MonoBehaviour {
     [SerializeField] private float _maxHealth;
     private float _currentHealth;
     [SerializeField] private float _knockBackAmount;
+    [SerializeField] private float _knockBackDuration;
     [SerializeField] private float _knockBackInvencibilityTime;
     private float _currentKnockBackInvencibility;
 
@@ -35,10 +36,13 @@ public class EnemyData : MonoBehaviour {
         if (_currentHealth <= 0) Activate(false);
         if (_currentKnockBackInvencibility <= 0) {
             _currentKnockBackInvencibility = _knockBackInvencibilityTime;
-            // May need to implement a stopping IENUM to make more abrupt small KBs
             rb.velocity = (transform.position - PlayerData.Instance.transform.position).normalized * _knockBackAmount;
-
+            Invoke(nameof(StopKnockBack), _knockBackDuration);
         }
+    }
+
+    private void StopKnockBack() {
+        rb.velocity = Vector3.zero;
     }
 
 }

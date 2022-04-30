@@ -549,15 +549,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _movementSpeed: 5
-  _maxAirVelocity: 50
   _turnSmoothTime: 0.05
+  _maxAirVelocity: 50
   _jumpStrengh: 350
   groundCheckPoint: {x: 0, y: -1, z: 0}
   _boxSize: {x: 0.7, y: 0.125, z: 0.7}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  _dashSpeed: 20
+  _dashSpeed: 15
   _dashDuration: 0.3
 --- !u!136 &552156549
 CapsuleCollider:
@@ -618,6 +618,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 092932a63ed53c14788cfb1a6ce8f320, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _inputStoreDuration: 0.2
   forwardKey: 119
   backwardKey: 115
   leftKey: 97
@@ -884,7 +885,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 746477025}
-  m_LocalRotation: {x: 0.14870128, y: 0.000000029470987, z: -0.000000004431644, w: 0.9888822}
+  m_LocalRotation: {x: 0.14870128, y: 0.000000029470986, z: -0.0000000044316435, w: 0.9888822}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1791,7 +1792,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2116734294}
-  m_LocalRotation: {x: 0.14870128, y: 0.000000029470987, z: -0.000000004431644, w: 0.9888822}
+  m_LocalRotation: {x: 0.14870128, y: 0.000000029470986, z: -0.0000000044316435, w: 0.9888822}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

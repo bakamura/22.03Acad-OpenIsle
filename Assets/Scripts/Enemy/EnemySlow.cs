@@ -28,19 +28,15 @@ public class EnemySlow : MonoBehaviour {
             rb.velocity = playerDirection.normalized * movementSpeed;
 
             if (Vector3.Distance(PlayerData.Instance.transform.position, transform.position) <= _attackRange / 2) {
-                StartCoroutine(Attack());
+                isAttacking = true;
+                rb.velocity = Vector3.zero;
+
+                Invoke(nameof(AttackCone) , 5); // Set to animation duration
             }
         }
     }
 
-    private IEnumerator Attack() {
-        isAttacking = true;
-        rb.velocity = Vector3.zero;
-
-        // Set animation
-
-        yield return new WaitForSeconds(5f); // Set to animation duration
-
+    private void AttackCone() {
         // Cone Area Calc (May be substituted by attached object)
         if (Vector3.Distance(PlayerData.Instance.transform.position, transform.position) < _attackRange) {
             Vector3 playerDirection = PlayerData.Instance.transform.position - transform.position;
@@ -48,6 +44,13 @@ public class EnemySlow : MonoBehaviour {
 
             }
         }
+
+        isAttacking = false;
+    }
+
+    // To be called when KB
+    public void CancelAttack() {
+        CancelInvoke(nameof(AttackCone)); //
 
         isAttacking = false;
     }

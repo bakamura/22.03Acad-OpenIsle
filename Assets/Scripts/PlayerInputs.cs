@@ -10,15 +10,16 @@ public class PlayerInputs : MonoBehaviour {
 
     [HideInInspector] public static float horizontalAxis = 0;
     [HideInInspector] public static float verticalAxis = 0;
-    [HideInInspector] public static bool jumpKeyPressed = false;
-    [HideInInspector] public static bool dashKeyPressed = false;
-    [HideInInspector] public static bool swordKeyPressed = false;
-    [HideInInspector] public static bool hookKeyPressed = false;
-    [HideInInspector] public static bool amuletKeyPressed = false;
-    [HideInInspector] public static bool interactKeyPressed = false; //
+    [HideInInspector] public static float jumpKeyPressed = 0;
+    [HideInInspector] public static float dashKeyPressed = 0;
+    [HideInInspector] public static float swordKeyPressed = 0;
+    [HideInInspector] public static float hookKeyPressed = 0;
+    [HideInInspector] public static float amuletKeyPressed = 0;
+    [HideInInspector] public static float interactKeyPressed = 0; //
 
     [Header("Inputs")]
 
+    [SerializeField] private float _inputStoreDuration = 0.1f;
     public KeyCode forwardKey;
     public KeyCode backwardKey;
     public KeyCode leftKey;
@@ -51,14 +52,21 @@ public class PlayerInputs : MonoBehaviour {
             // Make axis smoothing occur in this script
 
             // Triggers
-            if (Input.GetKeyDown(jumpKey)) jumpKeyPressed = true;
-            if (Input.GetKeyDown(dashKey)) dashKeyPressed = true;
-            if (Input.GetKeyDown(swordKey)) swordKeyPressed = true;
-            if (Input.GetKeyDown(hookKey)) hookKeyPressed = true;
-            if (Input.GetKeyDown(amuletKey)) amuletKeyPressed = true;
-            if (Input.GetKeyDown(interactKey)) interactKeyPressed = true;
-            // !!! Think on how to store input for a few milliseconds to provide smoother gameplay
+            if (Input.GetKeyDown(jumpKey)) jumpKeyPressed = _inputStoreDuration;
+            if (Input.GetKeyDown(dashKey)) dashKeyPressed = _inputStoreDuration;
+            if (Input.GetKeyDown(swordKey)) swordKeyPressed = _inputStoreDuration;
+            if (Input.GetKeyDown(hookKey)) hookKeyPressed = _inputStoreDuration;
+            if (Input.GetKeyDown(amuletKey)) amuletKeyPressed = _inputStoreDuration;
+            if (Input.GetKeyDown(interactKey)) interactKeyPressed = _inputStoreDuration;
         }
+
+        // Input memo vanishes even if input is locked
+        jumpKeyPressed -= Time.deltaTime;
+        dashKeyPressed -= Time.deltaTime;
+        swordKeyPressed -= Time.deltaTime;
+        hookKeyPressed -= Time.deltaTime;
+        amuletKeyPressed -= Time.deltaTime;
+        interactKeyPressed -= Time.deltaTime;
 
         // Debug
         if (Input.GetKeyDown(_confineCursorKey)) {
