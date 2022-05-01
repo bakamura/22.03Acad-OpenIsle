@@ -40,19 +40,21 @@ public class PlayerMovement : MonoBehaviour {
             // Jump
             _isGrounded = Physics.OverlapBox(transform.position + groundCheckPoint, _boxSize / 2, Quaternion.identity, groundLayer).Length > 0;
 
-            Debug.Log((PlayerInputs.jumpKeyPressed > 0 ? "TryingJump" : "NotJumping") + "\n" + (_isGrounded? "Is Grounded" : "Not Grounded")); // Dash memo working, jump not WEIRD BEHAVIOUR
+            //Debug.Log((PlayerInputs.jumpKeyPressed > 0 ? "TryingJump" : "NotJumping") + "\n" + (_isGrounded? "Is Grounded" : "Not Grounded")); // Dash memo working, jump not WEIRD BEHAVIOUR
             if (PlayerInputs.jumpKeyPressed > 0 && _isGrounded) {
                 PlayerInputs.jumpKeyPressed = 0;
 
-                PlayerData.rb.AddForce(transform.up * _jumpStrengh, ForceMode.Force); // Check forcemode
+                PlayerData.rb.AddForce(transform.up * _jumpStrengh, ForceMode.Acceleration); // Check forcemode
             }
 
             // Dash
             if (PlayerInputs.dashKeyPressed > 0) {
                 PlayerInputs.dashKeyPressed = 0;
 
+                //PlayerData.rb.AddForce(GetMovementAndSetRotation(new Vector3(PlayerInputs.horizontalAxis, 0, PlayerInputs.verticalAxis)).normalized * _dashSpeed, ForceMode.Impulse); // Check forcemode
                 movementLock = true;
-                PlayerData.rb.velocity = _facing * _dashSpeed;
+                //PlayerData.rb.velocity = _facing * _dashSpeed;
+                PlayerData.rb.velocity = new Vector3(_facing.x * _dashSpeed, VerticalMovment(), _facing.z * _dashSpeed);
                 Invoke(nameof(EndDash), _dashDuration);
             }
         }
@@ -60,7 +62,7 @@ public class PlayerMovement : MonoBehaviour {
 
     private void FixedUpdate() {
         // Movement
-        if (!movementLock) PlayerData.rb.velocity = new Vector3(HorizontalMovement().x, Mathf.Clamp(PlayerData.rb.velocity.y, -_maxAirVelocity, _maxAirVelocity), HorizontalMovement().z);
+        if (!movementLock) PlayerData.rb.velocity = new Vector3(HorizontalMovement().x, VerticalMovment(), HorizontalMovement().z);
     }
 
     private Vector3 HorizontalMovement() {
@@ -70,6 +72,10 @@ public class PlayerMovement : MonoBehaviour {
             return groundMovment * _movementSpeed;
         }
         else return Vector3.zero;
+    }
+
+    private float VerticalMovment() {
+        return Mathf.Clamp(PlayerData.rb.velocity.y, -_maxAirVelocity, _maxAirVelocity);
     }
 
     private Vector3 GetMovementAndSetRotation(Vector3 direction) {
