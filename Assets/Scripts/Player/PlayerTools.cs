@@ -58,10 +58,11 @@ public class PlayerTools : MonoBehaviour {
         else if (PlayerData.Instance.hasHook && _currentActionCoolDown <= 0 && PlayerInputs.hookKeyPressed > 0) {
             if (!_hookScript.isHookActive) {
                 PlayerInputs.hookKeyPressed = 0;
-                ChangeMesh(_hookMesh, _hookMaterial, _amuletActionDuration);
+                _hookScript.SendHitDetection();
+                ChangeMesh(_hookMesh, _hookMaterial,_hookScript.Duration());
 
                 // PlayerData.rb.useGravity = false;
-                _hookScript.HookStart();
+                _hookScript.StartHook();
                 // CHANGE CURRENT ACTION COOLDOWN BASED ON HOOK HIT
             }
         }
@@ -82,6 +83,7 @@ public class PlayerTools : MonoBehaviour {
         PlayerData.rb.velocity = Vector3.zero;
         _toolMeshFilter.mesh = mesh;
         _toolMeshRenderer.material = material;
+        Debug.Log(actionDuration);
         _currentActionCoolDown = actionDuration + _actionInternalCoolDown;
         Invoke(nameof(UnlockMovement), actionDuration);
     }
@@ -89,6 +91,7 @@ public class PlayerTools : MonoBehaviour {
     private void UnlockMovement() {
         // May have issues with hook function
         PlayerMovement.Instance.movementLock = false;
+        PlayerData.rb.useGravity = true;
     }
 
     private void SwordStart() {
