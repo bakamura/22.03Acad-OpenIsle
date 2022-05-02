@@ -223,7 +223,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 362581698}
-  m_LocalRotation: {x: 0.09853762, y: 0.000000004280661, z: -4.238689e-10, w: 0.99513334}
+  m_LocalRotation: {x: 0.098537624, y: -0.0000000042806607, z: 4.238689e-10, w: 0.99513334}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -747,7 +747,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   activeToolPoint: {fileID: 1691542057}
   _maxHealth: 0
-  hasSword: 0
+  hasSword: 1
   hasHook: 1
   hasAmulet: 1
 --- !u!114 &552156552
@@ -792,16 +792,16 @@ MonoBehaviour:
   _swordScript: {fileID: 1691542063}
   _swordMesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
   _swordMaterial: {fileID: 2100000, guid: 458ac71025dadb14bbca6d0a68cce432, type: 2}
-  _swordActionDuration: 0.4
+  _swordActionDuration: 0.35
   swordDamage: 2
   _swordCollider: {fileID: 1691542059}
   _hookScript: {fileID: 1691542062}
   _hookMesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
   _hookMaterial: {fileID: 2100000, guid: 7d6a5bbbb55e43f409ec54ad34e6101c, type: 2}
-  _hookActionDuration: 0.1
+  _hookActionDuration: 5
   _amuletMesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
   _amuletMaterial: {fileID: 2100000, guid: 248c6bd936d6f61408576722d9c39a35, type: 2}
-  _amuletActionDuration: 0.8
+  _amuletActionDuration: 0.5
 --- !u!1 &581094934
 GameObject:
   m_ObjectHideFlags: 0
@@ -1279,7 +1279,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 746477025}
-  m_LocalRotation: {x: 0.09853762, y: 0.000000004280661, z: -4.238689e-10, w: 0.99513334}
+  m_LocalRotation: {x: 0.098537624, y: -0.0000000042806607, z: 4.238689e-10, w: 0.99513334}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1668,7 +1668,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.09853762, y: 0.000000004280661, z: -4.238689e-10, w: 0.99513334}
+  m_LocalRotation: {x: 0.098537624, y: 0.000000004280661, z: -4.2386894e-10, w: 0.99513334}
   m_LocalPosition: {x: -2.01, y: 3.05, z: -3.8000002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -2490,7 +2490,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1691542057}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -2545,7 +2545,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hookDistance: 100
-  _hookSpeed: 6
+  _hookSpeed: 2
   _checkLayers:
   - serializedVersion: 2
     m_Bits: 128
@@ -2558,6 +2558,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  isHookActive: 0
+  _distanceToStop: 1
 --- !u!114 &1691542063
 MonoBehaviour:
   m_ObjectHideFlags: 0

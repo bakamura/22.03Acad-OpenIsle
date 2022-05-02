@@ -52,14 +52,18 @@ public class PlayerTools : MonoBehaviour {
             PlayerInputs.swordKeyPressed = 0;
             ChangeMesh(_swordMesh, _swordMaterial, _amuletActionDuration);
 
-            Invoke(nameof(SwordStart), 0);
+            Invoke(nameof(SwordStart), 0.1f);
             Invoke(nameof(SwordEnd), 0.4f);
         }
         else if (PlayerData.Instance.hasHook && _currentActionCoolDown <= 0 && PlayerInputs.hookKeyPressed > 0) {
-            PlayerInputs.hookKeyPressed = 0;
-            ChangeMesh(_hookMesh, _hookMaterial, _amuletActionDuration);
+            if (!_hookScript.isHookActive) {
+                PlayerInputs.hookKeyPressed = 0;
+                ChangeMesh(_hookMesh, _hookMaterial, _amuletActionDuration);
 
-
+                // PlayerData.rb.useGravity = false;
+                _hookScript.HookStart();
+                // CHANGE CURRENT ACTION COOLDOWN BASED ON HOOK HIT
+            }
         }
         else if (PlayerData.Instance.hasAmulet && _currentActionCoolDown <= 0 && PlayerInputs.amuletKeyPressed > 0) {
             PlayerInputs.amuletKeyPressed = 0;
@@ -69,6 +73,8 @@ public class PlayerTools : MonoBehaviour {
         }
 
         _currentActionCoolDown -= Time.deltaTime;
+
+        if (_hookScript.isHookActive && (PlayerInputs.jumpKeyPressed > 0 || PlayerInputs.hookKeyPressed > 0 || PlayerInputs.dashKeyPressed > 0)) _hookScript.EndHookMovment();
     }
 
     private void ChangeMesh(Mesh mesh, Material material, float actionDuration) {
