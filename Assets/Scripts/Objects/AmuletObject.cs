@@ -14,11 +14,11 @@ public class AmuletObject : MonoBehaviour {
         _standarMaterial = _meshRender.material;
     }
     private void Start() {
-        Amulet.onActivateAmulet += Changedimension;
+        PlayerTools.onActivateAmulet += Changedimension;
     }
 
     public void Changedimension() {
-        if (Vector3.Distance(transform.position, PlayerMovement.Instance.transform.position) < Amulet.amuletDistance) {
+        if (Vector3.Distance(transform.position, PlayerMovement.Instance.transform.position) < PlayerTools.amuletDistance) {
             _collider.enabled = !_collider.enabled;
             if (_meshRender.material == _standarMaterial) _meshRender.material = _materialToChange;
             else _meshRender.material = _standarMaterial;

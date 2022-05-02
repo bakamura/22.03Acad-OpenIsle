@@ -20,20 +20,24 @@ public class PlatformFragile : MonoBehaviour {
     }
 
     private void OnCollisionEnter(Collision collision) {
-        if (collision.transform.tag == "Player") StartCoroutine(Break());
+        if (collision.transform.tag == "Player") {
+            Invoke(nameof(Shake), 0);
+            Invoke(nameof(Break), _delayToBreak);
+            Invoke(nameof(Respawn), _delayToRespawn);
+        }
     }
 
-    private IEnumerator Break() {
-        // Animate fragility
+    private void Shake() {
+        // Animate
+    }
 
-        yield return new WaitForSeconds(_delayToBreak);
-
+    private void Break() {
         // Play sound
         _collider.enabled = false;
         _mesh.enabled = false;
+    }
 
-        yield return new WaitForSeconds(_delayToRespawn);
-
+    private void Respawn() {
         if (isActive) {
             _collider.enabled = true;
             _mesh.enabled = true;
