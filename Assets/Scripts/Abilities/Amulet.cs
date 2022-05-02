@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Amulet : MonoBehaviour
-{
+public class Amulet : MonoBehaviour {
+
     public static float amuletDistance = 5;
     public static UnityAction onActivateAmulet;
     [SerializeField] private float _amuletCooldown;

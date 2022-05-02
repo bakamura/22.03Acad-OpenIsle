@@ -6,7 +6,7 @@ public class EnemyData : MonoBehaviour {
 
     [Header("Components")]
 
-    [System.NonSerialized] public Rigidbody2D rb;
+    [System.NonSerialized] public Rigidbody rb;
 
     [Header("Info")]
 
@@ -18,7 +18,7 @@ public class EnemyData : MonoBehaviour {
     private float _currentKnockBackInvencibility;
 
     private void Awake() {
-        rb = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody>();
     }
 
     private void Update() {
@@ -26,7 +26,7 @@ public class EnemyData : MonoBehaviour {
     }
 
     public void Activate(bool isActivating) {
-        rb.simulated = isActivating;
+        // rb.simulated = isActivating;
 
         _currentHealth = _maxHealth;
     }

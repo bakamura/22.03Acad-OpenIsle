@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HookShot : MonoBehaviour
-{
+public class HookShot : MonoBehaviour {
+
     [SerializeField] private float _hookDistance;
     [SerializeField] private float _hookSpeed;
-    [SerializeField] private LayerMask[] _checkLayers = new LayerMask[3];// 0 = hookPoint, 1 = enemies, 2 = movable objects
-    [SerializeField] private AudioClip[] _hitAudios = new AudioClip[4];// 0 = hookShot, 1 = hit Something Pullable, 2 = hit something unpullable, 3 = pulling
+    [SerializeField] private LayerMask[] _checkLayers = new LayerMask[3]; // 0 = hookPoint, 1 = enemies, 2 = movable objects
+    [SerializeField] private AudioClip[] _hitAudios = new AudioClip[4]; // 0 = hookShot, 1 = hit Something Pullable, 2 = hit something unpullable, 3 = pulling
     private bool _isHookActive = false;
     private RaycastHit _hitinfo;
     private AudioSource _audio;
@@ -62,7 +62,7 @@ public class HookShot : MonoBehaviour
     private void MovePlayerToPoint() {
         float distance = Vector3.Distance(_hitinfo.point, PlayerMovement.Instance.transform.position);
         PlayerData.rb.velocity = (_hitinfo.point - PlayerMovement.Instance.transform.position).normalized * _hookSpeed * distance;
-        if (distance < 1f) EndHookMovment();        
+        if (distance < 1f) EndHookMovment();
     }
 
     private void MovePointToPlayer() {
@@ -71,7 +71,7 @@ public class HookShot : MonoBehaviour
         if (distance < _hitinfo.transform.lossyScale.magnitude / 2f + 1) {
             _hitinfo.rigidbody.velocity = Vector3.zero;
             EndHookMovment();
-        }        
+        }
     }
 
     private void LockPlayeMovment() {
