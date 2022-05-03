@@ -24,7 +24,7 @@ public class PlayerTools : MonoBehaviour {
 
     public float swordDamage;
     [SerializeField] private Collider _swordCollider;
-    [System.NonSerialized] public List<Collision> swordCollisions = new List<Collision>();
+    [HideInInspector] public List<Collision> swordCollisions = new List<Collision>();
 
     [Header("Hook")]
 
@@ -58,7 +58,7 @@ public class PlayerTools : MonoBehaviour {
     private void Update() {
         if (PlayerData.Instance.hasSword && _currentActionCoolDown <= 0 && PlayerInputs.swordKeyPressed > 0) {
             PlayerInputs.swordKeyPressed = 0;
-            ChangeMesh(_swordMesh, _swordMaterial, _amuletActionDuration);
+            ChangeMesh(_swordMesh, _swordMaterial, _swordActionDuration);
             _isAiming = false;
             ChangeCameraFollow(transform);
 
@@ -69,6 +69,7 @@ public class PlayerTools : MonoBehaviour {
             PlayerInputs.hookKeyPressed = 0;
             _isAiming = true;
             ChangeCameraFollow(_toolMeshFilter.transform);
+            ChangeMesh(_hookMesh, _hookMaterial, 9999);
         }
         else if (PlayerData.Instance.hasAmulet && _currentActionCoolDown <= 0 && PlayerInputs.amuletKeyPressed > 0) {
             PlayerInputs.amuletKeyPressed = 0;
@@ -78,7 +79,7 @@ public class PlayerTools : MonoBehaviour {
 
             onActivateAmulet.Invoke(); //
         }
-        if(_isAiming && PlayerInputs.hookKeyReleased > 0) {
+        if (_isAiming && PlayerInputs.hookKeyReleased > 0) {
             PlayerInputs.hookKeyReleased = 0;
 
             _isAiming = false;
@@ -86,11 +87,11 @@ public class PlayerTools : MonoBehaviour {
 
             //if (!_hookScript.isHookActive) {
             //    PlayerInputs.hookKeyPressed = 0;
-            //    // _hookScript.SendHitDetection();
-            //    // ChangeMesh(_hookMesh, _hookMaterial,_hookScript.Duration());
-            //    // Debug.Log(_hookScript.Duration());
-
-            //    //_hookScript.StartHook();
+            //    _hookScript.SendHitDetection();
+            //    ChangeMesh(_hookMesh, _hookMaterial, _hookScript.Duration());
+            //    Debug.Log(_hookScript.Duration());
+            
+            //    _hookScript.StartHook();
             //}
 
             _hookAlternateScript.InitiateHook();
@@ -98,7 +99,7 @@ public class PlayerTools : MonoBehaviour {
 
         _currentActionCoolDown -= Time.deltaTime;
 
-        if (_hookScript.isHookActive && (PlayerInputs.jumpKeyPressed > 0 || PlayerInputs.hookKeyPressed > 0 || PlayerInputs.dashKeyPressed > 0)) _hookScript.EndHookMovment();
+        if (_hookScript.isHookActive && (PlayerInputs.jumpKeyPressed > 0 || PlayerInputs.hookKeyPressed > 0 || PlayerInputs.dashKeyPressed > 0)) _hookScript.CancelHook();
     }
 
     private void ChangeMesh(Mesh mesh, Material material, float actionDuration) {
@@ -113,8 +114,14 @@ public class PlayerTools : MonoBehaviour {
 
     private void UnlockMovement() {
         // May have issues with hook function
+        Debug.Log("Movement Unlock");
         PlayerMovement.Instance.movementLock = false;
-        PlayerData.rb.useGravity = true;
+        //PlayerData.rb.useGravity = true;
+    }
+
+    public void EndHook() {
+        UnlockMovement();
+        _currentActionCoolDown = _actionInternalCoolDown;
     }
 
     private void SwordStart() {

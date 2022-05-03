@@ -12,7 +12,8 @@ public class PlayerMovement : MonoBehaviour {
     [Tooltip("How Fast the object rotates to input")]
     [SerializeField] private float _turnSmoothTime = .1f;
     private float _turnSmoothVelc; // Used by SmoothDampAngle because a static function can't store states.
-    [System.NonSerialized] public bool movementLock = false;
+    // [HideInInspector]
+    public bool movementLock = false;
     public float _maxAirVelocity = 300f;
 
     [Header("Jump")]

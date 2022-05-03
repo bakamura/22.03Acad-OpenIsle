@@ -27,7 +27,7 @@ public class AlternateToolHookShot : MonoBehaviour {
         switch (_state) {
             case 0: break;
             case 1: // Propel Player
-                if (Vector3.Distance(PlayerData.Instance.transform.position, _currentTarget.transform.position) < 0.25f /* Change for a variable to be edited in unity? */) {
+                if (Vector3.Distance(PlayerData.Instance.transform.position, _currentTarget.transform.position) < 1f /* Change for a variable to be edited in unity? */) {
                     EndHook();
                     break;
                 }
@@ -38,8 +38,12 @@ public class AlternateToolHookShot : MonoBehaviour {
                 transform.position = _currentTarget.transform.position; // Need to change to hitpoint
                 break;
             case 3: // Returning
-                rb.velocity = (PlayerData.Instance.transform.position - transform.position).normalized / (PlayerTools.instance.maxHookDuration / 2);
+                rb.velocity = (PlayerData.Instance.transform.position - transform.position).normalized * 2 / (PlayerTools.instance.maxHookDuration);
                 break;
+        }
+        if(!_active) { 
+            transform.position = PlayerData.Instance.activeToolPoint.transform.position;
+            transform.rotation = PlayerData.Instance.activeToolPoint.transform.rotation;
         }
     }
 
@@ -49,9 +53,10 @@ public class AlternateToolHookShot : MonoBehaviour {
                 Debug.Log("HookPoint");
                 transform.position = other.transform.position;
                 _state = 1;
-                _currentTarget = other.gameObject;
+                _currentTarget = gameObject; //
                 CancelInvoke(nameof(ReturnHook));
                 CancelInvoke(nameof(EndHook));
+                rb.velocity = Vector3.zero;
                 break;
             case "Enemy":
                 Debug.Log("Enemy");
@@ -66,6 +71,7 @@ public class AlternateToolHookShot : MonoBehaviour {
                 _currentTarget = other.gameObject;
                 CancelInvoke(nameof(ReturnHook));
                 CancelInvoke(nameof(EndHook));
+                rb.velocity = Vector3.zero;
                 break;
             default:
                 Debug.Log("Not Valid Target Hit");
@@ -77,7 +83,6 @@ public class AlternateToolHookShot : MonoBehaviour {
         _active = true;
         col.enabled = true;
         rb.velocity = Camera.main.transform.forward * PlayerTools.instance.hookSpeed;
-        transform.parent = null;
         Invoke(nameof(ReturnHook), PlayerTools.instance.maxHookDuration);
         Invoke(nameof(EndHook), PlayerTools.instance.maxHookDuration * 1.5f);
 
@@ -94,6 +99,7 @@ public class AlternateToolHookShot : MonoBehaviour {
             col.enabled = false;
             rb.velocity = Vector3.zero;
             transform.position = PlayerData.Instance.activeToolPoint.transform.position;
+            PlayerTools.instance.EndHook(); //
         }
     }
 }

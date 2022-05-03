@@ -18,6 +18,7 @@ public class ToolHookShot : MonoBehaviour {
     private float _initialTargetDistance;
     private float _objectSizeDifference;
     private bool _willHapenMovment;
+    private int _movmentCase;
 
     private void Awake() {
         _audio = GetComponent<AudioSource>();
@@ -27,7 +28,8 @@ public class ToolHookShot : MonoBehaviour {
         if (isHookActive) {
             HookMeshLine();
             if (_canStartPulling) {
-                HookPosibilities();
+                //HookPosibilities();
+                HookMovment();
             }
         }
     }
@@ -76,6 +78,7 @@ public class ToolHookShot : MonoBehaviour {
         }
         else {
             if (!_canStartPulling) {
+                HookPosibilities();
                 //_audio.clip = _hitAudios[2];
                 //_audio.Play();
             }
@@ -88,16 +91,40 @@ public class ToolHookShot : MonoBehaviour {
         if (_hitinfo.collider != null) { // hit a hook point
             if (Contains(_checkLayers[0], _hitinfo.collider.gameObject.layer)) { //Debug.Log("hook point");
                 PlayerData.rb.useGravity = false; //
-                MovePlayerToPoint();
+                _movmentCase = 1;
+                return;
+                //MovePlayerToPoint();
             }
             else if (Contains(_checkLayers[1], _hitinfo.collider.gameObject.layer)) { // hit an enemy
                 //EndHookMovment();
+                _movmentCase = 2;
+                return;
             }
             else if (Contains(_checkLayers[2], _hitinfo.collider.gameObject.layer)) { // hit a movable object
-                MovePointToPlayer();
+                _movmentCase = 3;
+                return;
+                //MovePointToPlayer();
             }
         }
-        EndHookMovment();
+        _movmentCase = 0;
+        //EndHookMovment();
+    }
+
+    private void HookMovment() {
+        switch (_movmentCase) {
+            case 1:
+                MovePlayerToPoint();
+                break;
+            case 2:
+                break;
+            case 3:
+                MovePointToPlayer();
+                break;
+            default:
+                EndHookMovment();
+                break;
+
+        }
     }
 
     private bool Contains(LayerMask mask, int layer) {
@@ -123,6 +150,11 @@ public class ToolHookShot : MonoBehaviour {
         return _hookSpeed * _initialTargetDistance * (PlayerMovement.Instance.transform.position - _hitinfo.transform.position).normalized / _hitinfo.rigidbody.mass * _initialTargetDistance;
     }
 
+    public void CancelHook() {
+        if (_hookTransform.localScale.z > 1) _hookTransform.localScale = new Vector3(_hookTransform.localScale.x, _hookTransform.localScale.y, 1);
+        EndHookMovment();
+    }
+
     public void EndHookMovment() {
         if (_hookTransform.localScale.z <= 1) {
             _canStartPulling = false;
@@ -131,6 +163,7 @@ public class ToolHookShot : MonoBehaviour {
             _initialTargetDistance = 0;
             _objectSizeDifference = 0;
             _hookTransform.localRotation = Quaternion.identity;
+            PlayerData.rb.useGravity = true;
             if (_hitinfo.rigidbody != null) _hitinfo.rigidbody.velocity = Vector3.zero;
         }
     }
