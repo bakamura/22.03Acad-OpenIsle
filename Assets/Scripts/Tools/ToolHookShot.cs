@@ -28,7 +28,6 @@ public class ToolHookShot : MonoBehaviour {
         if (isHookActive) {
             HookMeshLine();
             if (_canStartPulling) {
-                //HookPosibilities();
                 HookMovment();
             }
         }
@@ -38,27 +37,25 @@ public class ToolHookShot : MonoBehaviour {
         Physics.Raycast(PlayerMovement.Instance.transform.position, Camera.main.transform.forward, out _hitinfo, _hookDistance);
         _hookTransform.rotation = Quaternion.LookRotation(Camera.main.transform.forward);
         UpdateTargetDistance();
+        _initialTargetDistance = _targetDistance;
+        Mathf.Clamp(_initialTargetDistance, 1, _hookDistance);
     }
     private void UpdateTargetDistance() {
         if (_hitinfo.collider != null) {
             if (_hitinfo.rigidbody != null) {
-                if (_objectSizeDifference == 0) _objectSizeDifference = Vector3.Distance(_hitinfo.point, _hitinfo.transform.position);
+                _objectSizeDifference = Vector3.Distance(_hitinfo.point, _hitinfo.transform.position);
                 _targetDistance = Vector3.Distance(_hitinfo.transform.position, PlayerMovement.Instance.transform.position) - _objectSizeDifference;
             }
             else _targetDistance = Vector3.Distance(_hitinfo.point, PlayerMovement.Instance.transform.position);
         }
         else _targetDistance = _hookDistance;
-        if (_initialTargetDistance == 0) {
-            _initialTargetDistance = _targetDistance;
-            Mathf.Clamp(_initialTargetDistance, 1, _hookDistance);
-        }
     }
 
     public float Duration() {
         float result;
         if (_targetDistance != _hookDistance) {
             if (_hitinfo.rigidbody != null)
-                result = ObjectvelocityCalc().magnitude / _targetDistance; //ObjectvelocityCalc().magnitude * Time.fixedDeltaTime * _initialTargetDistance;
+                result = ObjectvelocityCalc().magnitude / _targetDistance;
             else result = PlayerVelocityCalc().magnitude / _targetDistance;
         }
         else result = _targetDistance / _hookShotSizeIncrease;
@@ -89,25 +86,21 @@ public class ToolHookShot : MonoBehaviour {
 
     private void HookPosibilities() {
         if (_hitinfo.collider != null) { // hit a hook point
-            if (Contains(_checkLayers[0], _hitinfo.collider.gameObject.layer)) { //Debug.Log("hook point");
+            if (Contains(_checkLayers[0], _hitinfo.collider.gameObject.layer)) {
                 PlayerData.rb.useGravity = false; //
                 _movmentCase = 1;
                 return;
-                //MovePlayerToPoint();
             }
             else if (Contains(_checkLayers[1], _hitinfo.collider.gameObject.layer)) { // hit an enemy
-                //EndHookMovment();
                 _movmentCase = 2;
                 return;
             }
             else if (Contains(_checkLayers[2], _hitinfo.collider.gameObject.layer)) { // hit a movable object
                 _movmentCase = 3;
                 return;
-                //MovePointToPlayer();
             }
         }
         _movmentCase = 0;
-        //EndHookMovment();
     }
 
     private void HookMovment() {
@@ -121,10 +114,9 @@ public class ToolHookShot : MonoBehaviour {
                 MovePointToPlayer();
                 break;
             default:
-                EndHookMovment();
                 break;
-
         }
+        EndHookMovment();
     }
 
     private bool Contains(LayerMask mask, int layer) {
@@ -160,8 +152,6 @@ public class ToolHookShot : MonoBehaviour {
             _canStartPulling = false;
             isHookActive = false;
             _willHapenMovment = false;
-            _initialTargetDistance = 0;
-            _objectSizeDifference = 0;
             _hookTransform.localRotation = Quaternion.identity;
             PlayerData.rb.useGravity = true;
             if (_hitinfo.rigidbody != null) _hitinfo.rigidbody.velocity = Vector3.zero;

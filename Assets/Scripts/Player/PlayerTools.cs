@@ -58,9 +58,10 @@ public class PlayerTools : MonoBehaviour {
     private void Update() {
         if (PlayerData.Instance.hasSword && _currentActionCoolDown <= 0 && PlayerInputs.swordKeyPressed > 0) {
             PlayerInputs.swordKeyPressed = 0;
-            ChangeMesh(_swordMesh, _swordMaterial, _swordActionDuration);
+            ChangeMesh(_swordMesh, _swordMaterial);
             _isAiming = false;
             ChangeCameraFollow(transform);
+            StartCooldown(_swordActionDuration);
 
             Invoke(nameof(SwordStart), 0.1f);
             Invoke(nameof(SwordEnd), 0.4f);
@@ -69,13 +70,14 @@ public class PlayerTools : MonoBehaviour {
             PlayerInputs.hookKeyPressed = 0;
             _isAiming = true;
             ChangeCameraFollow(_toolMeshFilter.transform);
-            ChangeMesh(_hookMesh, _hookMaterial, 9999);
+            ChangeMesh(_hookMesh, _hookMaterial);
         }
         else if (PlayerData.Instance.hasAmulet && _currentActionCoolDown <= 0 && PlayerInputs.amuletKeyPressed > 0) {
             PlayerInputs.amuletKeyPressed = 0;
-            ChangeMesh(_amuletMesh, _amuletMaterial, _amuletActionDuration);
+            ChangeMesh(_amuletMesh, _amuletMaterial);
             _isAiming = false;
             ChangeCameraFollow(transform);
+            StartCooldown(_amuletActionDuration);
 
             onActivateAmulet.Invoke(); //
         }
@@ -83,31 +85,35 @@ public class PlayerTools : MonoBehaviour {
             PlayerInputs.hookKeyReleased = 0;
 
             _isAiming = false;
-            ChangeCameraFollow(transform);
+            ChangeCameraFollow(transform);            
 
             //if (!_hookScript.isHookActive) {
             //    PlayerInputs.hookKeyPressed = 0;
             //    _hookScript.SendHitDetection();
-            //    ChangeMesh(_hookMesh, _hookMaterial, _hookScript.Duration());
-            //    Debug.Log(_hookScript.Duration());
-            
+            //    ChangeMesh(_hookMesh, _hookMaterial);
+            //    StartCooldown(_hookScript.Duration());            
             //    _hookScript.StartHook();
             //}
 
-            _hookAlternateScript.InitiateHook();
+            //_hookAlternateScript.InitiateHook();
         }
 
-        _currentActionCoolDown -= Time.deltaTime;
+        _currentActionCoolDown = Mathf.Clamp(_currentActionCoolDown - Time.deltaTime, 0, 100000);
 
         if (_hookScript.isHookActive && (PlayerInputs.jumpKeyPressed > 0 || PlayerInputs.hookKeyPressed > 0 || PlayerInputs.dashKeyPressed > 0)) _hookScript.CancelHook();
     }
 
-    private void ChangeMesh(Mesh mesh, Material material, float actionDuration) {
+    private void ChangeMesh(Mesh mesh, Material material/*, float actionDuration*/) {
         PlayerMovement.Instance.movementLock = true;
         PlayerData.rb.velocity = new Vector3(0, PlayerData.rb.velocity.y, 0);
         _toolMeshFilter.mesh = mesh;
         _toolMeshRenderer.material = material;
         //Debug.Log(actionDuration);
+        //_currentActionCoolDown = actionDuration + _actionInternalCoolDown;
+        //Invoke(nameof(UnlockMovement), actionDuration);
+    }
+
+    private void StartCooldown(float actionDuration) {
         _currentActionCoolDown = actionDuration + _actionInternalCoolDown;
         Invoke(nameof(UnlockMovement), actionDuration);
     }
