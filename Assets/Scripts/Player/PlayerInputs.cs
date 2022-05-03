@@ -14,6 +14,7 @@ public class PlayerInputs : MonoBehaviour {
     [HideInInspector] public static float dashKeyPressed = 0;
     [HideInInspector] public static float swordKeyPressed = 0;
     [HideInInspector] public static float hookKeyPressed = 0;
+    [HideInInspector] public static float hookKeyReleased = 0;
     [HideInInspector] public static float amuletKeyPressed = 0;
     [HideInInspector] public static float interactKeyPressed = 0; //
 
@@ -56,6 +57,7 @@ public class PlayerInputs : MonoBehaviour {
             if (Input.GetKeyDown(dashKey)) dashKeyPressed = _inputStoreDuration;
             if (Input.GetKeyDown(swordKey)) swordKeyPressed = _inputStoreDuration;
             if (Input.GetKeyDown(hookKey)) hookKeyPressed = _inputStoreDuration;
+            if (Input.GetKeyUp(hookKey)) hookKeyReleased = _inputStoreDuration;
             if (Input.GetKeyDown(amuletKey)) amuletKeyPressed = _inputStoreDuration;
             if (Input.GetKeyDown(interactKey)) interactKeyPressed = _inputStoreDuration;
         }

@@ -5,21 +5,22 @@ using UnityEngine;
 public class EnemySlow : MonoBehaviour {
 
     [Header("Components")]
-    private EnemyData _dataScrit;
+    private EnemyData _dataScript;
     private Rigidbody rb;
 
     [Header("Info")]
     [SerializeField] private float movementSpeed;
     [System.NonSerialized] public bool isAttacking; //
+    [SerializeField] private float _attackDamage;
     [SerializeField] private float _attackRange;
     [SerializeField] private float _halfAttackAngleAmplitude;
 
     private void Awake() {
-        _dataScrit = GetComponent<EnemyData>();
+        _dataScript = GetComponent<EnemyData>();
     }
 
     private void Start() {
-        
+        _dataScript.cancelAttack += CancelAttack; //
     }
 
     private void FixedUpdate() {
@@ -41,7 +42,7 @@ public class EnemySlow : MonoBehaviour {
         if (Vector3.Distance(PlayerData.Instance.transform.position, transform.position) < _attackRange) {
             Vector3 playerDirection = PlayerData.Instance.transform.position - transform.position;
             if (Mathf.Atan2(playerDirection.z, playerDirection.x) - Mathf.Atan2(transform.forward.z, transform.forward.x) <= _halfAttackAngleAmplitude) {
-
+                // do dmg
             }
         }
 
@@ -50,9 +51,10 @@ public class EnemySlow : MonoBehaviour {
 
     // To be called when KB
     public void CancelAttack() {
-        CancelInvoke(nameof(AttackCone)); //
-
-        isAttacking = false;
+        if (isAttacking) {
+            CancelInvoke(nameof(AttackCone)); //
+            isAttacking = false;
+        }
     }
 
 }

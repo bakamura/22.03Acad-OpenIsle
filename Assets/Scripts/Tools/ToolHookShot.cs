@@ -18,16 +18,10 @@ public class ToolHookShot : MonoBehaviour {
     private float _initialTargetDistance;
     private float _objectSizeDifference;
     private bool _willHapenMovment;
-    //[SerializeField] private float _distanceToStop = 1;
 
     private void Awake() {
         _audio = GetComponent<AudioSource>();
     }
-
-    //private void Update() {
-    //    // if (PlayerInputs.hookKeyPressed > 0 && PlayerData.Instance.hasHook && !isHookActive) HookStart();
-    //    // if (PlayerMovement.Instance.movementLock && isHookActive && (PlayerInputs.jumpKeyPressed > 0 || PlayerInputs.hookKeyPressed > 0 || PlayerInputs.dashKeyPressed > 0)) EndHookMovment();
-    //}
 
     private void FixedUpdate() {
         if (isHookActive) {
@@ -62,7 +56,7 @@ public class ToolHookShot : MonoBehaviour {
         float result;
         if (_targetDistance != _hookDistance) {
             if (_hitinfo.rigidbody != null)
-                result = ObjectvelocityCalc().magnitude / _targetDistance;//ObjectvelocityCalc().magnitude * Time.fixedDeltaTime * _initialTargetDistance;
+                result = ObjectvelocityCalc().magnitude / _targetDistance; //ObjectvelocityCalc().magnitude * Time.fixedDeltaTime * _initialTargetDistance;
             else result = PlayerVelocityCalc().magnitude / _targetDistance;
         }
         else result = _targetDistance / _hookShotSizeIncrease;
@@ -91,15 +85,12 @@ public class ToolHookShot : MonoBehaviour {
     }
 
     private void HookPosibilities() {
-        if (_hitinfo.collider != null) {
-            if (Contains(_checkLayers[0], _hitinfo.collider.gameObject.layer)) { // hit a hook point
-                //Debug.Log("hook point");
+        if (_hitinfo.collider != null) { // hit a hook point
+            if (Contains(_checkLayers[0], _hitinfo.collider.gameObject.layer)) { //Debug.Log("hook point");
+                PlayerData.rb.useGravity = false; //
                 MovePlayerToPoint();
-                //_currentRuningMethodName = nameof(MovePlayerToPoint);
-                //InvokeRepeating(_currentRuningMethodName, 0f, Time.fixedDeltaTime);
             }
-            else if (Contains(_checkLayers[1], _hitinfo.collider.gameObject.layer)) { // hit an enemy                                                                                  
-                //Debug.Log("enemy");
+            else if (Contains(_checkLayers[1], _hitinfo.collider.gameObject.layer)) { // hit an enemy
                 //EndHookMovment();
             }
             else if (Contains(_checkLayers[2], _hitinfo.collider.gameObject.layer)) { // hit a movable object
@@ -117,7 +108,6 @@ public class ToolHookShot : MonoBehaviour {
     private void MovePlayerToPoint() {
         _willHapenMovment = true;
         PlayerData.rb.velocity = new Vector3(PlayerVelocityCalc().x, Mathf.Clamp(PlayerVelocityCalc().y, -PlayerMovement.Instance._maxAirVelocity, PlayerMovement.Instance._maxAirVelocity), PlayerVelocityCalc().z);
-        // Weird behaviour: when playmode enterer, casting hook may "lock" the player into the ground
     }
 
     private void MovePointToPlayer() {
@@ -126,7 +116,7 @@ public class ToolHookShot : MonoBehaviour {
     }
 
     private Vector3 PlayerVelocityCalc() {
-        return _hookSpeed * _initialTargetDistance * (_hitinfo.point - PlayerMovement.Instance.transform.position).normalized;
+        return _hookSpeed * _initialTargetDistance * (_hitinfo.point - PlayerMovement.Instance.transform.position).normalized; // May need clamping
     }
 
     private Vector3 ObjectvelocityCalc() {
@@ -142,8 +132,6 @@ public class ToolHookShot : MonoBehaviour {
             _objectSizeDifference = 0;
             _hookTransform.localRotation = Quaternion.identity;
             if (_hitinfo.rigidbody != null) _hitinfo.rigidbody.velocity = Vector3.zero;
-            // PlayerMovement.Instance.movementLock = false;
-            //PlayerData.rb.useGravity = true;
         }
     }
 }

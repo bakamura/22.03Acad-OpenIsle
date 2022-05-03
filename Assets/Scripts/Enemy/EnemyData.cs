@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class EnemyData : MonoBehaviour {
 
@@ -16,6 +17,7 @@ public class EnemyData : MonoBehaviour {
     [SerializeField] private float _knockBackDuration;
     [SerializeField] private float _knockBackInvencibilityTime;
     private float _currentKnockBackInvencibility;
+    [System.NonSerialized] public UnityAction cancelAttack;
 
     private void Awake() {
         rb = GetComponent<Rigidbody>();
@@ -37,6 +39,7 @@ public class EnemyData : MonoBehaviour {
         if (_currentKnockBackInvencibility <= 0) {
             _currentKnockBackInvencibility = _knockBackInvencibilityTime;
             rb.velocity = (transform.position - PlayerData.Instance.transform.position).normalized * _knockBackAmount;
+            cancelAttack.Invoke(); //
             Invoke(nameof(StopKnockBack), _knockBackDuration);
         }
     }

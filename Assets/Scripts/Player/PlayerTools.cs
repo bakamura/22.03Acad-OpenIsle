@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Cinemachine;
 
 public class PlayerTools : MonoBehaviour {
 
@@ -20,7 +21,6 @@ public class PlayerTools : MonoBehaviour {
     [SerializeField] private Mesh _swordMesh;
     [SerializeField] private Material _swordMaterial;
     [SerializeField] private float _swordActionDuration;
-    // public AudioClip swordAudio
 
     public float swordDamage;
     [SerializeField] private Collider _swordCollider;
@@ -32,6 +32,14 @@ public class PlayerTools : MonoBehaviour {
     [SerializeField] private Mesh _hookMesh;
     [SerializeField] private Material _hookMaterial;
     [SerializeField] private float _hookActionDuration;
+    [SerializeField] private CinemachineFreeLook cinemachineCam;
+    // Naka alternate script
+    private bool _isAiming = false;
+    [SerializeField] private AlternateToolHookShot _hookAlternateScript;
+    public float hookSpeed;
+    public float playerHookSpeed;
+    public float objectHookSpeed;
+    public float maxHookDuration; // In seconds, when going
 
     [Header("Amulet")]
 
@@ -51,26 +59,41 @@ public class PlayerTools : MonoBehaviour {
         if (PlayerData.Instance.hasSword && _currentActionCoolDown <= 0 && PlayerInputs.swordKeyPressed > 0) {
             PlayerInputs.swordKeyPressed = 0;
             ChangeMesh(_swordMesh, _swordMaterial, _amuletActionDuration);
+            _isAiming = false;
+            ChangeCameraFollow(transform);
 
             Invoke(nameof(SwordStart), 0.1f);
             Invoke(nameof(SwordEnd), 0.4f);
         }
         else if (PlayerData.Instance.hasHook && _currentActionCoolDown <= 0 && PlayerInputs.hookKeyPressed > 0) {
-            if (!_hookScript.isHookActive) {
-                PlayerInputs.hookKeyPressed = 0;
-                _hookScript.SendHitDetection();
-                ChangeMesh(_hookMesh, _hookMaterial,_hookScript.Duration());
-
-                // PlayerData.rb.useGravity = false;
-                _hookScript.StartHook();
-                // CHANGE CURRENT ACTION COOLDOWN BASED ON HOOK HIT
-            }
+            PlayerInputs.hookKeyPressed = 0;
+            _isAiming = true;
+            ChangeCameraFollow(_toolMeshFilter.transform);
         }
         else if (PlayerData.Instance.hasAmulet && _currentActionCoolDown <= 0 && PlayerInputs.amuletKeyPressed > 0) {
             PlayerInputs.amuletKeyPressed = 0;
             ChangeMesh(_amuletMesh, _amuletMaterial, _amuletActionDuration);
+            _isAiming = false;
+            ChangeCameraFollow(transform);
 
             onActivateAmulet.Invoke(); //
+        }
+        if(_isAiming && PlayerInputs.hookKeyReleased > 0) {
+            PlayerInputs.hookKeyReleased = 0;
+
+            _isAiming = false;
+            ChangeCameraFollow(transform);
+
+            //if (!_hookScript.isHookActive) {
+            //    PlayerInputs.hookKeyPressed = 0;
+            //    // _hookScript.SendHitDetection();
+            //    // ChangeMesh(_hookMesh, _hookMaterial,_hookScript.Duration());
+            //    // Debug.Log(_hookScript.Duration());
+
+            //    //_hookScript.StartHook();
+            //}
+
+            _hookAlternateScript.InitiateHook();
         }
 
         _currentActionCoolDown -= Time.deltaTime;
@@ -80,10 +103,10 @@ public class PlayerTools : MonoBehaviour {
 
     private void ChangeMesh(Mesh mesh, Material material, float actionDuration) {
         PlayerMovement.Instance.movementLock = true;
-        PlayerData.rb.velocity = Vector3.zero;
+        PlayerData.rb.velocity = new Vector3(0, PlayerData.rb.velocity.y, 0);
         _toolMeshFilter.mesh = mesh;
         _toolMeshRenderer.material = material;
-        Debug.Log(actionDuration); //
+        //Debug.Log(actionDuration);
         _currentActionCoolDown = actionDuration + _actionInternalCoolDown;
         Invoke(nameof(UnlockMovement), actionDuration);
     }
@@ -101,5 +124,10 @@ public class PlayerTools : MonoBehaviour {
 
     private void SwordEnd() {
         _swordCollider.enabled = false;
+    }
+
+    private void ChangeCameraFollow(Transform followObject) {
+        cinemachineCam.Follow = followObject;
+        cinemachineCam.LookAt = followObject;
     }
 }
