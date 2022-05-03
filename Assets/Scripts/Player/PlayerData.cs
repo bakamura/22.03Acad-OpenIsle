@@ -11,7 +11,7 @@ public class PlayerData : MonoBehaviour {
 
     public GameObject activeToolPoint;
     public static Rigidbody rb { get; private set; }
-    public static CapsuleCollider collider {  get; private set; } // 
+    public static CapsuleCollider col {  get; private set; } // 
 
     [Header("Stats")]
 
@@ -29,7 +29,7 @@ public class PlayerData : MonoBehaviour {
         else if (Instance != this) Destroy(this);
 
         rb = GetComponent<Rigidbody>();
-        collider = GetComponent<CapsuleCollider>();
+        col = GetComponent<CapsuleCollider>();
     }
 
     private void Start() {

@@ -83,7 +83,7 @@ public class PlayerTools : MonoBehaviour {
         PlayerData.rb.velocity = Vector3.zero;
         _toolMeshFilter.mesh = mesh;
         _toolMeshRenderer.material = material;
-        Debug.Log(actionDuration);
+        Debug.Log(actionDuration); //
         _currentActionCoolDown = actionDuration + _actionInternalCoolDown;
         Invoke(nameof(UnlockMovement), actionDuration);
     }

@@ -28,6 +28,7 @@ public class ToolHookShot : MonoBehaviour {
     //    // if (PlayerInputs.hookKeyPressed > 0 && PlayerData.Instance.hasHook && !isHookActive) HookStart();
     //    // if (PlayerMovement.Instance.movementLock && isHookActive && (PlayerInputs.jumpKeyPressed > 0 || PlayerInputs.hookKeyPressed > 0 || PlayerInputs.dashKeyPressed > 0)) EndHookMovment();
     //}
+
     private void FixedUpdate() {
         if (isHookActive) {
             HookMeshLine();
@@ -69,9 +70,9 @@ public class ToolHookShot : MonoBehaviour {
     }
 
     public void StartHook() {
+        isHookActive = true;
         //_audio.clip = _hitAudios[0];
         //_audio.Play();
-        isHookActive = true;
     }
 
     private void HookMeshLine() {
