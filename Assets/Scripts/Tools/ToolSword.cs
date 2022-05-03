@@ -12,6 +12,7 @@ public class ToolSword : MonoBehaviour {
                     break;
                 case "Breakable":
                     //case used to the vines in the plateform area and the breakable doors in puzzle area
+                    collision.gameObject.GetComponent<BreakableObjects>().DestroyObject();
                     break;
             }
             PlayerTools.instance.swordCollisions.Add(collision);

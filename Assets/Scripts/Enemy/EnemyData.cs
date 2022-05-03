@@ -39,7 +39,7 @@ public class EnemyData : MonoBehaviour {
         if (_currentKnockBackInvencibility <= 0) {
             _currentKnockBackInvencibility = _knockBackInvencibilityTime;
             rb.velocity = (transform.position - PlayerData.Instance.transform.position).normalized * _knockBackAmount;
-            cancelAttack.Invoke(); //
+            //cancelAttack.Invoke(); //
             Invoke(nameof(StopKnockBack), _knockBackDuration);
         }
     }
