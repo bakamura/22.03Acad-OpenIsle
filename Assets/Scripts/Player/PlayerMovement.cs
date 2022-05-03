@@ -13,7 +13,7 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField] private float _turnSmoothTime = .1f;
     private float _turnSmoothVelc; // Used by SmoothDampAngle because a static function can't store states.
     [System.NonSerialized] public bool movementLock = false;
-    [SerializeField] private float _maxAirVelocity = 300f;
+    public float _maxAirVelocity = 300f;
 
     [Header("Jump")]
 

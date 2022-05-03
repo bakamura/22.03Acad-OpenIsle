@@ -62,8 +62,8 @@ public class ToolHookShot : MonoBehaviour {
         float result;
         if (_targetDistance != _hookDistance) {
             if (_hitinfo.rigidbody != null)
-                result = _targetDistance / ObjectvelocityCalc().magnitude;//ObjectvelocityCalc().magnitude * Time.fixedDeltaTime * _initialTargetDistance;
-            else result = _targetDistance / PlayerVelocityCalc().magnitude;
+                result = ObjectvelocityCalc().magnitude / _targetDistance;//ObjectvelocityCalc().magnitude * Time.fixedDeltaTime * _initialTargetDistance;
+            else result = PlayerVelocityCalc().magnitude / _targetDistance;
         }
         else result = _targetDistance / _hookShotSizeIncrease;
         return  (_targetDistance / _hookShotSizeIncrease + result) * Time.fixedDeltaTime;
@@ -116,7 +116,7 @@ public class ToolHookShot : MonoBehaviour {
 
     private void MovePlayerToPoint() {
         _willHapenMovment = true;
-        PlayerData.rb.velocity = PlayerVelocityCalc();
+        PlayerData.rb.velocity = new Vector3(PlayerVelocityCalc().x, Mathf.Clamp(PlayerVelocityCalc().y, -PlayerMovement.Instance._maxAirVelocity, PlayerMovement.Instance._maxAirVelocity), PlayerVelocityCalc().z);
         // Weird behaviour: when playmode enterer, casting hook may "lock" the player into the ground
     }
 
