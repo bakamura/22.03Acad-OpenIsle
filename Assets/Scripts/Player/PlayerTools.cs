@@ -41,6 +41,8 @@ public class PlayerTools : MonoBehaviour {
     public float hookCorrectionDistance;
     // Vini
     [SerializeField] private ToolHookShot _hookScript;
+    public Transform _hookCameraPoint;
+    [SerializeField] private CanvasGroup _hookAimUI;
 
     [Header("Amulet")]
 
@@ -69,7 +71,8 @@ public class PlayerTools : MonoBehaviour {
         else if (PlayerMovement.Instance.isGrounded && PlayerData.Instance.hasHook && _currentActionCoolDown <= 0 && PlayerInputs.hookKeyPressed > 0 && !AlternateToolHookShot.Instance.active) {
             PlayerInputs.hookKeyPressed = 0;
             isAiming = true;
-            ChangeCameraFollow(_toolMeshFilter.transform);
+            //ChangeCameraFollow(_toolMeshFilter.transform);
+            ChangeCameraFollow(_hookCameraPoint);
             ChangeMesh(_hookMesh, _hookMaterial, 0);
         }
         else if (PlayerData.Instance.hasAmulet && _currentActionCoolDown <= 0 && PlayerInputs.amuletKeyPressed > 0) {
@@ -92,15 +95,13 @@ public class PlayerTools : MonoBehaviour {
                 isAiming = false;
                 ChangeCameraFollow(transform);
 
-                //if (!_hookScript.isHookActive) {
-                //    PlayerInputs.hookKeyPressed = 0;
-                //    _hookScript.SendHitDetection();
-                //    ChangeMesh(_hookMesh, _hookMaterial);
-                //    StartCooldown(_hookScript.Duration());            
-                //    _hookScript.StartHook();
-                //}
+                if (!_hookScript.isHookActive) {
+                    _hookScript.SendHitDetection();
+                    ChangeMesh(_hookMesh, _hookMaterial, 0);           
+                    _hookScript.StartHook();
+                }
 
-                _hookAlternateScript.InitiateHook();
+                //_hookAlternateScript.InitiateHook();
             }
         }
         else PlayerInputs.hookKeyReleased = 0;
@@ -112,6 +113,7 @@ public class PlayerTools : MonoBehaviour {
 
     private void ChangeMesh(Mesh mesh, Material material, float actionDuration) {
         if (actionDuration > 0) {
+            Debug.Log("Movement Lock");
             PlayerMovement.Instance.movementLock = true;
             _currentActionCoolDown = actionDuration + _actionInternalCoolDown;
             Invoke(nameof(UnlockMovement), actionDuration);
@@ -142,6 +144,8 @@ public class PlayerTools : MonoBehaviour {
     }
 
     private void ChangeCameraFollow(Transform followObject) {
+        if (followObject == _hookCameraPoint) _hookAimUI.alpha = 1f;
+        else _hookAimUI.alpha = 0f;
         cinemachineCam.Follow = followObject;
         cinemachineCam.LookAt = followObject;
     }
