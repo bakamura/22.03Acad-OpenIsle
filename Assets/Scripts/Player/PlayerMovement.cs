@@ -26,8 +26,10 @@ public class PlayerMovement : MonoBehaviour {
 
     [Header("Dash")]
 
-    [SerializeField] private float _dashSpeed = 1000f;
+    [SerializeField] private float _dashSpeed = 15f;
     [SerializeField] private float _dashDuration = .3f;
+    [SerializeField] private float _dashInernalCooldown;
+    private float _dashCurrentCooldown = 0;
     private Vector3 _facing;
 
     private void Awake() {
@@ -48,17 +50,20 @@ public class PlayerMovement : MonoBehaviour {
             }
 
             // Dash
-            if (PlayerInputs.dashKeyPressed > 0) {
+            if (PlayerInputs.dashKeyPressed > 0 && _dashCurrentCooldown <= 0) {
                 PlayerInputs.dashKeyPressed = 0;
+                _dashCurrentCooldown = _dashInernalCooldown;
 
                 movementLock = true;
-                float targetLookAngle = (Mathf.Atan2(PlayerInputs.horizontalAxis, PlayerInputs.verticalAxis) * Mathf.Rad2Deg) + Camera.main.transform.eulerAngles.y;
+                float targetLookAngle = new Vector2(PlayerInputs.horizontalAxis, PlayerInputs.verticalAxis).magnitude > 0 ? 
+                    (Mathf.Atan2(PlayerInputs.horizontalAxis, PlayerInputs.verticalAxis) * Mathf.Rad2Deg) + Camera.main.transform.eulerAngles.y : 
+                    Mathf.Atan2(transform.forward.x, transform.forward.z) * Mathf.Rad2Deg;
                 transform.rotation = Quaternion.Euler(0, targetLookAngle, 0);
-                PlayerData.rb.velocity = Quaternion.Euler(0, targetLookAngle, 0) * Vector3.forward * _dashSpeed;
-                PlayerData.rb.useGravity = false;
+                PlayerData.rb.velocity += Quaternion.Euler(0, targetLookAngle, 0) * Vector3.forward * _dashSpeed;
                 Invoke(nameof(EndDash), _dashDuration);
             }
         }
+        _dashCurrentCooldown -= Time.deltaTime;
     }
 
     private void FixedUpdate() {
@@ -73,7 +78,6 @@ public class PlayerMovement : MonoBehaviour {
     private Vector3 HorizontalMovement() {
         if (PlayerInputs.horizontalAxis != 0 || PlayerInputs.verticalAxis != 0) {
             Vector3 groundMovment = GetMovementAndSetRotation(new Vector3(PlayerInputs.horizontalAxis, 0, PlayerInputs.verticalAxis)).normalized;
-            _facing = groundMovment;
             return groundMovment * _movementSpeed;
         }
         else return isGrounded ? -4 * PlayerData.rb.velocity : Vector3.zero;
@@ -89,7 +93,6 @@ public class PlayerMovement : MonoBehaviour {
     void EndDash() {
         movementLock = false;
         PlayerData.rb.velocity = Vector3.zero;
-        PlayerData.rb.useGravity = true;
     }
 
     void OnDrawGizmos() {
