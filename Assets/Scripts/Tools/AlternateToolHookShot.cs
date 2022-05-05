@@ -11,9 +11,12 @@ public class AlternateToolHookShot : MonoBehaviour {
     private Collider col;
 
     [Header("Info")]
-    private bool _active;
+    [HideInInspector] public bool active;
     private int _state = 0;
     private GameObject _currentTarget;
+
+    private float _currentReturnPoint = 0;
+    private Vector3 _lastPoint;
 
     private void Awake() {
         if (Instance == null) Instance = this;
@@ -24,26 +27,36 @@ public class AlternateToolHookShot : MonoBehaviour {
     }
 
     private void Update() {
-        switch (_state) {
-            case 0: break;
-            case 1: // Propel Player
-                if (Vector3.Distance(PlayerData.Instance.transform.position, _currentTarget.transform.position) < 1f /* Change for a variable to be edited in unity? */) {
-                    EndHook();
-                    break;
-                }
-                PlayerData.rb.velocity = (_currentTarget.transform.position - PlayerData.Instance.transform.position).normalized * PlayerTools.instance.playerHookSpeed;
-                break;
-            case 2: // Pull Object
-                _currentTarget.GetComponent<Rigidbody>().velocity = (PlayerData.Instance.transform.position - _currentTarget.transform.position).normalized * PlayerTools.instance.objectHookSpeed;
-                transform.position = _currentTarget.transform.position; // Need to change to hitpoint
-                break;
-            case 3: // Returning
-                rb.velocity = (PlayerData.Instance.transform.position - transform.position).normalized * 2 / (PlayerTools.instance.maxHookDuration);
-                break;
-        }
-        if(!_active) { 
+        if (!active) {
             transform.position = PlayerData.Instance.activeToolPoint.transform.position;
             transform.rotation = PlayerData.Instance.activeToolPoint.transform.rotation;
+        }
+        else {
+            switch (_state) {
+                case 0: // Check if surpass max distance
+                    if (Vector3.Distance(PlayerData.Instance.activeToolPoint.transform.position, transform.position) > PlayerTools.instance.maxHookDistance) ReturnHook();
+                    break;
+                case 1: // Propel Player
+                    if (Vector3.Distance(PlayerData.Instance.transform.position, _currentTarget.transform.position) < PlayerTools.instance.hookCorrectionDistance) {
+                        EndHook();
+                        break;
+                    }
+                    PlayerData.rb.velocity = (_currentTarget.transform.position - PlayerData.Instance.transform.position).normalized * PlayerTools.instance.playerHookSpeed;
+                    break;
+                case 2: // Pull Object
+                    _currentTarget.GetComponent<Rigidbody>().velocity = (PlayerData.Instance.transform.position - _currentTarget.transform.position).normalized * PlayerTools.instance.objectHookSpeed;
+                    transform.position = _currentTarget.transform.position; // Need to change to hitpoint
+                    // Need to endHook at some given point
+                    break;
+                case 3: // Returning
+                    if (_currentReturnPoint >= 1) {
+                        EndHook();
+                        break;
+                    }
+                    _currentReturnPoint += Time.deltaTime / PlayerTools.instance.hookReturnDuration;
+                    transform.position = Vector3.Lerp(_lastPoint, PlayerData.Instance.transform.position, _currentReturnPoint);
+                    break;
+            }
         }
     }
 
@@ -54,51 +67,46 @@ public class AlternateToolHookShot : MonoBehaviour {
                 transform.position = other.transform.position;
                 _state = 1;
                 _currentTarget = gameObject; //
-                CancelInvoke(nameof(ReturnHook));
-                CancelInvoke(nameof(EndHook));
                 rb.velocity = Vector3.zero;
                 break;
             case "Enemy":
                 Debug.Log("Enemy");
                 transform.position = other.transform.position;
-                CancelInvoke(nameof(ReturnHook));
-                CancelInvoke(nameof(EndHook));
                 break;
             case "MovableObject": // May not be included
                 Debug.Log("MovableObject");
                 // Get hit point and correct angle
                 _state = 2;
                 _currentTarget = other.gameObject;
-                CancelInvoke(nameof(ReturnHook));
-                CancelInvoke(nameof(EndHook));
                 rb.velocity = Vector3.zero;
                 break;
             default:
                 Debug.Log("Not Valid Target Hit");
+                ReturnHook();
                 break;
         }
     }
 
     public void InitiateHook() {
-        _active = true;
+        active = true;
         col.enabled = true;
         rb.velocity = Camera.main.transform.forward * PlayerTools.instance.hookSpeed;
-        Invoke(nameof(ReturnHook), PlayerTools.instance.maxHookDuration);
-        Invoke(nameof(EndHook), PlayerTools.instance.maxHookDuration * 1.5f);
-
+        PlayerData.rb.velocity = new Vector3(0, PlayerData.rb.velocity.y, 0);
+        PlayerMovement.Instance.movementLock = true;
     }
 
     private void ReturnHook() {
-        if (_active) _state = 3;
+        _state = 3;
+        _currentReturnPoint = 0;
+        _lastPoint = transform.position;
     }
 
     private void EndHook() {
-        if (_active) {
-            _active = false;
+        if (active) {
+            active = false;
             _state = 0;
             col.enabled = false;
             rb.velocity = Vector3.zero;
-            transform.position = PlayerData.Instance.activeToolPoint.transform.position;
             PlayerTools.instance.EndHook(); //
         }
     }

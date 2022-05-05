@@ -126,7 +126,7 @@ public class ToolHookShot : MonoBehaviour {
 
     private void MovePlayerToPoint() {
         _willHapenMovment = true;
-        PlayerData.rb.velocity = new Vector3(PlayerVelocityCalc().x, Mathf.Clamp(PlayerVelocityCalc().y, -PlayerMovement.Instance._maxAirVelocity, PlayerMovement.Instance._maxAirVelocity), PlayerVelocityCalc().z);
+        PlayerData.rb.velocity = new Vector3(PlayerVelocityCalc().x, Mathf.Clamp(PlayerVelocityCalc().y, -300, 300), PlayerVelocityCalc().z);
     }
 
     private void MovePointToPlayer() {

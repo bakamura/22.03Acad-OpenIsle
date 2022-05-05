@@ -17,7 +17,6 @@ public class PlayerTools : MonoBehaviour {
 
     [Header("Sword")]
 
-    [SerializeField] private ToolSword _swordScript;
     [SerializeField] private Mesh _swordMesh;
     [SerializeField] private Material _swordMaterial;
     [SerializeField] private float _swordActionDuration;
@@ -28,18 +27,20 @@ public class PlayerTools : MonoBehaviour {
 
     [Header("Hook")]
 
-    [SerializeField] private ToolHookShot _hookScript;
     [SerializeField] private Mesh _hookMesh;
     [SerializeField] private Material _hookMaterial;
-    [SerializeField] private float _hookActionDuration;
     [SerializeField] private CinemachineFreeLook cinemachineCam;
-    // Naka alternate script
-    private bool _isAiming = false;
+    [HideInInspector] public bool isAiming = false;
+    // Naka (alternate script)
     [SerializeField] private AlternateToolHookShot _hookAlternateScript;
     public float hookSpeed;
     public float playerHookSpeed;
     public float objectHookSpeed;
-    public float maxHookDuration; // In seconds, when going
+    public float maxHookDistance; // In seconds, when going
+    public float hookReturnDuration = 1;
+    public float hookCorrectionDistance;
+    // Vini
+    [SerializeField] private ToolHookShot _hookScript;
 
     [Header("Amulet")]
 
@@ -58,76 +59,72 @@ public class PlayerTools : MonoBehaviour {
     private void Update() {
         if (PlayerData.Instance.hasSword && _currentActionCoolDown <= 0 && PlayerInputs.swordKeyPressed > 0) {
             PlayerInputs.swordKeyPressed = 0;
-            ChangeMesh(_swordMesh, _swordMaterial);
-            _isAiming = false;
+            ChangeMesh(_swordMesh, _swordMaterial, _swordActionDuration);
+            isAiming = false;
             ChangeCameraFollow(transform);
-            StartCooldown(_swordActionDuration);
 
             Invoke(nameof(SwordStart), 0.1f);
             Invoke(nameof(SwordEnd), 0.4f);
         }
-        else if (PlayerData.Instance.hasHook && _currentActionCoolDown <= 0 && PlayerInputs.hookKeyPressed > 0) {
+        else if (PlayerMovement.Instance.isGrounded && PlayerData.Instance.hasHook && _currentActionCoolDown <= 0 && PlayerInputs.hookKeyPressed > 0 && !AlternateToolHookShot.Instance.active) {
             PlayerInputs.hookKeyPressed = 0;
-            _isAiming = true;
+            isAiming = true;
             ChangeCameraFollow(_toolMeshFilter.transform);
-            ChangeMesh(_hookMesh, _hookMaterial);
+            ChangeMesh(_hookMesh, _hookMaterial, 0);
         }
         else if (PlayerData.Instance.hasAmulet && _currentActionCoolDown <= 0 && PlayerInputs.amuletKeyPressed > 0) {
             PlayerInputs.amuletKeyPressed = 0;
-            ChangeMesh(_amuletMesh, _amuletMaterial);
-            _isAiming = false;
+            ChangeMesh(_amuletMesh, _amuletMaterial, _amuletActionDuration);
+            isAiming = false;
             ChangeCameraFollow(transform);
-            StartCooldown(_amuletActionDuration);
 
             onActivateAmulet.Invoke(); //
         }
-        if (_isAiming && PlayerInputs.hookKeyReleased > 0) {
-            PlayerInputs.hookKeyReleased = 0;
-
-            _isAiming = false;
-            ChangeCameraFollow(transform);            
-
-            //if (!_hookScript.isHookActive) {
-            //    PlayerInputs.hookKeyPressed = 0;
-            //    _hookScript.SendHitDetection();
-            //    ChangeMesh(_hookMesh, _hookMaterial);
-            //    StartCooldown(_hookScript.Duration());            
-            //    _hookScript.StartHook();
-            //}
-
-            //_hookAlternateScript.InitiateHook();
+        if (!PlayerMovement.Instance.isGrounded) {
+            isAiming = false;
+            ChangeCameraFollow(transform);
         }
+        if (isAiming) {
+            transform.rotation = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, Camera.main.transform.eulerAngles.z);
+            if (PlayerInputs.hookKeyReleased > 0) {
+                PlayerInputs.hookKeyReleased = 0;
+
+                isAiming = false;
+                ChangeCameraFollow(transform);
+
+                //if (!_hookScript.isHookActive) {
+                //    PlayerInputs.hookKeyPressed = 0;
+                //    _hookScript.SendHitDetection();
+                //    ChangeMesh(_hookMesh, _hookMaterial);
+                //    StartCooldown(_hookScript.Duration());            
+                //    _hookScript.StartHook();
+                //}
+
+                _hookAlternateScript.InitiateHook();
+            }
+        }
+        else PlayerInputs.hookKeyReleased = 0;
 
         _currentActionCoolDown = Mathf.Clamp(_currentActionCoolDown - Time.deltaTime, 0, 100000);
 
         if (_hookScript.isHookActive && (PlayerInputs.jumpKeyPressed > 0 || PlayerInputs.hookKeyPressed > 0 || PlayerInputs.dashKeyPressed > 0)) _hookScript.CancelHook();
     }
 
-    private void ChangeMesh(Mesh mesh, Material material/*, float actionDuration*/) {
-        PlayerMovement.Instance.movementLock = true;
+    private void ChangeMesh(Mesh mesh, Material material, float actionDuration) {
+        if (actionDuration > 0) {
+            PlayerMovement.Instance.movementLock = true;
+            _currentActionCoolDown = actionDuration + _actionInternalCoolDown;
+            Invoke(nameof(UnlockMovement), actionDuration);
+        }
         PlayerData.rb.velocity = new Vector3(0, PlayerData.rb.velocity.y, 0);
         _toolMeshFilter.mesh = mesh;
         _toolMeshRenderer.material = material;
-        //Debug.Log(actionDuration);
-        //_currentActionCoolDown = actionDuration + _actionInternalCoolDown;
-        //Invoke(nameof(UnlockMovement), actionDuration);
-    }
-
-    private void StartCooldown(float actionDuration) {
-        _currentActionCoolDown = actionDuration + _actionInternalCoolDown;
-        Invoke(nameof(UnlockMovement), actionDuration);
     }
 
     private void UnlockMovement() {
         // May have issues with hook function
         Debug.Log("Movement Unlock");
         PlayerMovement.Instance.movementLock = false;
-        //PlayerData.rb.useGravity = true;
-    }
-
-    public void EndHook() {
-        UnlockMovement();
-        _currentActionCoolDown = _actionInternalCoolDown;
     }
 
     private void SwordStart() {
@@ -137,6 +134,11 @@ public class PlayerTools : MonoBehaviour {
 
     private void SwordEnd() {
         _swordCollider.enabled = false;
+    }
+
+    public void EndHook() {
+        UnlockMovement();
+        _currentActionCoolDown = _actionInternalCoolDown;
     }
 
     private void ChangeCameraFollow(Transform followObject) {
