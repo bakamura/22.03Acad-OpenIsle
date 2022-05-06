@@ -30,9 +30,15 @@ public class EnemyTurret : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        if(Vector3.Distance(PlayerData.Instance.transform.position, transform.position) <= _attackRange && isAttacking) {
-            Invoke(nameof(AttackShot), 0.5f);
-
+        if(Vector3.Distance(PlayerData.Instance.transform.position, transform.position) <= _attackRange) {
+            if (isAttacking) {
+                Vector3 playerDirection = PlayerData.Instance.transform.position - transform.position;
+                transform.rotation = Quaternion.Euler(0, Mathf.Atan2(playerDirection.x, playerDirection.z), 0);
+            }
+            else {
+                isAttacking = true;
+                Invoke(nameof(AttackShot), 0.5f);
+            }
         }
 
     }
@@ -40,7 +46,7 @@ public class EnemyTurret : MonoBehaviour {
     private void AttackShot() {
 
 
-        isAttacking = false;
+        isAttacking = false; // Should move elsewhere?
     }
 
     public void CancelAttack() {

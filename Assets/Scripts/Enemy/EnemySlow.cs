@@ -27,6 +27,7 @@ public class EnemySlow : MonoBehaviour {
         if (!isAttacking) {
             Vector3 playerDirection = PlayerData.Instance.transform.position - transform.position;
             rb.velocity = playerDirection.normalized * movementSpeed;
+            transform.rotation = Quaternion.Euler(0, Mathf.Atan2(playerDirection.x, playerDirection.z) * Mathf.Rad2Deg, 0);
 
             if (Vector3.Distance(PlayerData.Instance.transform.position, transform.position) <= _attackRange / 2) {
                 isAttacking = true;
@@ -41,7 +42,7 @@ public class EnemySlow : MonoBehaviour {
         // Cone Area Calc (May be substituted by attached object)
         if (Vector3.Distance(PlayerData.Instance.transform.position, transform.position) < _attackRange) {
             Vector3 playerDirection = PlayerData.Instance.transform.position - transform.position;
-            if (Mathf.Atan2(playerDirection.z, playerDirection.x) - Mathf.Atan2(transform.forward.z, transform.forward.x) <= _halfAttackAngleAmplitude) {
+            if ((Mathf.Atan2(playerDirection.x, playerDirection.z) - Mathf.Atan2(transform.forward.x, transform.forward.z)) * Mathf.Rad2Deg <= _halfAttackAngleAmplitude) {
                 // do dmg
             }
         }
