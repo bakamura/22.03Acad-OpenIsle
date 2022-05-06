@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class PlatformMoving : MonoBehaviour {
 
-    private bool isActive = true;
+    //private bool isActive = true;
 
-    [Header("Components")]
-    private Collider _col; // Rename?
-    private MeshRenderer _mesh;
+    //[Header("Components")]
+    //private Collider _col; 
+    //private MeshRenderer _mesh;
 
     [Tooltip("First element should be it's spawn position")]
     [SerializeField] private Vector3[] _path;
@@ -16,26 +16,31 @@ public class PlatformMoving : MonoBehaviour {
     [SerializeField] private float _correctionMarginDistance;
     private int _targetPoint = 1;
     private int _direction = 1;
+    private bool _hasSpring = false;
 
-    private void Awake() {
-        _col = GetComponent<Collider>();
-        _mesh = GetComponent<MeshRenderer>();
+    //private void Awake() {
+    //    _col = GetComponent<Collider>();
+    //    _mesh = GetComponent<MeshRenderer>();
+    //}
+
+    private void Start() {
+        if(GetComponent<PlatformSpring>() != null) _hasSpring = true;
     }
 
     private void FixedUpdate() {
-        if (isActive) {
-            if ((_path[_targetPoint] - transform.position).magnitude <= _correctionMarginDistance) {
-                transform.position = _path[_targetPoint];
-                if (_targetPoint == 0) _direction = 1;
-                else if (_targetPoint == _path.Length - 1) _direction = -1;
-                _targetPoint += _direction;
-            }
-            transform.position += (_path[_targetPoint] - transform.position).normalized * _movementSpeed * Time.deltaTime;
+        //if (isActive) {
+        if ((_path[_targetPoint] - transform.position).magnitude <= _correctionMarginDistance) {
+            transform.position = _path[_targetPoint];
+            if (_targetPoint == 0) _direction = 1;
+            else if (_targetPoint == _path.Length - 1) _direction = -1;
+            _targetPoint += _direction;
         }
+        transform.position += (_path[_targetPoint] - transform.position).normalized * _movementSpeed * Time.fixedDeltaTime;
+        //}
     }
 
     private void OnCollisionEnter(Collision collision) {
-        if (collision.transform.tag == "Player") collision.transform.parent = transform;
+        if (!_hasSpring && collision.transform.tag == "Player") collision.transform.parent = transform;
     }
 
     private void OnCollisionExit(Collision collision) {
@@ -43,14 +48,14 @@ public class PlatformMoving : MonoBehaviour {
         if (collision.transform.tag == "Player" && collision.transform.parent == transform) collision.transform.parent = null;
     }
 
-    public void Activate(bool activating) {
-        isActive = activating;
-        _col.enabled = activating;
-        _mesh.enabled = activating;
-        if (activating) {
-            transform.position = _path[0];
-            _targetPoint = 1;
-            _direction = 1;
-        }
-    }
+    //public void Activate(bool activating) {
+    //    isActive = activating;
+    //    _col.enabled = activating;
+    //    _mesh.enabled = activating;
+    //    if (activating) {
+    //        transform.position = _path[0];
+    //        _targetPoint = 1;
+    //        _direction = 1;
+    //    }
+    //}
 }

@@ -7,23 +7,27 @@ public class PlatformFragile : MonoBehaviour {
     private bool isActive = true;
 
     [Header("Components")]
-    private Collider _collider; // Rename?
+    private Collider _col;
     private MeshRenderer _mesh;
 
     [Header("Info")]
     [SerializeField] private float _delayToBreak;
     [SerializeField] private float _delayToRespawn;
+    private bool _hasMovement = false;
 
     private void Awake() {
-        _collider = GetComponent<Collider>();
+        _col = GetComponent<Collider>();
         _mesh = GetComponent<MeshRenderer>();
+    }
+
+    private void Start() {
+        if (GetComponent<PlatformMoving>() != null) _hasMovement = true;
     }
 
     private void OnCollisionEnter(Collision collision) {
         if (collision.transform.tag == "Player") {
             Invoke(nameof(Shake), 0);
             Invoke(nameof(Break), _delayToBreak);
-            Invoke(nameof(Respawn), _delayToRespawn);
         }
     }
 
@@ -33,21 +37,22 @@ public class PlatformFragile : MonoBehaviour {
 
     private void Break() {
         // Play sound
-        _collider.enabled = false;
+        _col.enabled = false;
         _mesh.enabled = false;
+        if (_hasMovement && PlayerData.Instance.transform.parent == transform) PlayerData.Instance.transform.parent = null;
+        Invoke(nameof(Respawn), _delayToRespawn);
     }
 
     private void Respawn() {
         if (isActive) {
-            _collider.enabled = true;
+            _col.enabled = true;
             _mesh.enabled = true;
         }
     }
 
-    private void Activate(bool activating) {
-        isActive = activating;
-        _collider.enabled = activating;
-        _mesh.enabled = activating;
-    }
-
+    //private void Activate(bool activating) {
+    //    isActive = activating;
+    //    _col.enabled = activating;
+    //    _mesh.enabled = activating;
+    //}
 }

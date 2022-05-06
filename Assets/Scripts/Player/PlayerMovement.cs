@@ -19,7 +19,7 @@ public class PlayerMovement : MonoBehaviour {
     [Header("Jump")]
 
     [SerializeField] private float _jumpStrengh = 100f;
-    [SerializeField] private float _airVelocityMultiplier = 0.4f;
+    //[SerializeField] private float _airVelocityMultiplier = 0.4f;
     [SerializeField] private Vector3 groundCheckPoint;
     [SerializeField] private Vector3 _boxSize = Vector3.one;
     [SerializeField] private LayerMask groundLayer;
@@ -29,7 +29,7 @@ public class PlayerMovement : MonoBehaviour {
     [Header("Dash")]
 
     [SerializeField] private float _dashSpeed = 15f;
-    [SerializeField] private float _dashDuration = .3f; // Change name to invencibility frame duration ?
+    //[SerializeField] private float _dashDuration = .3f; // Change name to invencibility frame duration ?
     [SerializeField] private float _dashInernalCooldown;
     // private Vector3 _currentDashVelocity;
     private float _dashCurrentCooldown = 0;
@@ -48,7 +48,8 @@ public class PlayerMovement : MonoBehaviour {
             if (PlayerInputs.jumpKeyPressed > 0 && isGrounded) {
                 PlayerInputs.jumpKeyPressed = 0;
 
-                PlayerData.rb.AddForce(transform.up * _jumpStrengh, ForceMode.Acceleration);
+                //PlayerData.rb.AddForce(transform.up * _jumpStrengh, ForceMode.Acceleration);
+                PlayerData.rb.velocity = new Vector3(PlayerData.rb.velocity.x, _jumpStrengh, PlayerData.rb.velocity.z);
             }
 
             // Dash
@@ -96,7 +97,7 @@ public class PlayerMovement : MonoBehaviour {
             // Vector3 horizontalMovement = GetMovementAndSetRotation(new Vector3(PlayerInputs.horizontalAxis, 0, PlayerInputs.verticalAxis)).normalized;
             return moveDirection * _movementAcceleration;
         }
-        else return (isGrounded ? -4 : -0.5f) * new Vector3(PlayerData.rb.velocity.x, 0, PlayerData.rb.velocity.z);
+        else return (isGrounded ? -4 : -0.125f) * new Vector3(PlayerData.rb.velocity.x, 0, PlayerData.rb.velocity.z);
         //else return Vector3.zero;  
     }
 

@@ -34,7 +34,7 @@ public class ToolHookShot : MonoBehaviour {
     }
 
     public void SendHitDetection() {
-        Physics.Raycast(PlayerMovement.Instance.transform.position, Camera.main.transform.forward, out _hitinfo, _hookDistance);
+        Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out _hitinfo, _hookDistance);
         _hookTransform.rotation = Quaternion.Euler(Camera.main.transform.eulerAngles.x, Camera.main.transform.eulerAngles.y, Camera.main.transform.eulerAngles.z);//Quaternion.LookRotation(Camera.main.transform.forward);//check for better calc//Quaternion.FromToRotation(_hookTransform.position, _hitinfo.point);
         UpdateTargetDistance();
         _initialTargetDistance = _targetDistance;
