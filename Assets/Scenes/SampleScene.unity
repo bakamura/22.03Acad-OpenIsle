@@ -997,13 +997,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d54d5fe946a48c54ab3004b0acf319ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _movementAcceleration: 5
-  _groundedDrag: 2
-  _speedCap: 5
+  _movementAcceleration: 15
   _turnSmoothTime: 0.05
   movementLock: 0
   _jumpStrengh: 500
-  _airVelocityMultiplier: 0.4
+  _airVelocityMultiplier: 0.3
   groundCheckPoint: {x: 0, y: -1, z: 0}
   _boxSize: {x: 0.7, y: 0.125, z: 0.7}
   groundLayer:
@@ -1036,7 +1034,7 @@ Rigidbody:
   m_GameObject: {fileID: 552156546}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0.05
+  m_Drag: 2
   m_AngularDrag: 0
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -1695,7 +1693,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 746477025}
-  m_LocalRotation: {x: -0.024976611, y: -0.000000017201002, z: -4.2975687e-10, w: 0.999688}
+  m_LocalRotation: {x: -0.024976611, y: -0.000000017201012, z: -4.2975712e-10, w: 0.999688}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
