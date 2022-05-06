@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class PlatformMoving : MonoBehaviour {
 
-    private bool isActive = false;
+    private bool isActive = true;
 
     [Header("Components")]
-    private Collider _collider; // Rename?
+    private Collider _col; // Rename?
     private MeshRenderer _mesh;
 
     [Tooltip("First element should be it's spawn position")]
@@ -18,7 +18,7 @@ public class PlatformMoving : MonoBehaviour {
     private int _direction = 1;
 
     private void Awake() {
-        _collider = GetComponent<Collider>();
+        _col = GetComponent<Collider>();
         _mesh = GetComponent<MeshRenderer>();
     }
 
@@ -39,12 +39,13 @@ public class PlatformMoving : MonoBehaviour {
     }
 
     private void OnCollisionExit(Collision collision) {
+        // Make only work when contact is above
         if (collision.transform.tag == "Player" && collision.transform.parent == transform) collision.transform.parent = null;
     }
 
     public void Activate(bool activating) {
         isActive = activating;
-        _collider.enabled = activating;
+        _col.enabled = activating;
         _mesh.enabled = activating;
         if (activating) {
             transform.position = _path[0];

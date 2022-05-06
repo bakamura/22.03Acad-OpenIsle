@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlatformFragile : MonoBehaviour {
 
-    private bool isActive = false;
+    private bool isActive = true;
 
     [Header("Components")]
     private Collider _collider; // Rename?
