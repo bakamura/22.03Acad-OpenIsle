@@ -15,7 +15,7 @@ public class PlayerData : MonoBehaviour {
 
     [Header("Stats")]
 
-    [SerializeField] private float _maxHealth;
+    public float maxHealth;
     private float _currentHealth;
 
     [Header("Tools")]
@@ -33,10 +33,11 @@ public class PlayerData : MonoBehaviour {
     }
 
     private void Start() {
-        _currentHealth = _maxHealth; // Change to read memory when it's implemented
+        _currentHealth = maxHealth; // Change to read memory when it's implemented
     }
 
     private void TakeDamage(float amount) {
         _currentHealth -= amount;
+        UserInterface.Instance.ChangeHealthBar(_currentHealth);
     }
 }
