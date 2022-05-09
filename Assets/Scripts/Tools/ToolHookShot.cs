@@ -19,9 +19,17 @@ public class ToolHookShot : MonoBehaviour {
     private float _objectSizeDifference;
     private bool _willHapenMovment;
     private int _movmentCase;
+    private Material[] _chainMaterials = new Material[2];
+    private float _baseTilingOffset;
 
     private void Awake() {
         _audio = GetComponent<AudioSource>();
+        int index = 0;
+        foreach (MeshRenderer material in _hookTransform.gameObject.GetComponentsInChildren<MeshRenderer>()) {
+            _chainMaterials[index] = material.material;
+            index++;
+        }
+        _baseTilingOffset = _chainMaterials[0].mainTextureScale.y;
     }
 
     private void FixedUpdate() {
@@ -43,7 +51,7 @@ public class ToolHookShot : MonoBehaviour {
     private void UpdateTargetDistance() {
         if (_hitinfo.collider != null) {
             if (_hitinfo.rigidbody != null) {
-                if (_objectSizeDifference == 0)_objectSizeDifference = Vector3.Distance(_hitinfo.transform.position, _hitinfo.point);
+                if (_objectSizeDifference == 0) _objectSizeDifference = Vector3.Distance(_hitinfo.transform.position, _hitinfo.point);
                 _targetDistance = Vector3.Distance(PlayerMovement.Instance.transform.position, _hitinfo.transform.position) - _objectSizeDifference;
             }
             else _targetDistance = Vector3.Distance(_hitinfo.point, PlayerMovement.Instance.transform.position);
@@ -72,7 +80,7 @@ public class ToolHookShot : MonoBehaviour {
     private void HookMeshLine() {
         UpdateTargetDistance();
         if (_hookTransform.localScale.z < _targetDistance && !_canStartPulling) {
-            _hookTransform.localScale += new Vector3(0, 0, _hookShotSizeIncrease);
+            _hookTransform.localScale += new Vector3(0, 0, _hookShotSizeIncrease);            
         }
         else {
             if (!_canStartPulling) {
@@ -81,8 +89,12 @@ public class ToolHookShot : MonoBehaviour {
                 //_audio.Play();
             }
             _canStartPulling = true;
-            _hookTransform.localScale = _targetDistance != _hookDistance && _willHapenMovment ? new Vector3(1, 1, Mathf.Clamp(_targetDistance, 1, _hookDistance)) : new Vector3(1, 1, Mathf.Clamp(_hookTransform.localScale.z - _hookShotSizeIncrease * 2, 1, _hookDistance));
+            //if collides with something interactable its scale updates with the targetDistance, if not shrinks itself
+            Vector3 newScale = _targetDistance != _hookDistance && _willHapenMovment ? new Vector3(1, 1, Mathf.Clamp(_targetDistance, 1, _hookDistance)) : new Vector3(1, 1, Mathf.Clamp(_hookTransform.localScale.z - _hookShotSizeIncrease * 2, 1, _hookDistance));
+            _hookTransform.localScale = newScale;
+
         }
+        foreach (Material mat in _chainMaterials) mat.mainTextureScale = new Vector2(1, _baseTilingOffset * _hookTransform.localScale.z);        
     }
 
     private void HookPosibilities() {
