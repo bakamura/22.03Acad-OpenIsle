@@ -25,7 +25,7 @@ public class PlatformFragile : MonoBehaviour {
     }
 
     private void OnCollisionEnter(Collision collision) {
-        if (collision.transform.tag == "Player") {
+        if (collision.transform.tag == "Player" && PlayerData.rb.transform.position.y - (PlayerData.rb.transform.lossyScale.y / 2f) < transform.position.y + (transform.lossyScale.y / 2f) + 0.05f) {
             Invoke(nameof(Shake), 0);
             Invoke(nameof(Break), _delayToBreak);
         }
@@ -49,10 +49,4 @@ public class PlatformFragile : MonoBehaviour {
             _mesh.enabled = true;
         }
     }
-
-    //private void Activate(bool activating) {
-    //    isActive = activating;
-    //    _col.enabled = activating;
-    //    _mesh.enabled = activating;
-    //}
 }

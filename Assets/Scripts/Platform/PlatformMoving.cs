@@ -4,12 +4,6 @@ using UnityEngine;
 
 public class PlatformMoving : MonoBehaviour {
 
-    //private bool isActive = true;
-
-    //[Header("Components")]
-    //private Collider _col; 
-    //private MeshRenderer _mesh;
-
     [Tooltip("First element should be it's spawn position")]
     [SerializeField] private Vector3[] _path;
     [SerializeField] private float _movementSpeed;
@@ -18,17 +12,11 @@ public class PlatformMoving : MonoBehaviour {
     private int _direction = 1;
     private bool _hasSpring = false;
 
-    //private void Awake() {
-    //    _col = GetComponent<Collider>();
-    //    _mesh = GetComponent<MeshRenderer>();
-    //}
-
     private void Start() {
-        if(GetComponent<PlatformSpring>() != null) _hasSpring = true;
+        if (GetComponent<PlatformSpring>() != null) _hasSpring = true;
     }
 
     private void FixedUpdate() {
-        //if (isActive) {
         if ((_path[_targetPoint] - transform.position).magnitude <= _correctionMarginDistance) {
             transform.position = _path[_targetPoint];
             if (_targetPoint == 0) _direction = 1;
@@ -36,26 +24,13 @@ public class PlatformMoving : MonoBehaviour {
             _targetPoint += _direction;
         }
         transform.position += (_path[_targetPoint] - transform.position).normalized * _movementSpeed * Time.fixedDeltaTime;
-        //}
     }
 
     private void OnCollisionEnter(Collision collision) {
-        if (!_hasSpring && collision.transform.tag == "Player") collision.transform.parent = transform;
+        if (!_hasSpring && collision.transform.tag == "Player" && PlayerData.rb.transform.position.y - (PlayerData.rb.transform.lossyScale.y / 2f) < transform.position.y + (transform.lossyScale.y / 2f) + 0.05f) collision.transform.parent = transform;
     }
 
     private void OnCollisionExit(Collision collision) {
-        // Make only work when contact is above
         if (collision.transform.tag == "Player" && collision.transform.parent == transform) collision.transform.parent = null;
     }
-
-    //public void Activate(bool activating) {
-    //    isActive = activating;
-    //    _col.enabled = activating;
-    //    _mesh.enabled = activating;
-    //    if (activating) {
-    //        transform.position = _path[0];
-    //        _targetPoint = 1;
-    //        _direction = 1;
-    //    }
-    //}
 }

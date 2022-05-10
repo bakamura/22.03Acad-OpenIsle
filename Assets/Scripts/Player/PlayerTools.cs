@@ -97,7 +97,7 @@ public class PlayerTools : MonoBehaviour {
 
                 if (!_hookScript.isHookActive) {
                     _hookScript.SendHitDetection();
-                    ChangeMesh(_hookMesh, _hookMaterial, 0);           
+                    ChangeMesh(_hookMesh, _hookMaterial, 0);
                     _hookScript.StartHook();
                 }
 
@@ -144,8 +144,7 @@ public class PlayerTools : MonoBehaviour {
     }
 
     private void ChangeCameraFollow(Transform followObject) {
-        if (followObject == _hookCameraPoint) _hookAimUI.alpha = 1f;
-        else _hookAimUI.alpha = 0f;
+        _hookAimUI.alpha = (followObject == _hookCameraPoint) ? 1f : 0f;
         cinemachineCam.Follow = followObject;
         cinemachineCam.LookAt = followObject;
     }
