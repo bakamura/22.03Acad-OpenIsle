@@ -113,7 +113,7 @@ public class PlayerTools : MonoBehaviour {
 
     private void ChangeMesh(Mesh mesh, Material material, float actionDuration) {
         if (actionDuration > 0) {
-            Debug.Log("Movement Lock");
+            //Debug.Log("Movement Lock");
             PlayerMovement.Instance.movementLock = true;
             _currentActionCoolDown = actionDuration + _actionInternalCoolDown;
             Invoke(nameof(UnlockMovement), actionDuration);
@@ -125,7 +125,7 @@ public class PlayerTools : MonoBehaviour {
 
     private void UnlockMovement() {
         // May have issues with hook function
-        Debug.Log("Movement Unlock");
+        //Debug.Log("Movement Unlock");
         PlayerMovement.Instance.movementLock = false;
     }
 

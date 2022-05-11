@@ -36,8 +36,8 @@ public class PlayerData : MonoBehaviour {
         _currentHealth = maxHealth; // Change to read memory when it's implemented
     }
 
-    private void TakeDamage(float amount) {
+    public void TakeDamage(float amount) {
         _currentHealth -= amount;
-        UserInterface.Instance.ChangeHealthBar(_currentHealth);
+        //UserInterface.Instance.ChangeHealthBar(_currentHealth);
     }
 }

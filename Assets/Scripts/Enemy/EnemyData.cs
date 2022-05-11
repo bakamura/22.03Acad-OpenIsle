@@ -8,6 +8,8 @@ public class EnemyData : MonoBehaviour {
     [Header("Components")]
 
     [System.NonSerialized] public Rigidbody rb;
+    private EnemyMovment _enemyMovment = null;
+    private EnemyAnimAndVFX _visualScript;
 
     [Header("Info")]
 
@@ -21,6 +23,8 @@ public class EnemyData : MonoBehaviour {
 
     private void Awake() {
         rb = GetComponent<Rigidbody>();
+        _enemyMovment = GetComponent<EnemyMovment>();
+        _visualScript = GetComponent<EnemyAnimAndVFX>();
     }
 
     private void Update() {
@@ -37,15 +41,20 @@ public class EnemyData : MonoBehaviour {
         _currentHealth -= damageAmount;
         if (_currentHealth <= 0) Activate(false);
         if (_currentKnockBackInvencibility <= 0) {
+            if (_enemyMovment != null) _enemyMovment._isMovmentLocked = true;
             _currentKnockBackInvencibility = _knockBackInvencibilityTime;
+            rb.isKinematic = false;
             rb.velocity = (transform.position - PlayerData.Instance.transform.position).normalized * _knockBackAmount;
             cancelAttack.Invoke(); //
+            _visualScript.StunAnim();
             Invoke(nameof(StopKnockBack), _knockBackDuration);
         }
     }
 
     private void StopKnockBack() {
-        rb.velocity = Vector3.zero;
+        if (_enemyMovment != null) _enemyMovment._isMovmentLocked = false;
+        _visualScript.EndStunAnim();
+        rb.isKinematic = true;
+        //rb.velocity = Vector3.zero;
     }
-
 }

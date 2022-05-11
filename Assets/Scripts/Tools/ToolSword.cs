@@ -6,6 +6,7 @@ public class ToolSword : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision) {
         if (!PlayerTools.instance.swordCollisions.Contains(collision)) {
+            Debug.Log("do hit");
             switch (collision.gameObject.tag) {
                 case "Enemy":
                     collision.gameObject.GetComponent<EnemyData>().TakeDamage(PlayerTools.instance.swordDamage);
