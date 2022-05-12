@@ -27,7 +27,7 @@ public class PlatformMoving : MonoBehaviour {
     }
 
     private void OnCollisionEnter(Collision collision) {
-        if (!_hasSpring && collision.transform.tag == "Player" && PlayerData.rb.transform.position.y - (PlayerData.rb.transform.lossyScale.y / 2f) < transform.position.y + (transform.lossyScale.y / 2f) + 0.05f) collision.transform.parent = transform;
+        if (!_hasSpring && collision.transform.tag == "Player" && PlayerData.rb.transform.position.y - (PlayerData.rb.transform.lossyScale.y / 2f) > transform.position.y + (transform.lossyScale.y / 2f) - 0.05f) collision.transform.parent = transform;
     }
 
     private void OnCollisionExit(Collision collision) {

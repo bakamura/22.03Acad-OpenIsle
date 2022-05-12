@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class SaveData {
 
     // Player 
     public float[] position = new float[3];
+    public float[] rotation = new float[4];
     public bool hasSword;
     public bool hasHook;
     public bool hasAmulet;
@@ -21,6 +23,10 @@ public class SaveData {
         position[0] = playerData.transform.position.x;
         position[1] = playerData.transform.position.y;
         position[2] = playerData.transform.position.z;
+        rotation[0] = playerData.transform.eulerAngles.x;
+        rotation[1] = playerData.transform.eulerAngles.y;
+        rotation[2] = playerData.transform.eulerAngles.z;
+
         hasSword = playerData.hasSword;
         hasHook = playerData.hasHook;
         hasAmulet = playerData.hasAmulet;
