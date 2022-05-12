@@ -23,7 +23,7 @@ public class PlayerTools : MonoBehaviour {
 
     public float swordDamage;
     [SerializeField] private Collider _swordCollider;
-    [HideInInspector] public List<Collision> swordCollisions = new List<Collision>();
+    [HideInInspector] public List<Collider> swordCollisions = new List<Collider>();
 
     [Header("Hook")]
 

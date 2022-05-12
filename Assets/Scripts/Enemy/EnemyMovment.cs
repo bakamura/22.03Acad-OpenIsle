@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class EnemyMovment : MonoBehaviour
 {
     [Header("Components")]
-    [SerializeField] private Transform _followPoint;
+    //[SerializeField] private Transform _followPoint;
     private NavMeshAgent _navMeshAgent;
     private EnemyAnimAndVFX _visualScript;
 
@@ -23,7 +23,11 @@ public class EnemyMovment : MonoBehaviour
 
     private void Update() {
         PlayerDetection();
-        if (_isTargetInRange && !_isMovmentLocked) _navMeshAgent.destination = PlayerMovement.Instance.transform.position;
+        if (_isTargetInRange && !_isMovmentLocked) {
+            _navMeshAgent.destination = PlayerMovement.Instance.transform.position;
+            Vector3 _lookAtPlayer = PlayerData.Instance.transform.position - transform.position;
+            transform.rotation = Quaternion.Euler(0, Mathf.Atan2(_lookAtPlayer.x, _lookAtPlayer.z) * Mathf.Rad2Deg, 0);
+        }
         //if (Input.GetKeyDown(KeyCode.Space)) _navMeshAgent.destination = _followPoint.position;
     }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyAnimAndVFX : MonoBehaviour {
-    private Animator _animator;
+    public Animator _animator { get; private set; }
     private AudioSource _audio;
     [SerializeField] private EnemyAudio[] _audioDatas;
     private Dictionary<int, EnemyAudio> _audioDictionary = new Dictionary<int, EnemyAudio>();
