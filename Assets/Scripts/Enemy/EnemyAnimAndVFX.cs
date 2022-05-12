@@ -65,7 +65,8 @@ public class EnemyAnimAndVFX : MonoBehaviour {
             Attack,
             Idle,
             Walk,
-            Stun
+            Stun,
+            Die
         };
         public soundTypes soundType;
         public AudioData _audioData;
