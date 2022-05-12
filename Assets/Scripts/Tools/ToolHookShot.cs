@@ -43,11 +43,12 @@ public class ToolHookShot : MonoBehaviour {
 
     public void SendHitDetection() {
         Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out _hitinfo, _hookDistance);
-        _hookTransform.rotation = Quaternion.Euler(Camera.main.transform.eulerAngles.x, Camera.main.transform.eulerAngles.y, Camera.main.transform.eulerAngles.z);//Quaternion.LookRotation(Camera.main.transform.forward);//check for better calc//Quaternion.FromToRotation(_hookTransform.position, _hitinfo.point);
+        _hookTransform.rotation = Quaternion.Euler(Camera.main.transform.eulerAngles.x, Camera.main.transform.eulerAngles.y, Camera.main.transform.eulerAngles.z);
         UpdateTargetDistance();
         _initialTargetDistance = _targetDistance;
         Mathf.Clamp(_initialTargetDistance, 1, _hookDistance);
     }
+
     private void UpdateTargetDistance() {
         if (_hitinfo.collider != null) {
             if (_hitinfo.rigidbody != null) {
@@ -78,11 +79,12 @@ public class ToolHookShot : MonoBehaviour {
     }
 
     private void HookMeshLine() {
-        UpdateTargetDistance();
-        if (_hookTransform.localScale.z < _targetDistance && !_canStartPulling) {
+        //UpdateTargetDistance();
+        if (_hookTransform.localScale.z < _targetDistance / 2f && !_canStartPulling) {
             _hookTransform.localScale += new Vector3(0, 0, _hookShotSizeIncrease);            
         }
         else {
+            UpdateTargetDistance();
             if (!_canStartPulling) {
                 HookPosibilities();
                 //_audio.clip = _hitAudios[2];
@@ -90,7 +92,7 @@ public class ToolHookShot : MonoBehaviour {
             }
             _canStartPulling = true;
             //if collides with something interactable its scale updates with the targetDistance, if not shrinks itself
-            Vector3 newScale = _targetDistance != _hookDistance && _willHapenMovment ? new Vector3(1, 1, Mathf.Clamp(_targetDistance, 1, _hookDistance)) : new Vector3(1, 1, Mathf.Clamp(_hookTransform.localScale.z - _hookShotSizeIncrease * 2, 1, _hookDistance));
+            Vector3 newScale = _targetDistance != _hookDistance && _willHapenMovment ? new Vector3(1, 1, Mathf.Clamp(_targetDistance / 2f, 1, _hookDistance)) : new Vector3(1, 1, Mathf.Clamp(_hookTransform.localScale.z - _hookShotSizeIncrease * 2, 1, _hookDistance));
             _hookTransform.localScale = newScale;
 
         }
