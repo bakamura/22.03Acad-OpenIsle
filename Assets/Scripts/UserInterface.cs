@@ -66,10 +66,8 @@ public class UserInterface : MonoBehaviour {
         }
 
         // Fade transition
-        if (ingameCanvasAlpha == 1f && ingameCanvasAlpha > ingameCanvas.alpha) ingameCanvas.alpha += Time.unscaledDeltaTime / canvasFadeDuration;
-        else if (ingameCanvasAlpha == 0f) ingameCanvas.alpha -= Time.unscaledDeltaTime / canvasFadeDuration;
-        if (pauseCanvasAlpha == 1f && pauseCanvasAlpha > pauseCanvas.alpha) pauseCanvas.alpha += Time.unscaledDeltaTime / canvasFadeDuration;
-        else if (pauseCanvasAlpha == 0f) pauseCanvas.alpha -= Time.unscaledDeltaTime / canvasFadeDuration;
+        FadeCanvas(ingameCanvas, ingameCanvasAlpha, canvasFadeDuration);
+        FadeCanvas(pauseCanvas, pauseCanvasAlpha, canvasFadeDuration);
     }
 
     private void SetTimeScale() {
@@ -88,5 +86,10 @@ public class UserInterface : MonoBehaviour {
             canvas.interactable = active;
             canvas.blocksRaycasts = active;
         }
+    }
+
+    public static void FadeCanvas(CanvasGroup canvas, float targetAlpha, float fadeDuration) {
+        if (targetAlpha == 1f && targetAlpha > canvas.alpha) canvas.alpha += Time.unscaledDeltaTime / fadeDuration;
+        else if (targetAlpha == 0f) canvas.alpha -= Time.unscaledDeltaTime / fadeDuration;
     }
 }
