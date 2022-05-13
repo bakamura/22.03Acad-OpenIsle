@@ -20,6 +20,7 @@ public class EnemyData : MonoBehaviour {
     [SerializeField] private float _knockBackInvencibilityTime;
     private float _currentKnockBackInvencibility;
     [System.NonSerialized] public UnityAction cancelAttack;
+    private Vector3 _kncockbackDirection;
 
     private void Awake() {
         rb = GetComponent<Rigidbody>();
@@ -41,20 +42,37 @@ public class EnemyData : MonoBehaviour {
         _currentHealth -= damageAmount;
         if (_currentHealth <= 0) Activate(false);
         if (_currentKnockBackInvencibility <= 0) {
-            if (_enemyMovment != null) _enemyMovment._navMeshAgent.isStopped = true;
             _currentKnockBackInvencibility = _knockBackInvencibilityTime;
-            rb.isKinematic = false;
-            rb.velocity = (transform.position - PlayerData.Instance.transform.position).normalized * _knockBackAmount;
+            //rb.isKinematic = false;
+            Knockback();
             cancelAttack.Invoke(); //
             _visualScript.StunAnim();
             Invoke(nameof(StopKnockBack), _knockBackDuration);
         }
     }
 
+    private void Knockback() {
+        _kncockbackDirection = (transform.position - PlayerData.Instance.transform.position).normalized;
+        if (_enemyMovment._isFlying) rb.velocity = _kncockbackDirection * _knockBackAmount;
+        else {
+            _enemyMovment._navMeshAgent.isStopped = true;
+            InvokeRepeating(nameof(GroundKncockBackMovment), 0, Time.fixedDeltaTime);
+        }
+    }
+
+    private void GroundKncockBackMovment() {
+        transform.position += _knockBackAmount * Time.fixedDeltaTime * _kncockbackDirection;
+    }
+
     private void StopKnockBack() {
-        if (_enemyMovment != null) _enemyMovment._navMeshAgent.isStopped = false;
         _visualScript.EndStunAnim();
-        rb.isKinematic = true;
-        //rb.velocity = Vector3.zero;
+        if (_enemyMovment != null) {
+            if (_enemyMovment._isFlying) rb.velocity = Vector3.zero;
+            else {
+                CancelInvoke(nameof(GroundKncockBackMovment));
+                _enemyMovment._navMeshAgent.isStopped = false;
+            }
+            _enemyMovment._isMovmentLocked = false;
+        }
     }
 }

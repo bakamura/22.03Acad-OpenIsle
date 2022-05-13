@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class EnemyDamage : MonoBehaviour
 {
-    private EnemyMelee _meleeScript;
+    private EnemyBehaviour _attackScript;
 
     private void Awake() {
-        _meleeScript = GetComponent<EnemyMelee>();
+        _attackScript = GetComponent<EnemyBehaviour>();
     }
 
     private void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.tag == "Player" && !_meleeScript._alreadyDeltDamage) {
-            PlayerData.Instance.TakeDamage(_meleeScript._damage);
-            _meleeScript._alreadyDeltDamage = true;
+        if (collision.gameObject.CompareTag("Player") && !_attackScript._isActionInCooldown) {
+            PlayerData.Instance.TakeDamage(_attackScript._damage);
+            _attackScript._isActionInCooldown = true;
         }
     }
 }

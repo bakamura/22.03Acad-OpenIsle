@@ -21,8 +21,9 @@ public class EnemyAnimAndVFX : MonoBehaviour {
     }
 
     public void AttackAnim(float atkSpeed) {
-        _animator.SetFloat("ATKSPEED", atkSpeed);
-        _animator.SetTrigger("ATTACK");        
+        _animator.SetFloat("ATKSPEED", Mathf.Clamp(atkSpeed, 1, float.MaxValue));
+        bool attacking = atkSpeed >= 1;
+        _animator.SetBool("ATTACK", attacking);        
         //PlaySoundEffect(EnemyAudio.soundTypes.Attack, _animator.GetCurrentAnimatorStateInfo(0).length / 2f);
     }
 
