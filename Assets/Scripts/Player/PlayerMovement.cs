@@ -83,7 +83,7 @@ public class PlayerMovement : MonoBehaviour {
             Vector3 moveDirection = (Quaternion.Euler(0, targetLookAngle, 0) * Vector3.forward).normalized;
             return moveDirection * _movementAcceleration;
         }
-        else return (isGrounded ? -4 : -0.125f) * new Vector3(PlayerData.rb.velocity.x, 0, PlayerData.rb.velocity.z);
+        else return (isGrounded ? -4 : -0.125f) * new Vector3(PlayerData.rb.velocity.x, 0, PlayerData.rb.velocity.z).normalized;
     }
 
     private void StopDash() {

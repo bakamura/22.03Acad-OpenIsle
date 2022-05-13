@@ -17,14 +17,15 @@ public class MainMenu : MonoBehaviour {
     }
 
     private void Start() {
-        UserInterface.ActivateCanvas(mainCanvas, ref mainCanvasAlpha, true);
-        UserInterface.ActivateCanvas(settingsCanvas, ref settingsCanvasAlpha, true);
+        UserInterface.ActivateCanvas(mainCanvas, ref mainCanvasAlpha, false);
+        UserInterface.ActivateCanvas(settingsCanvas, ref settingsCanvasAlpha, false);
         UserInterface.ActivateCanvas(quitCanvas, ref quitCanvasAlpha, true);
     }
 
     private void Update() {
-        if (mainCanvas.alpha == 1f && mainCanvasAlpha > mainCanvas.alpha) mainCanvas.alpha += Time.unscaledDeltaTime / canvasFadeDuration;
-        else if (mainCanvasAlpha == 0f) mainCanvas.alpha -= Time.unscaledDeltaTime / canvasFadeDuration;
+        UserInterface.FadeCanvas(mainCanvas, mainCanvasAlpha, canvasFadeDuration);
+        UserInterface.FadeCanvas(settingsCanvas, settingsCanvasAlpha, canvasFadeDuration);
+        UserInterface.FadeCanvas(quitCanvas,quitCanvasAlpha, canvasFadeDuration);
     }
 
 }
