@@ -41,7 +41,7 @@ public class EnemyData : MonoBehaviour {
         _currentHealth -= damageAmount;
         if (_currentHealth <= 0) Activate(false);
         if (_currentKnockBackInvencibility <= 0) {
-            if (_enemyMovment != null) _enemyMovment._isMovmentLocked = true;
+            if (_enemyMovment != null) _enemyMovment._navMeshAgent.isStopped = true;
             _currentKnockBackInvencibility = _knockBackInvencibilityTime;
             rb.isKinematic = false;
             rb.velocity = (transform.position - PlayerData.Instance.transform.position).normalized * _knockBackAmount;
@@ -52,7 +52,7 @@ public class EnemyData : MonoBehaviour {
     }
 
     private void StopKnockBack() {
-        if (_enemyMovment != null) _enemyMovment._isMovmentLocked = false;
+        if (_enemyMovment != null) _enemyMovment._navMeshAgent.isStopped = false;
         _visualScript.EndStunAnim();
         rb.isKinematic = true;
         //rb.velocity = Vector3.zero;

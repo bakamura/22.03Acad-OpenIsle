@@ -7,13 +7,12 @@ public class EnemyMovment : MonoBehaviour
 {
     [Header("Components")]
     //[SerializeField] private Transform _followPoint;
-    private NavMeshAgent _navMeshAgent;
+    [HideInInspector] public NavMeshAgent _navMeshAgent;
     private EnemyAnimAndVFX _visualScript;
 
     [Header("Info")]
     [SerializeField] private float _detectionRange;
     private bool _isTargetInRange = false;
-    [HideInInspector] public bool _isMovmentLocked = false;
     
 
     private void Awake() {
@@ -23,7 +22,7 @@ public class EnemyMovment : MonoBehaviour
 
     private void Update() {
         PlayerDetection();
-        if (_isTargetInRange && !_isMovmentLocked) {
+        if (_isTargetInRange && !_navMeshAgent.isStopped) {
             _navMeshAgent.destination = PlayerMovement.Instance.transform.position;
             Vector3 _lookAtPlayer = PlayerData.Instance.transform.position - transform.position;
             transform.rotation = Quaternion.Euler(0, Mathf.Atan2(_lookAtPlayer.x, _lookAtPlayer.z) * Mathf.Rad2Deg, 0);

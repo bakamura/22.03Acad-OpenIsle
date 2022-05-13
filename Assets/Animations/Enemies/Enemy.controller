@@ -45,7 +45,7 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0
   m_TransitionOffset: 0
-  m_ExitTime: 0.75
+  m_ExitTime: 0
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -101,7 +101,7 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0
   m_TransitionOffset: 0
-  m_ExitTime: 1
+  m_ExitTime: 0
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -157,7 +157,7 @@ AnimatorController:
     m_Controller: {fileID: 0}
   - m_Name: ATKSPEED
     m_Type: 1
-    m_DefaultFloat: 0
+    m_DefaultFloat: 1
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
@@ -191,13 +191,13 @@ AnimatorState:
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
   m_Mirror: 0
-  m_SpeedParameterActive: 0
+  m_SpeedParameterActive: 1
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 7400000, guid: 444031c5d48902f4186736efd9ce1234, type: 2}
   m_Tag: 
-  m_SpeedParameter: 
+  m_SpeedParameter: ATKSPEED
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
@@ -259,13 +259,13 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 367955414485760126}
-    m_Position: {x: 580, y: 130, z: 0}
+    m_Position: {x: 570, y: 140, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7205554894848943178}
-    m_Position: {x: 100, y: 0, z: 0}
+    m_Position: {x: 70, y: 20, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5589853824357504314}
-    m_Position: {x: 280, y: 130, z: 0}
+    m_Position: {x: 250, y: 140, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: -8083826300983781849}
@@ -273,10 +273,10 @@ AnimatorStateMachine:
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: -110, y: -80, z: 0}
-  m_EntryPosition: {x: -20, y: 130, z: 0}
+  m_EntryPosition: {x: -50, y: 140, z: 0}
   m_ExitPosition: {x: 920, y: 110, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
-  m_DefaultState: {fileID: 367955414485760126}
+  m_DefaultState: {fileID: 5589853824357504314}
 --- !u!1102 &5589853824357504314
 AnimatorState:
   serializedVersion: 6

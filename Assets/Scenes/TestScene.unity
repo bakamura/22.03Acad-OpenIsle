@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748171, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -781,7 +781,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 344324204}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 3, y: 1, z: 2}
@@ -875,7 +875,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 351006675}
-  m_LocalRotation: {x: -0.024976611, y: 0.000000017201012, z: 4.2975712e-10, w: 0.999688}
+  m_LocalRotation: {x: -0.02497659, y: -0.000000017201012, z: -4.2975679e-10, w: 0.999688}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1595,8 +1595,8 @@ GameObject:
   - component: {fileID: 831342565}
   - component: {fileID: 831342564}
   - component: {fileID: 831342561}
-  - component: {fileID: 831342560}
   - component: {fileID: 831342562}
+  - component: {fileID: 831342560}
   - component: {fileID: 831342569}
   - component: {fileID: 831342568}
   - component: {fileID: 831342567}
@@ -1622,8 +1622,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fa2d6f3afc288e4e88d798ab4359419, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _detectionRange: 5
-  _isMovmentLocked: 0
+  _navMeshAgent: {fileID: 0}
+  _detectionRange: 7
 --- !u!195 &831342561
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1786,7 +1786,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxHealth: 100
-  _knockBackAmount: 2
+  _knockBackAmount: 6
   _knockBackDuration: 3
   _knockBackInvencibilityTime: 5
 --- !u!114 &831342569
@@ -1806,9 +1806,9 @@ MonoBehaviour:
   _player:
     serializedVersion: 2
     m_Bits: 8
-  _meleeArea: {x: 1, y: 2, z: 1}
+  _meleeArea: {x: 3, y: 2, z: 2.5}
   _attackSpeed: 1
-  _damage: 0
+  _damage: 1
   _alreadyDeltDamage: 0
 --- !u!82 &831342570
 AudioSource:
@@ -2592,7 +2592,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1367950956}
-  m_LocalRotation: {x: -0.024976611, y: -0.000000017201012, z: -4.2975712e-10, w: 0.999688}
+  m_LocalRotation: {x: -0.02497659, y: 0.000000017201012, z: 4.2975679e-10, w: 0.999688}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3213,7 +3213,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1614955625}
-  m_LocalRotation: {x: 0.02497643, y: -0.00000001720101, z: -4.2975393e-10, w: -0.999688}
+  m_LocalRotation: {x: 0.02497643, y: 0.000000017201012, z: 4.29754e-10, w: -0.999688}
   m_LocalPosition: {x: 0, y: 1.05, z: -2.2399998}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -3784,7 +3784,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1931040144}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 831342566}
