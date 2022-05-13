@@ -59,7 +59,7 @@ public class PlayerTools : MonoBehaviour {
     }
 
     private void Update() {
-        if (PlayerData.Instance.hasSword && _currentActionCoolDown <= 0 && PlayerInputs.swordKeyPressed > 0) {
+        if (PlayerMovement.Instance.isGrounded && PlayerData.Instance.hasSword && _currentActionCoolDown <= 0 && PlayerInputs.swordKeyPressed > 0) {
             PlayerInputs.swordKeyPressed = 0;
             ChangeMesh(_swordMesh, _swordMaterial, _swordActionDuration);
             isAiming = false;
@@ -68,7 +68,7 @@ public class PlayerTools : MonoBehaviour {
             Invoke(nameof(SwordStart), 0.1f);
             Invoke(nameof(SwordEnd), 0.4f);
         }
-        else if (PlayerMovement.Instance.isGrounded && PlayerData.Instance.hasHook && _currentActionCoolDown <= 0 && PlayerInputs.hookKeyPressed > 0 && !AlternateToolHookShot.Instance.active) {
+        else if (PlayerData.Instance.hasHook && _currentActionCoolDown <= 0 && PlayerInputs.hookKeyPressed > 0 && !AlternateToolHookShot.Instance.active) {
             PlayerInputs.hookKeyPressed = 0;
             isAiming = true;
             //ChangeCameraFollow(_toolMeshFilter.transform);
@@ -106,7 +106,7 @@ public class PlayerTools : MonoBehaviour {
         }
         else PlayerInputs.hookKeyReleased = 0;
 
-        _currentActionCoolDown = Mathf.Clamp(_currentActionCoolDown - Time.deltaTime, 0, 100000);
+        _currentActionCoolDown = Mathf.Clamp(_currentActionCoolDown - Time.deltaTime, 0, 30);
 
         if (_hookScript.isHookActive && (PlayerInputs.jumpKeyPressed > 0 || PlayerInputs.hookKeyPressed > 0 || PlayerInputs.dashKeyPressed > 0)) _hookScript.CancelHook();
     }
