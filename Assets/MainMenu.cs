@@ -23,7 +23,7 @@ public class MainMenu : MonoBehaviour {
     }
 
     private void Update() {
-        if (mainCanvas == 1f && mainCanvasAlpha > mainCanvas.alpha) mainCanvas.alpha += Time.unscaledDeltaTime / canvasFadeDuration;
+        if (mainCanvas.alpha == 1f && mainCanvasAlpha > mainCanvas.alpha) mainCanvas.alpha += Time.unscaledDeltaTime / canvasFadeDuration;
         else if (mainCanvasAlpha == 0f) mainCanvas.alpha -= Time.unscaledDeltaTime / canvasFadeDuration;
     }
 
