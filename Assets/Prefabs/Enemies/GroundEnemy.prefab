@@ -140,7 +140,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _navMeshAgent: {fileID: 0}
-  _speed: 3.5
+  _movmentSpeed: 3
+  _rotationSpeed: 5
   _detectionRange: 7
   _isFlying: 0
   _isMovmentLocked: 0
@@ -177,13 +178,11 @@ MonoBehaviour:
   _player:
     serializedVersion: 2
     m_Bits: 8
-  anim: {fileID: 0}
   _damage: 2
   _attackSpeed: 2
   _actionArea: {x: 1, y: 2, z: 2}
   _isAgressive: 0
-  _actionCooldown: 0
-  _currentAttackCooldown: 0
+  _isActionInCooldown: 0
 --- !u!114 &4865877115328566535
 MonoBehaviour:
   m_ObjectHideFlags: 0

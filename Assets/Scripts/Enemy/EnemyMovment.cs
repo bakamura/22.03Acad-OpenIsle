@@ -5,34 +5,34 @@ using UnityEngine.AI;
 
 public class EnemyMovment : MonoBehaviour {
     [Header("Components")]
-    //[SerializeField] private Transform _followPoint;
     [HideInInspector] public NavMeshAgent _navMeshAgent;
     private EnemyAnimAndVFX _visualData;
     private EnemyData _data;
+    private EnemyBehaviour _behaviourData;
 
     [Header("Info")]
-    [SerializeField] private float _speed;
+    [SerializeField] private float _movmentSpeed;
+    [SerializeField] private float _rotationSpeed;
     [SerializeField] private float _detectionRange;
     public bool _isFlying;
     [HideInInspector] public bool _isMovmentLocked;
     private bool _isTargetInRange = false;
-    private Vector3 _lookDirection;
+    public Vector3 pointAroundPlayer = Vector3.zero;
 
     private void Awake() {
         _navMeshAgent = GetComponent<NavMeshAgent>();
         _visualData = GetComponent<EnemyAnimAndVFX>();
         _data = GetComponent<EnemyData>();
-        if (_navMeshAgent != null) _navMeshAgent.speed = _speed;
-        //if (_isFlying) {
-        //    _navMeshAgent.enabled = false;
-        //    _data.rb.useGravity = false;
-        //}
+        _behaviourData = GetComponent<EnemyBehaviour>();
+        if (_navMeshAgent != null) _navMeshAgent.speed = _movmentSpeed;       
+        if (_behaviourData != null && _isFlying) pointAroundPlayer = new Vector3(Random.Range(-_behaviourData._actionArea.x / 2.1f, _behaviourData._actionArea.x / 2.1f), 
+            Random.Range(_behaviourData._actionArea.y / 4f, _behaviourData._actionArea.y / 2.1f), 
+            Random.Range(-_behaviourData._actionArea.z / 2.1f, _behaviourData._actionArea.z / 2.1f));
     }
 
     private void Update() {
         PlayerDetection();
         if (!_isFlying) GroundMovment();
-        //if (Input.GetKeyDown(KeyCode.Space)) _navMeshAgent.destination = _followPoint.position;
     }
 
     private void FixedUpdate() {
@@ -48,17 +48,17 @@ public class EnemyMovment : MonoBehaviour {
     }
 
     private void FlyingMovment() {
-        if (_isTargetInRange && !_isMovmentLocked) _data.rb.velocity = _lookDirection.normalized * _speed;
-        else _data.rb.velocity = Vector3.zero;
+        if (_isTargetInRange && !_isMovmentLocked) {
+            Vector3 _movmentDirection = ((PlayerData.Instance.transform.position + pointAroundPlayer) - transform.position).normalized;
+            transform.position += _movmentSpeed * Time.deltaTime * _movmentDirection;
+            //_data.rb.velocity = _movmentDirection.normalized * _movmentSpeed;
+        }
+        //else _data.rb.velocity = Vector3.zero;
     }
 
     private void PlayerDetection() {
         _isTargetInRange = Vector3.Distance(PlayerMovement.Instance.transform.position, transform.position) <= _detectionRange;
-        if (_isTargetInRange) {
-            _lookDirection = PlayerData.Instance.transform.position - transform.position;
-            if (_isFlying) Quaternion.Euler(Mathf.Atan2(_lookDirection.z, _lookDirection.y) * Mathf.Rad2Deg, Mathf.Atan2(_lookDirection.x, _lookDirection.z) * Mathf.Rad2Deg, Mathf.Atan2(_lookDirection.x, _lookDirection.y) * Mathf.Rad2Deg);
-            else transform.rotation = Quaternion.Euler(0, Mathf.Atan2(_lookDirection.x, _lookDirection.z) * Mathf.Rad2Deg, 0);
-        }
+        if (_isTargetInRange) transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(PlayerData.Instance.transform.position - transform.position), Time.deltaTime * _rotationSpeed);
         float mov = _isTargetInRange ? 1f : 0f;
         _visualData.MovmentAnim(mov);
     }
@@ -66,5 +66,9 @@ public class EnemyMovment : MonoBehaviour {
     private void OnDrawGizmosSelected() {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, _detectionRange);
+        if (UnityEditor.EditorApplication.isPlaying) {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawCube(PlayerMovement.Instance.transform.position + pointAroundPlayer, new Vector3(.1f, .1f, .1f));
+        }
     }
 }
