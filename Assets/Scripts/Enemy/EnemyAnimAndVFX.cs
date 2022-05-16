@@ -52,6 +52,7 @@ public class EnemyAnimAndVFX : MonoBehaviour {
     }
     private void AudioSetup(EnemyAudio.soundTypes sound) {
         //_audio.clip = _audioDictionary[(int)sound]._audioData.audioClips[Random.Range(0, _audioDictionary[(int)sound]._audioData.audioClips.Length)];
+        //_audio.outputAudioMixerGroup = _audioDictionary[(int)sound]._audioData.audioMixerGroup;
         //_audio.volume = _audioDictionary[(int)sound]._audioData.volume;
         //_audio.loop = _audioDictionary[(int)sound]._audioData.canLoop;
         _soundCurrentCooldowns[(int)sound] = _audioDictionary[(int)sound]._audioData.soundInterval;
