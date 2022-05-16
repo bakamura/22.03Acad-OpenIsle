@@ -7,17 +7,27 @@ public class EnemyBehaviour : MonoBehaviour {
     [SerializeField] private Collider _hitDetection;
     [SerializeField] private Transform _attackPoint;
     [SerializeField] private LayerMask _player;
+
     private EnemyData _data;
     private EnemyAnimAndVFX _visualScript = null;
     private EnemyMovment _movmentScript = null;
+    public enum EnemyTypes {
+        fighter,
+        shoot,
+        neutral,
+    }
 
     [Header("Status")]
+    public EnemyTypes enemyType;
     public float _damage;
     [SerializeField] private float _attackSpeed;
     public Vector3 _actionArea;
-    [SerializeField] private bool _isAgressive;
+    public bool _canWander;
+    [Tooltip("if player is inside the action area, this will follow player")] public bool _willGoTowardsPlayer;
+    public bool isAgressive;
+    [SerializeField] private bool _isKamikaze;
 
-    private float _actionRange;
+    [HideInInspector] public float actionRange { get; private set; }
     [HideInInspector] public bool isActionInCooldown;
     private bool _isTargetInRange;
     [HideInInspector] public Vector3 pointAroundPlayer { get; private set; }
@@ -27,31 +37,31 @@ public class EnemyBehaviour : MonoBehaviour {
         _visualScript = GetComponent<EnemyAnimAndVFX>();
         _movmentScript = GetComponent<EnemyMovment>();
         _data.cancelAttack += ActionInterupt;
+        isAgressive = enemyType != EnemyTypes.neutral;
         //_data.cancelAttack += DisableDetection; if with collider
     }
 
-    private void Start() {      
-        if (_movmentScript._isFlying) pointAroundPlayer = new Vector3(Random.Range(-_actionArea.x / 2.1f, _actionArea.x / 2.1f), Random.Range(_actionArea.y / 4f, _actionArea.y / 2.1f), Random.Range(-_actionArea.z / 2.1f, _actionArea.z / 2.1f));
-        _actionRange = Vector3.Distance(transform.position, _attackPoint.position) + _actionArea.magnitude / 2.5f;
-        if (_movmentScript._navMeshAgent != null) _movmentScript._navMeshAgent.stoppingDistance = _actionRange;
+    private void Start() {
+        if (_movmentScript._isFlying) pointAroundPlayer = new Vector3(Random.Range(-_actionArea.x / 2.1f, _actionArea.x / 2.1f), Random.Range(_actionArea.y / 2.5f, _actionArea.y / 2.1f), Random.Range(-_actionArea.z / 2.1f, _actionArea.z / 2.1f));
+        actionRange = Vector3.Distance(transform.position, _attackPoint.position) + _actionArea.magnitude / 2.5f;
+        //if (_movmentScript._navMeshAgent != null) _movmentScript._navMeshAgent.stoppingDistance = _canWander ? _movmentScript.minDistanceFromWanderingPoint : actionRange;
     }
 
     private void Update() {
-        _isTargetInRange = Vector3.Distance(transform.position, PlayerMovement.Instance.transform.position) <= _actionRange;
-        if (_isTargetInRange) {
-            if (_isAgressive) _visualScript.AttackAnim(_attackSpeed);
+        if (_isTargetInRange = Vector3.Distance(transform.position, PlayerMovement.Instance.transform.position) <= actionRange && _willGoTowardsPlayer) {
+            if (isAgressive) _visualScript.AttackAnim(_attackSpeed);
             // movment lock and stop
             _movmentScript._isMovmentLocked = true;
             if (!_movmentScript._isFlying) _movmentScript._navMeshAgent.isStopped = true;
         }
         else {
-            if (!_isAgressive) EndActionSetup();
+            if (!_willGoTowardsPlayer) EndActionSetup();
         }
     }
 
     private void FixedUpdate() {
         // for melee attack
-        if (Physics.CheckBox(_attackPoint.position, _actionArea / 2f, Quaternion.identity, _player) && !isActionInCooldown && _isAgressive) {
+        if (Physics.CheckBox(_attackPoint.position, _actionArea / 2f, Quaternion.identity, _player) && !isActionInCooldown && _willGoTowardsPlayer && !_isKamikaze) {
             PlayerData.Instance.TakeDamage(_damage);
             isActionInCooldown = true;
         }
@@ -62,17 +72,29 @@ public class EnemyBehaviour : MonoBehaviour {
         //_hitDetection.enabled = true;
     }
 
-    public void EndActionSetup() { // anim event
-        if (_isAgressive) _visualScript.AttackAnim(0);
-        if (!_isTargetInRange) _movmentScript._isMovmentLocked = false;
-        if (!_movmentScript._isFlying && !_isTargetInRange) _movmentScript._navMeshAgent.isStopped = false;
-        isActionInCooldown = true;
+    public void EndActionSetup() { // anim event        
+        if (_willGoTowardsPlayer) _visualScript.AttackAnim(0);
         //_hitDetection.enabled = false;
+
+        if (_isKamikaze) {
+            if (Physics.CheckSphere(_attackPoint.position, _actionArea.magnitude, _player)) PlayerData.Instance.TakeDamage(_damage);
+            _movmentScript._isMovmentLocked = false;
+            if (!_movmentScript._isFlying) _movmentScript._navMeshAgent.isStopped = false;
+            isActionInCooldown = false;
+            _data.Activate(false);
+        }
+        else {
+            if (!_isTargetInRange) {
+                _movmentScript._isMovmentLocked = false;
+                if (!_movmentScript._isFlying) _movmentScript._navMeshAgent.isStopped = false;
+            }
+            isActionInCooldown = true;
+        }
     }
 
     private void ActionInterupt() {
         isActionInCooldown = false;
-        if (_isAgressive) _visualScript.AttackAnim(0);
+        if (_willGoTowardsPlayer) _visualScript.AttackAnim(0);
     }
 
 #if UNITY_EDITOR

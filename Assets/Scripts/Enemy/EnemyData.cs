@@ -9,6 +9,7 @@ public class EnemyData : MonoBehaviour {
 
     private EnemyMovment _enemyMovment = null;
     private EnemyAnimAndVFX _visualScript;
+    private EnemyBehaviour _enemyBehaviour;
 
     [Header("Info")]
 
@@ -24,6 +25,8 @@ public class EnemyData : MonoBehaviour {
     private void Awake() {
         _enemyMovment = GetComponent<EnemyMovment>();
         _visualScript = GetComponent<EnemyAnimAndVFX>();
+        _enemyBehaviour = GetComponent<EnemyBehaviour>();
+        _currentHealth = _maxHealth;
     }
 
     private void Update() {
@@ -31,14 +34,20 @@ public class EnemyData : MonoBehaviour {
     }
 
     public void Activate(bool isActivating) {
-        // rb.simulated = isActivating;
-
         _currentHealth = _maxHealth;
+        _currentKnockBackInvencibility = 0;
+        cancelAttack.Invoke();
+        if (_enemyBehaviour.enemyType == EnemyBehaviour.EnemyTypes.neutral) _enemyBehaviour.isAgressive = false;
+        gameObject.SetActive(isActivating);
     }
 
     public void TakeDamage(float damageAmount) {
         _currentHealth -= damageAmount;
-        if (_currentHealth <= 0) Activate(false);
+        if (_currentHealth <= 0) {
+            Activate(false);
+            return;
+        }
+        if (_enemyBehaviour.enemyType == EnemyBehaviour.EnemyTypes.neutral) _enemyBehaviour.isAgressive = true;
         if (_currentKnockBackInvencibility <= 0) {
             _currentKnockBackInvencibility = _knockBackInvencibilityTime;
             cancelAttack.Invoke(); //
@@ -62,7 +71,6 @@ public class EnemyData : MonoBehaviour {
     private void StopKnockBack() {
         _visualScript.EndStunAnim();
         if (_enemyMovment != null) {
-
                 CancelInvoke(nameof(GroundKncockBackMovment));
                 if (!_enemyMovment._isFlying) _enemyMovment._navMeshAgent.isStopped = false;
             _enemyMovment._isMovmentLocked = false;

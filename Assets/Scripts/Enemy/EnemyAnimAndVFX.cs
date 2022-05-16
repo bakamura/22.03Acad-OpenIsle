@@ -36,9 +36,9 @@ public class EnemyAnimAndVFX : MonoBehaviour {
         _animator.SetTrigger("ENDSTUN");
     }
 
-    public void MovmentAnim(float isTargetInRange) {
-        _animator.SetFloat("TARGET", isTargetInRange);
-        if (isTargetInRange > 0) PlaySoundEffect(EnemyAudio.soundTypes.Walk, 0f);
+    public void MovmentAnim(float isMoving) {
+        _animator.SetFloat("TARGET", isMoving);
+        if (isMoving > 0) PlaySoundEffect(EnemyAudio.soundTypes.Walk, 0f);
     }
 
     public void PlaySoundEffect(EnemyAudio.soundTypes sound, float soundDelay) {

@@ -102,10 +102,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fa2d6f3afc288e4e88d798ab4359419, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  poin: {fileID: 0}
   _navMeshAgent: {fileID: 0}
   _movmentSpeed: 3
   _rotationSpeed: 5
   _detectionRange: 7
+  _randomNavegationArea: 5
+  minDistanceFromWanderingPoint: 0.5
+  randomNavPointCooldown: 2
   _isFlying: 1
   _isMovmentLocked: 0
 --- !u!114 &225186512227304886
@@ -141,10 +148,14 @@ MonoBehaviour:
   _player:
     serializedVersion: 2
     m_Bits: 8
+  enemyType: 1
   _damage: 2
   _attackSpeed: 2
   _actionArea: {x: 4, y: 4, z: 4}
-  _isAgressive: 0
+  _canWander: 0
+  _willGoTowardsPlayer: 0
+  isAgressive: 0
+  _isKamikaze: 0
   isActionInCooldown: 0
 --- !u!114 &225186512227304893
 MonoBehaviour:
@@ -162,6 +173,7 @@ MonoBehaviour:
   - soundType: 3
     _audioData:
       audioClips: []
+      audioMixerGroup: {fileID: 0}
       volume: 0
       canLoop: 0
       pitch: 1.17
@@ -171,6 +183,7 @@ MonoBehaviour:
   - soundType: 2
     _audioData:
       audioClips: []
+      audioMixerGroup: {fileID: 0}
       volume: 0
       canLoop: 0
       pitch: -0.07

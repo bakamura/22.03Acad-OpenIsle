@@ -139,10 +139,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fa2d6f3afc288e4e88d798ab4359419, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  poin: {fileID: 0}
   _navMeshAgent: {fileID: 0}
   _movmentSpeed: 3
   _rotationSpeed: 5
   _detectionRange: 7
+  _randomNavegationArea: 5
+  minDistanceFromWanderingPoint: 0.5
+  randomNavPointCooldown: 2
   _isFlying: 0
   _isMovmentLocked: 0
 --- !u!114 &4865877115328566540
@@ -178,11 +185,15 @@ MonoBehaviour:
   _player:
     serializedVersion: 2
     m_Bits: 8
+  enemyType: 0
   _damage: 2
   _attackSpeed: 2
   _actionArea: {x: 1, y: 2, z: 2}
-  _isAgressive: 0
-  _isActionInCooldown: 0
+  _canWander: 0
+  _willGoTowardsPlayer: 0
+  isAgressive: 0
+  _isKamikaze: 0
+  isActionInCooldown: 0
 --- !u!114 &4865877115328566535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -199,18 +210,22 @@ MonoBehaviour:
   - soundType: 3
     _audioData:
       audioClips: []
+      audioMixerGroup: {fileID: 0}
       volume: 0
       canLoop: 0
-      randomPitch: 0
       pitch: 1.17
+      randomPitch: 0
+      randomPicthRange: 0
       soundInterval: 0
   - soundType: 2
     _audioData:
       audioClips: []
+      audioMixerGroup: {fileID: 0}
       volume: 0
       canLoop: 0
-      randomPitch: 1
       pitch: -0.07
+      randomPitch: 1
+      randomPicthRange: 0
       soundInterval: 1
 --- !u!95 &4865877115328566531
 Animator:
