@@ -7,7 +7,6 @@ public class EnemyData : MonoBehaviour {
 
     [Header("Components")]
 
-    [System.NonSerialized] public Rigidbody rb;
     private EnemyMovment _enemyMovment = null;
     private EnemyAnimAndVFX _visualScript;
 
@@ -23,7 +22,6 @@ public class EnemyData : MonoBehaviour {
     private Vector3 _kncockbackDirection;
 
     private void Awake() {
-        rb = GetComponent<Rigidbody>();
         _enemyMovment = GetComponent<EnemyMovment>();
         _visualScript = GetComponent<EnemyAnimAndVFX>();
     }
@@ -52,12 +50,9 @@ public class EnemyData : MonoBehaviour {
     private void Knockback() {
         _visualScript.StunAnim();
         _kncockbackDirection = (transform.position - PlayerData.Instance.transform.position).normalized;
-        //if (_enemyMovment._isFlying) rb.velocity = _kncockbackDirection * _knockBackAmount;
-        //else {
-        if (!_enemyMovment._isFlying) _enemyMovment._navMeshAgent.isStopped = true;
-        _enemyMovment._isMovmentLocked = true;
-        InvokeRepeating(nameof(GroundKncockBackMovment), 0, Time.fixedDeltaTime);
-        //}
+            if (!_enemyMovment._isFlying) _enemyMovment._navMeshAgent.isStopped = true;
+            _enemyMovment._isMovmentLocked = true;
+            InvokeRepeating(nameof(GroundKncockBackMovment), 0, Time.fixedDeltaTime);
     }
 
     private void GroundKncockBackMovment() {
@@ -67,11 +62,9 @@ public class EnemyData : MonoBehaviour {
     private void StopKnockBack() {
         _visualScript.EndStunAnim();
         if (_enemyMovment != null) {
-            //if (_enemyMovment._isFlying) rb.velocity = Vector3.zero;
-            //else {
-            CancelInvoke(nameof(GroundKncockBackMovment));
-            if (!_enemyMovment._isFlying) _enemyMovment._navMeshAgent.isStopped = false;
-            //}
+
+                CancelInvoke(nameof(GroundKncockBackMovment));
+                if (!_enemyMovment._isFlying) _enemyMovment._navMeshAgent.isStopped = false;
             _enemyMovment._isMovmentLocked = false;
         }
     }

@@ -55,7 +55,7 @@ public class EnemyAnimAndVFX : MonoBehaviour {
         //_audio.volume = _audioDictionary[(int)sound]._audioData.volume;
         //_audio.loop = _audioDictionary[(int)sound]._audioData.canLoop;
         _soundCurrentCooldowns[(int)sound] = _audioDictionary[(int)sound]._audioData.soundInterval;
-        //if (_audioDictionary[(int)sound]._audioData.randomPitch) _audio.pitch = Random.Range(-3f, 3f);
+        //if (_audioDictionary[(int)sound]._audioData.randomPitch) _audio.pitch = Random.Range(-_audioDictionary[(int)sound]._audioData.randomPicthRange, _audioDictionary[(int)sound]._audioData.randomPicthRange);
         //else _audio.pitch = _audioDictionary[(int)sound]._audioData.pitch;
     }
 

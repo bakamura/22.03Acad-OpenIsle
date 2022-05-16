@@ -7,7 +7,6 @@ public class EnemyMovment : MonoBehaviour {
     [Header("Components")]
     [HideInInspector] public NavMeshAgent _navMeshAgent;
     private EnemyAnimAndVFX _visualData;
-    private EnemyData _data;
     private EnemyBehaviour _behaviourData;
 
     [Header("Info")]
@@ -17,17 +16,12 @@ public class EnemyMovment : MonoBehaviour {
     public bool _isFlying;
     [HideInInspector] public bool _isMovmentLocked;
     private bool _isTargetInRange = false;
-    public Vector3 pointAroundPlayer = Vector3.zero;
 
     private void Awake() {
         _navMeshAgent = GetComponent<NavMeshAgent>();
         _visualData = GetComponent<EnemyAnimAndVFX>();
-        _data = GetComponent<EnemyData>();
         _behaviourData = GetComponent<EnemyBehaviour>();
         if (_navMeshAgent != null) _navMeshAgent.speed = _movmentSpeed;       
-        if (_behaviourData != null && _isFlying) pointAroundPlayer = new Vector3(Random.Range(-_behaviourData._actionArea.x / 2.1f, _behaviourData._actionArea.x / 2.1f), 
-            Random.Range(_behaviourData._actionArea.y / 4f, _behaviourData._actionArea.y / 2.1f), 
-            Random.Range(-_behaviourData._actionArea.z / 2.1f, _behaviourData._actionArea.z / 2.1f));
     }
 
     private void Update() {
@@ -49,11 +43,9 @@ public class EnemyMovment : MonoBehaviour {
 
     private void FlyingMovment() {
         if (_isTargetInRange && !_isMovmentLocked) {
-            Vector3 _movmentDirection = ((PlayerData.Instance.transform.position + pointAroundPlayer) - transform.position).normalized;
+            Vector3 _movmentDirection = ((PlayerData.Instance.transform.position + _behaviourData.pointAroundPlayer) - transform.position).normalized;
             transform.position += _movmentSpeed * Time.deltaTime * _movmentDirection;
-            //_data.rb.velocity = _movmentDirection.normalized * _movmentSpeed;
         }
-        //else _data.rb.velocity = Vector3.zero;
     }
 
     private void PlayerDetection() {
@@ -65,10 +57,6 @@ public class EnemyMovment : MonoBehaviour {
 
     private void OnDrawGizmosSelected() {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, _detectionRange);
-        if (UnityEditor.EditorApplication.isPlaying) {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawCube(PlayerMovement.Instance.transform.position + pointAroundPlayer, new Vector3(.1f, .1f, .1f));
-        }
+        Gizmos.DrawWireSphere(transform.position, _detectionRange);        
     }
 }
