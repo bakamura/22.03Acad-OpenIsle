@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class EnemyMovment : MonoBehaviour {
     [Header("Components")]
-    [SerializeField] private LayerMask _obstacleLayer;
+    //[SerializeField] private LayerMask _obstacleLayer;
     [HideInInspector] public NavMeshAgent _navMeshAgent;
     private EnemyAnimAndVFX _visualData;
     private EnemyBehaviour _behaviourData;
@@ -19,8 +19,7 @@ public class EnemyMovment : MonoBehaviour {
     [SerializeField, Tooltip("the interval bettwen moving to a new point")] private float randomNavPointCooldown;
     public bool _isFlying;
 
-    /*[HideInInspector]*/
-    public bool _isMovmentLocked;
+    [HideInInspector] public bool _isMovmentLocked;
     private Vector3 _currentTarget;
     private bool _isWandering;
     private bool _isFollowingPlayer;
@@ -33,9 +32,10 @@ public class EnemyMovment : MonoBehaviour {
         _behaviourData = GetComponent<EnemyBehaviour>();
         _startPoint = transform.position;
         _currentTarget = transform.position;
-        if (_navMeshAgent != null) {
+        if (_navMeshAgent) {
             _navMeshAgent.speed = _movmentSpeed;
             _navMeshAgent.stoppingDistance = minDistanceFromWanderingPoint;
+            _navMeshAgent.angularSpeed *= _rotationSpeed;
         }
     }
 
@@ -51,7 +51,6 @@ public class EnemyMovment : MonoBehaviour {
         if (!_isMovmentLocked && _currentTarget != Vector3.zero) {
             _navMeshAgent.isStopped = false;
             _navMeshAgent.destination = _currentTarget;
-            Debug.Log("moving");
         }
         else _navMeshAgent.isStopped = true;
     }
@@ -60,7 +59,7 @@ public class EnemyMovment : MonoBehaviour {
         if (!_isMovmentLocked && _currentTarget != Vector3.zero) {
             Vector3 _movmentDirection = _isFollowingPlayer ? ((_currentTarget + _behaviourData.pointAroundPlayer) - transform.position).normalized : (_currentTarget - transform.position).normalized;
             transform.position += _movmentSpeed * Time.deltaTime * _movmentDirection;
-            //Debug.Log("moving");
+            SetRotation(_currentTarget);
         }
     }
 
@@ -78,10 +77,9 @@ public class EnemyMovment : MonoBehaviour {
                     _randomPoinCoroutine = null;
                     _isMovmentLocked = false;
                 }
-                _navMeshAgent.stoppingDistance = _behaviourData.actionRange;
+                if (_navMeshAgent) _navMeshAgent.stoppingDistance = _behaviourData.actionArea;
                 _isFollowingPlayer = true;
                 _isWandering = false;
-                //_canStartWandering = false;
                 _currentTarget = PlayerMovement.Instance.transform.position;
             }
             else if (_behaviourData._canWander) {
@@ -99,16 +97,12 @@ public class EnemyMovment : MonoBehaviour {
             distanceFromTarget = Vector3.Distance(_currentTarget, transform.position);
             CheckForNewRandomPoint(distanceFromTarget);
         }
-        if (_currentTarget != Vector3.zero) SetRotation(_currentTarget);
     }
 
     private void CheckForNewRandomPoint(float distanceFromTarget) {
         if (_randomPoinCoroutine == null) {
-            _navMeshAgent.stoppingDistance = minDistanceFromWanderingPoint;
-            if (distanceFromTarget <= minDistanceFromWanderingPoint) {
-                _isWandering = false;
-                Debug.Log("next point");
-            }
+            if (_navMeshAgent) _navMeshAgent.stoppingDistance = minDistanceFromWanderingPoint;
+            if (distanceFromTarget <= minDistanceFromWanderingPoint) _isWandering = false;            
             if (!_isWandering) {
                 _isWandering = true;
                 _currentTarget = Vector3.zero;

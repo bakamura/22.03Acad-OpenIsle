@@ -15,7 +15,7 @@ public class EnemyTurret : MonoBehaviour {
     [SerializeField] private Vector3 _bulletSpawnPoint;
     [SerializeField] private GameObject _bulletPrefab;
     [SerializeField] private int _bulletAmount;
-    private BulletEnemyTurret[] _bulletInstances; // Object pooling
+    private BulletEnemy[] _bulletInstances; // Object pooling
 
     private void Awake() {
         _dataScript = GetComponent<EnemyData>();
@@ -23,8 +23,8 @@ public class EnemyTurret : MonoBehaviour {
 
     private void Start() {
         Transform bulletParent = new GameObject("EnemyTurretBullets").transform;
-        _bulletInstances = new BulletEnemyTurret[_bulletAmount];
-        for (int i = 0; i < _bulletAmount; i++) _bulletInstances[i] = Instantiate(_bulletPrefab, transform.position + _bulletSpawnPoint, Quaternion.identity, bulletParent).GetComponent<BulletEnemyTurret>();
+        _bulletInstances = new BulletEnemy[_bulletAmount];
+        for (int i = 0; i < _bulletAmount; i++) _bulletInstances[i] = Instantiate(_bulletPrefab, transform.position + _bulletSpawnPoint, Quaternion.identity, bulletParent).GetComponent<BulletEnemy>();
 
         _dataScript.cancelAttack += CancelAttack; //
     }
