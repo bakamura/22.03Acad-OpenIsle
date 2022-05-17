@@ -48,7 +48,7 @@ public class EnemyBehaviour : MonoBehaviour {
     }
 
     private void Start() {
-        if (_movmentScript._isFlying) pointAroundPlayer = new Vector3(Random.Range(-actionArea * .9f, actionArea * .9f), Random.Range(actionArea * .9f, actionArea * .6f), Random.Range(-actionArea * .9f, actionArea * .9f));
+        if (_movmentScript._isFlying) pointAroundPlayer = new Vector3(Random.Range(-actionArea * .5f, actionArea * .5f), Random.Range(actionArea * .5f, actionArea * .7f), Random.Range(-actionArea * .5f, actionArea * .5f));
     }
 
     private void Update() {
@@ -64,11 +64,16 @@ public class EnemyBehaviour : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        // for melee attack
-        if (Physics.CheckSphere(_attackPoint.position, actionArea, _player) && !isActionInCooldown && _willGoTowardsPlayer && !_isKamikaze) {
+        // action logic
+        //if (!isActionInCooldown && _willGoTowardsPlayer && !_isKamikaze) {
+        //    if (enemyType == EnemyTypes.shoot) Shoot();            
+        //    else {
+        if (Physics.CheckSphere(_attackPoint.position, actionArea, _player) && !isActionInCooldown && _willGoTowardsPlayer && !_isKamikaze && enemyType != EnemyTypes.shoot) {
             PlayerData.Instance.TakeDamage(_damage);
             isActionInCooldown = true;
         }
+        //}
+        //}
     }
 
     public void StartActionSetup() { // anim event
@@ -86,7 +91,10 @@ public class EnemyBehaviour : MonoBehaviour {
                 isActionInCooldown = false;
                 _data.Activate(false);
             }
-            else if (enemyType == EnemyTypes.shoot) Shoot();
+            else if (enemyType == EnemyTypes.shoot) {
+                Shoot();
+                //isActionInCooldown = false;
+            }
         }
         //_hitDetection.enabled = false;
         if (!_isTargetInRange) {
@@ -100,12 +108,12 @@ public class EnemyBehaviour : MonoBehaviour {
     private void Shoot() {
         if (_bullets.Count < _bulletAmount) {
             GameObject bullet = Instantiate(_bulletPrefab, transform.position, Quaternion.identity, null);
-            bullet.GetComponent<BulletEnemy>().Activate(true, _bulletStartPoint.position, PlayerData.Instance.transform, _bulletSize, _bulletSpeed, _bulletMaxHeighOffset);
+            bullet.GetComponent<BulletEnemy>().Activate(true, _bulletStartPoint.position, PlayerData.Instance.transform, _bulletSize, _bulletSpeed, _bulletMaxHeighOffset, _damage);
             _bullets.Add(bullet.GetComponent<BulletEnemy>());
         }
         else {
-            foreach(BulletEnemy bullet in _bullets) {
-                if (!bullet.isActiveAndEnabled) bullet.Activate(true, _bulletStartPoint.position, PlayerData.Instance.transform, _bulletSize, _bulletSpeed, _bulletMaxHeighOffset);
+            foreach (BulletEnemy bullet in _bullets) {
+                if (!bullet.isActiveAndEnabled) bullet.Activate(true, _bulletStartPoint.position, PlayerData.Instance.transform, _bulletSize, _bulletSpeed, _bulletMaxHeighOffset, _damage);
                 break;
             }
         }
