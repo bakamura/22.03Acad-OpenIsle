@@ -53,14 +53,14 @@ public class UserInterface : MonoBehaviour {
         // Input
         if (Input.GetKeyDown(pauseKey)) {
             if (ingameCanvas.interactable) {
-                ActivateCanvas(ingameCanvas, ref ingameCanvasAlpha, false, true);
-                ActivateCanvas(pauseCanvas, ref pauseCanvasAlpha, true);
+                ingameCanvasAlpha = ActivateCanvas(ingameCanvas, false, true);
+                pauseCanvasAlpha = ActivateCanvas(pauseCanvas, true);
                 Time.timeScale = 0;
                 isGamePaused = true;
             }
             else {
-                ActivateCanvas(ingameCanvas, ref ingameCanvasAlpha, true, true);
-                ActivateCanvas(pauseCanvas, ref pauseCanvasAlpha, false);
+                ingameCanvasAlpha = ActivateCanvas(ingameCanvas, true, true);
+                pauseCanvasAlpha = ActivateCanvas(pauseCanvas, false);
                 Invoke(nameof(SetTimeScale), canvasFadeDuration);
             }
         }
@@ -79,13 +79,13 @@ public class UserInterface : MonoBehaviour {
         healthBar.fillAmount = currentHealth / PlayerData.Instance.maxHealth;
     }
 
-    public static void ActivateCanvas(CanvasGroup canvas, ref float alpha, bool active, bool onlyVisual = false) {
-        alpha = active ? 1f : 0f;
+    public static float ActivateCanvas(CanvasGroup canvas, bool active, bool onlyVisual = false) {
         if (onlyVisual) canvas.alpha = active ? 1f : 0f;
         else {
             canvas.interactable = active;
             canvas.blocksRaycasts = active;
         }
+        return active ? 1f : 0f;
     }
 
     public static void FadeCanvas(CanvasGroup canvas, float targetAlpha, float fadeDuration) {
