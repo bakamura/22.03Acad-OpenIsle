@@ -35,7 +35,7 @@ public class UserInterface : MonoBehaviour {
         if (Instance == null) Instance = this;
         else if (Instance != this) Destroy(gameObject);
 
-        SaveData save = SaveSystem.LoadProgress();
+        SaveData save = SaveSystem.LoadProgress(GameManager.currentSaveFile);
         if (save != null) {
             swordBtnImage.enabled = save.hasSword;
             hookBtnImage.enabled = save.hasHook;
@@ -47,7 +47,7 @@ public class UserInterface : MonoBehaviour {
         // Debug Save
         if (saveTheData) {
             saveTheData = false;
-            SaveSystem.SaveProgress();
+            SaveSystem.SaveProgress(GameManager.currentSaveFile);
         }
 
         // Input

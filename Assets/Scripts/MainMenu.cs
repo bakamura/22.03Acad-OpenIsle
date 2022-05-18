@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour {
 
@@ -12,10 +13,6 @@ public class MainMenu : MonoBehaviour {
     [SerializeField] private CanvasInfo settings;
     [SerializeField] private CanvasInfo quit;
     private int currentMenu = 0;
-
-    private void Awake() {
-
-    }
 
     private void Start() {
         MenuBtn(0);
@@ -52,6 +49,11 @@ public class MainMenu : MonoBehaviour {
                 quit.alpha = UserInterface.ActivateCanvas(quit.canvas, true);
                 break;
         }
+    }
+
+    public void PlaySaveBtn(int saveFileID) {
+        GameManager.currentSaveFile = saveFileID;
+        SceneManager.LoadScene(1);
     }
 
     public void QuitGameBtn() {
