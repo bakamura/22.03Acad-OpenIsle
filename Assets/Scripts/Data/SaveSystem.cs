@@ -33,8 +33,8 @@ public static class SaveSystem {
         }
     }
 
-    public static void EraseProgress() {
-        string path = Application.persistentDataPath + "/progress.data";
+    public static void EraseProgress(int saveFile) {
+        string path = Application.persistentDataPath + "/progress" + saveFile.ToString() + ".data";
         if (File.Exists(path)) File.Delete(path);
         else Debug.Log("Couldn't find anything in" + path);
     }
