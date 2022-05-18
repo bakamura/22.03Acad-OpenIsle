@@ -10,6 +10,7 @@ public class UserInterface : MonoBehaviour {
     [Header("Debug SaveSystem")]
 
     [SerializeField] private bool saveTheData = false;
+    [SerializeField] private bool eraseTheData = false;
 
     [Header("Info")]
 
@@ -48,6 +49,10 @@ public class UserInterface : MonoBehaviour {
         if (saveTheData) {
             saveTheData = false;
             SaveSystem.SaveProgress(GameManager.currentSaveFile);
+        }
+        if (eraseTheData) {
+            eraseTheData = false;
+            SaveSystem.EraseProgress(GameManager.currentSaveFile);
         }
 
         // Input
