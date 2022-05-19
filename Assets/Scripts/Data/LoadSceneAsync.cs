@@ -22,7 +22,7 @@ public class LoadSceneAsync : MonoBehaviour {
     void Update() {
         float distance = Vector3.Distance(transform.position, PlayerData.Instance.transform.position);
         if (distance < distanceCheck && _asyncOperation == null && !_isSceneLoaded) _asyncOperation = SceneManager.LoadSceneAsync(SceneToLoad, LoadSceneMode.Additive);        
-        else if (distance > distanceCheck && _asyncOperation != null && _isSceneLoaded) {
+        else if (distance > distanceCheck && _isSceneLoaded) {
             SceneManager.UnloadSceneAsync(SceneToLoad);
             _isSceneLoaded = false;
         }
@@ -36,5 +36,10 @@ public class LoadSceneAsync : MonoBehaviour {
                 _asyncOperation = null;
             }
         }
+    }
+
+    private void OnDrawGizmosSelected() {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, distanceCheck);
     }
 }
