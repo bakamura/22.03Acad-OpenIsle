@@ -1,8 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
-    <ui:Label text="Components" display-tooltip-when-elided="true" name="HeaderComponents" style="opacity: 1; background-color: rgba(0, 0, 0, 0); -unity-font-style: bold; font-size: 15px; -unity-text-align: upper-center;" />
-    <uie:PropertyField binding-path="_hitDetection" label="Hit Detection" name="HitDetection" />
-    <uie:PropertyField binding-path="_attackPoint" label="Attack Point" name="AttackPoint" />
-    <uie:PropertyField binding-path="_bulletPrefab" label="Bullet Prefab" name="BulletPrefab" />
-    <uie:PropertyField binding-path="_bulletStartPoint" label="Bullet Start Point" name="BulletStartPoint" />
-    <uie:EnumField label="Enem Type" value="asa" name="EnemType" binding-path="enemyType" />
-</ui:UXML>

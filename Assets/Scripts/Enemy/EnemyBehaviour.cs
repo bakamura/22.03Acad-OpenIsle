@@ -6,7 +6,7 @@ public class EnemyBehaviour : MonoBehaviour {
     [Header("Components")]
     [SerializeField] private Collider _hitDetection;
     [SerializeField] private Transform _attackPoint;
-    [SerializeField] private GameObject _bulletPrefab;// if is shoot
+    public GameObject _bulletPrefab;// if is shoot
     [SerializeField] private Transform _bulletStartPoint;// if is shoot
     [SerializeField] private LayerMask _player;
 
