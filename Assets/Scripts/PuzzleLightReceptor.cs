@@ -1,26 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PuzzleLightReceptor : MonoBehaviour {
 
-    private void Awake() {
-        
-    }
-
-    private void Start() {
-        
-    }
-
-    private void Update() {
-        
-    }
-
-    private void FixedUpdate() {
-        
-    }
+    [HideInInspector] public UnityAction onActivate;
 
     public void Activate() {
-
+        onActivate.Invoke();
     }
 }
