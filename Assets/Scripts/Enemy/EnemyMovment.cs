@@ -61,7 +61,7 @@ public class EnemyMovment : MonoBehaviour {
         if (!_isMovmentLocked && _currentTarget != Vector3.zero) {
             Vector3 _movmentDirection = _isFollowingPlayer ? ((_currentTarget + _behaviourData.pointAroundPlayer) - transform.position).normalized : (_currentTarget - transform.position).normalized;
             transform.position += _movmentSpeed * Time.deltaTime * _movmentDirection;
-            SetRotation(PlayerData.Instance.transform.position);
+            SetRotation(_currentTarget);
         }
     }
 
@@ -79,7 +79,7 @@ public class EnemyMovment : MonoBehaviour {
                     _randomPoinCoroutine = null;
                     _isMovmentLocked = false;
                 }
-                if (_navMeshAgent) _navMeshAgent.stoppingDistance = _behaviourData.actionArea;
+                if (_navMeshAgent) _navMeshAgent.stoppingDistance = _behaviourData._actionRange;
                 _isFollowingPlayer = true;
                 _isWandering = false;
                 _currentTarget = PlayerMovement.Instance.transform.position;

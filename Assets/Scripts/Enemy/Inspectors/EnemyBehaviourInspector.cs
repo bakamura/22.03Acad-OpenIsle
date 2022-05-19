@@ -24,7 +24,7 @@ public class EnemyBehaviourInspector : Editor
         if (inspector.enemyType != EnemyBehaviour.EnemyTypes.passive) {
             inspector._damage = EditorGUILayout.FloatField("Damage", inspector._damage);
             inspector._attackSpeed = EditorGUILayout.FloatField("Attack Speed", inspector._attackSpeed);
-            inspector.actionArea = EditorGUILayout.FloatField("Action Area", inspector.actionArea);
+            inspector.actionArea = EditorGUILayout.Vector3Field("Action Area", inspector.actionArea);
             if (inspector.enemyType != EnemyBehaviour.EnemyTypes.shoot) inspector._isKamikaze = EditorGUILayout.Toggle("Is Kamikaze", inspector._isKamikaze);
         }
 

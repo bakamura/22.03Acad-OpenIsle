@@ -25,7 +25,7 @@ public class EnemyBehaviour : MonoBehaviour {
     public float _damage;//if is not passive
     public float _attackSpeed;//if is not passive
     public float _rotationSpeed;//if goes to target
-    public float actionArea;
+    public Vector3 actionArea;
     //public bool _canWander;
     //[Tooltip("if player is inside the action area, this will follow player")] public bool _willGoTowardsPlayer;//if is neutral or passive
     public bool _isKamikaze;//if is not passive
@@ -33,7 +33,7 @@ public class EnemyBehaviour : MonoBehaviour {
     [HideInInspector] public bool isAgressive;
     private bool isActionInCooldown;
     private bool _isTargetInRange;
-    private float _actionRange;
+    public float _actionRange { get; private set; }
 
     [Header("Range Status")]
     public float _bulletSize;//if is shoot
@@ -51,19 +51,14 @@ public class EnemyBehaviour : MonoBehaviour {
         _data.cancelAttack += ActionInterupt;
         isAgressive = enemyType != EnemyTypes.neutral && enemyType != EnemyTypes.passive;
         if (enemyType == EnemyTypes.shoot) _bullets = new List<BulletEnemy>();
-        _actionRange = Vector3.Distance(_attackPoint.position, transform.position) + actionArea * .5f;
+        float totalDistance = Vector3.Distance(_attackPoint.position, transform.position) + actionArea.z * .5f;
+        _actionRange = Mathf.Sqrt(Mathf.Pow(totalDistance, 2) * 2);
         //_data.cancelAttack += DisableDetection; if with collider
     }
 
     private void Start() {
-        if (_movmentScript._isFlying) { //https://datagenetics.com/blog/january32020/index.html
-            while (Vector3.Distance(PlayerData.Instance.transform.position, PlayerData.Instance.transform.position + pointAroundPlayer) >= _actionRange || pointAroundPlayer == Vector3.zero) {
-                float theta = Random.Range(0, 2 * Mathf.PI);
-                float phi = Random.Range(0, Mathf.PI);
-                float randomFactor = Random.Range(_actionRange / 2f, _actionRange);
-                pointAroundPlayer = new Vector3(randomFactor * Mathf.Sin(phi) * Mathf.Cos(theta), randomFactor * Mathf.Sin(phi) * Mathf.Sin(phi), randomFactor * Mathf.Cos(theta));
-            }
-        }
+        float totalDistance = Vector3.Distance(_attackPoint.position, transform.position) + actionArea.z * .5f;
+        pointAroundPlayer = _movmentScript._isFlying ? new Vector3(Random.Range(-totalDistance, totalDistance) * .9f, Random.Range(totalDistance * .5f, totalDistance * .9f), Random.Range(-totalDistance, totalDistance) * .9f) : Vector3.zero;
     }
 
     private void Update() {
@@ -87,7 +82,7 @@ public class EnemyBehaviour : MonoBehaviour {
         //if (!isActionInCooldown && _willGoTowardsPlayer && !_isKamikaze) {
         //    if (enemyType == EnemyTypes.shoot) Shoot();            
         //    else {
-        if (Physics.CheckSphere(_attackPoint.position, actionArea, _player) && !isActionInCooldown /*&& _willGoTowardsPlayer*/ && !_isKamikaze && enemyType != EnemyTypes.shoot) {
+        if (Physics.CheckBox(_attackPoint.position, actionArea, Quaternion.identity,_player) && !isActionInCooldown /*&& _willGoTowardsPlayer*/ && !_isKamikaze && enemyType != EnemyTypes.shoot) {
             PlayerData.Instance.TakeDamage(_damage);
             isActionInCooldown = true;
         }
@@ -104,7 +99,7 @@ public class EnemyBehaviour : MonoBehaviour {
                                    //if (isAgressive) {
         _visualScript.AttackAnim(0);
         if (_isKamikaze) {
-            if (Physics.CheckSphere(_attackPoint.position, actionArea, _player)) PlayerData.Instance.TakeDamage(_damage);
+            if (Physics.CheckBox(_attackPoint.position, actionArea, Quaternion.identity, _player)) PlayerData.Instance.TakeDamage(_damage);
             _movmentScript._isMovmentLocked = false;
             if (_movmentScript._navMeshAgent) _movmentScript._navMeshAgent.isStopped = false;
             isActionInCooldown = false;
@@ -148,7 +143,7 @@ public class EnemyBehaviour : MonoBehaviour {
     private void OnDrawGizmosSelected() {
         if (enemyType != EnemyTypes.passive) {
             Gizmos.color = Color.black;
-            Gizmos.DrawWireSphere(_attackPoint.position, actionArea);
+            Gizmos.DrawWireCube(_attackPoint.position, actionArea);
         }
         if (UnityEditor.EditorApplication.isPlaying) {
             Gizmos.color = Color.blue;
