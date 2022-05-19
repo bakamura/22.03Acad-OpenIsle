@@ -11,13 +11,15 @@ public class EnemyMovment : MonoBehaviour {
     private EnemyBehaviour _behaviourData;
 
     [Header("Info")]
-    [SerializeField] private float _movmentSpeed;
-    [SerializeField] private float _rotationSpeed;
-    [SerializeField] private float _detectionRange;
-    [SerializeField] private float _randomNavegationArea;
-    [SerializeField, Tooltip("the minimal distance it needs to be for a new point generation")] private float minDistanceFromWanderingPoint;
-    [SerializeField, Tooltip("the interval bettwen moving to a new point")] private float randomNavPointCooldown;
+    public float _movmentSpeed;
+    public float _rotationSpeed;
+    public float _detectionRange;// if go to player
+    public float _randomNavegationArea;// if wanders
+    [Tooltip("the minimal distance it needs to be for a new point generation")] public float minDistanceFromWanderingPoint;// if wanders
+    [Tooltip("the interval bettwen moving to a new point")] public float randomNavPointCooldown;// if wanders
     public bool _isFlying;
+    public bool _canWander;
+    [Tooltip("if player is inside the action area, this will follow player")] public bool _willGoTowardsPlayer;
 
     [HideInInspector] public bool _isMovmentLocked;
     private Vector3 _currentTarget;
@@ -33,15 +35,15 @@ public class EnemyMovment : MonoBehaviour {
         _startPoint = transform.position;
         _currentTarget = transform.position;
         if (_navMeshAgent) {
-            _navMeshAgent.speed = _movmentSpeed;
+            //_navMeshAgent.speed = _movmentSpeed;
             _navMeshAgent.stoppingDistance = minDistanceFromWanderingPoint;
-            _navMeshAgent.angularSpeed *= _rotationSpeed;
+            //_navMeshAgent.angularSpeed *= _rotationSpeed;
         }
     }
 
     private void Update() {
         MovmentLogic();
-        if (!_isFlying) GroundMovment();
+        if (!_isFlying && _navMeshAgent) GroundMovment();
         else FlyingMovment();
         if (!_isMovmentLocked) _visualData.MovmentAnim(1f);
         else _visualData.MovmentAnim(0f);
@@ -59,7 +61,7 @@ public class EnemyMovment : MonoBehaviour {
         if (!_isMovmentLocked && _currentTarget != Vector3.zero) {
             Vector3 _movmentDirection = _isFollowingPlayer ? ((_currentTarget + _behaviourData.pointAroundPlayer) - transform.position).normalized : (_currentTarget - transform.position).normalized;
             transform.position += _movmentSpeed * Time.deltaTime * _movmentDirection;
-            SetRotation(_currentTarget);
+            SetRotation(PlayerData.Instance.transform.position);
         }
     }
 
@@ -69,7 +71,7 @@ public class EnemyMovment : MonoBehaviour {
 
     private void MovmentLogic() {
         float distanceFromTarget;
-        if (_behaviourData._willGoTowardsPlayer) {
+        if (/*_behaviourData.*/_willGoTowardsPlayer) {
             distanceFromTarget = Vector3.Distance(PlayerMovement.Instance.transform.position, transform.position);
             if (distanceFromTarget <= _detectionRange) {//move to player
                 if (_randomPoinCoroutine != null) {
@@ -82,7 +84,7 @@ public class EnemyMovment : MonoBehaviour {
                 _isWandering = false;
                 _currentTarget = PlayerMovement.Instance.transform.position;
             }
-            else if (_behaviourData._canWander) {
+            else if (/*_behaviourData.*/_canWander) {
                 _isFollowingPlayer = false;
                 distanceFromTarget = Vector3.Distance(_currentTarget, transform.position);
                 CheckForNewRandomPoint(distanceFromTarget);
@@ -92,7 +94,7 @@ public class EnemyMovment : MonoBehaviour {
                 _isFollowingPlayer = false;
             }
         }
-        else if (_behaviourData._canWander) {
+        else if (/*_behaviourData.*/_canWander) {
             _isFollowingPlayer = false;
             distanceFromTarget = Vector3.Distance(_currentTarget, transform.position);
             CheckForNewRandomPoint(distanceFromTarget);
@@ -102,7 +104,7 @@ public class EnemyMovment : MonoBehaviour {
     private void CheckForNewRandomPoint(float distanceFromTarget) {
         if (_randomPoinCoroutine == null) {
             if (_navMeshAgent) _navMeshAgent.stoppingDistance = minDistanceFromWanderingPoint;
-            if (distanceFromTarget <= minDistanceFromWanderingPoint) _isWandering = false;            
+            if (distanceFromTarget <= minDistanceFromWanderingPoint) _isWandering = false;
             if (!_isWandering) {
                 _isWandering = true;
                 _currentTarget = Vector3.zero;
@@ -124,17 +126,22 @@ public class EnemyMovment : MonoBehaviour {
         _currentTarget = _startPoint + new Vector3(Random.Range(-_randomNavegationArea, _randomNavegationArea), _isFlying ? Random.Range(-_randomNavegationArea, _randomNavegationArea) : 0, Random.Range(-_randomNavegationArea, _randomNavegationArea));
         //if (Physics.Raycast(transform.position, (_currentTarget - transform.position).normalized, Vector3.Distance(transform.position, _currentTarget), _obstacleLayer)) _currentTarget = Vector3.zero;
     }
-
+#if UNITY_EDITOR
     private void OnDrawGizmosSelected() {
         // detection area
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, _detectionRange);
+        if (_willGoTowardsPlayer) {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, _detectionRange);
+        }
         // wandering area
-        Gizmos.color = Color.green;
-        if (UnityEditor.EditorApplication.isPlaying) Gizmos.DrawWireSphere(_startPoint, _randomNavegationArea);
-        else Gizmos.DrawWireSphere(transform.position, _randomNavegationArea);
+        if (_canWander) {
+            Gizmos.color = Color.green;
+            if (UnityEditor.EditorApplication.isPlaying) Gizmos.DrawWireSphere(_startPoint, _randomNavegationArea);
+            else Gizmos.DrawWireSphere(transform.position, _randomNavegationArea);
+        }
         // current moving target point
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(_currentTarget, .5f);
     }
+#endif
 }

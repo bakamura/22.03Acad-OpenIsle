@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class EnemyBehaviour : MonoBehaviour {
     [Header("Components")]
-    [SerializeField] private Collider _hitDetection;
-    [SerializeField] private Transform _attackPoint;
+    public Collider _hitDetection;
+    public Transform _attackPoint;
     public GameObject _bulletPrefab;// if is shoot
-    [SerializeField] private Transform _bulletStartPoint;// if is shoot
-    [SerializeField] private LayerMask _player;
+    public Transform _bulletStartPoint;// if is shoot
+    public LayerMask _player;//if is not passive
 
     private EnemyData _data;
     private EnemyAnimAndVFX _visualScript = null;
@@ -17,28 +17,29 @@ public class EnemyBehaviour : MonoBehaviour {
         fighter,
         shoot,
         neutral,
-        passive
+        passive //if only wants it to go towards player and never do nothing
     }
 
     [Header("Base Status")]
     public EnemyTypes enemyType;
-    public float _damage;
-    [SerializeField] private float _attackSpeed;//if is not passive
-    [SerializeField, Tooltip("if will not move give this a value, else change this value in the EnemyMovment script")] private float _rotationSpeed;//if goes to target
+    public float _damage;//if is not passive
+    public float _attackSpeed;//if is not passive
+    public float _rotationSpeed;//if goes to target
     public float actionArea;
-    public bool _canWander;//if goes to player
-    [Tooltip("if player is inside the action area, this will follow player")] public bool _willGoTowardsPlayer;
-    [SerializeField] private bool _isKamikaze;//if goes to player
+    //public bool _canWander;
+    //[Tooltip("if player is inside the action area, this will follow player")] public bool _willGoTowardsPlayer;//if is neutral or passive
+    public bool _isKamikaze;//if is not passive
 
     [HideInInspector] public bool isAgressive;
-    [HideInInspector] public bool isActionInCooldown;
+    private bool isActionInCooldown;
     private bool _isTargetInRange;
+    private float _actionRange;
 
     [Header("Range Status")]
-    [SerializeField] private float _bulletSize;//if is shoot
-    [SerializeField] private float _bulletSpeed;//if is shoot
-    [SerializeField] private short _bulletAmount;//if is shoot
-    [SerializeField, Tooltip("bullet start point in Yaxis + this value = Max Bullet Height")] private float _bulletMaxHeighOffset;//if is shoot
+    public float _bulletSize;//if is shoot
+    public float _bulletSpeed;//if is shoot
+    public int _bulletAmount;//if is shoot
+    public float _bulletMaxHeighOffset;//if is shoot
 
     [HideInInspector] public Vector3 pointAroundPlayer { get; private set; }
     private List<BulletEnemy> _bullets;
@@ -50,25 +51,34 @@ public class EnemyBehaviour : MonoBehaviour {
         _data.cancelAttack += ActionInterupt;
         isAgressive = enemyType != EnemyTypes.neutral && enemyType != EnemyTypes.passive;
         if (enemyType == EnemyTypes.shoot) _bullets = new List<BulletEnemy>();
+        _actionRange = Vector3.Distance(_attackPoint.position, transform.position) + actionArea * .5f;
         //_data.cancelAttack += DisableDetection; if with collider
     }
 
     private void Start() {
-        if (_movmentScript) pointAroundPlayer = _movmentScript._isFlying ? new Vector3(Random.Range(-actionArea * .5f, actionArea * .5f), Random.Range(actionArea * .5f, actionArea * .7f), Random.Range(-actionArea * .5f, actionArea * .5f)) : Vector3.zero;
+        if (_movmentScript._isFlying) { //https://datagenetics.com/blog/january32020/index.html
+            while (Vector3.Distance(PlayerData.Instance.transform.position, PlayerData.Instance.transform.position + pointAroundPlayer) >= _actionRange || pointAroundPlayer == Vector3.zero) {
+                float theta = Random.Range(0, 2 * Mathf.PI);
+                float phi = Random.Range(0, Mathf.PI);
+                float randomFactor = Random.Range(_actionRange / 2f, _actionRange);
+                pointAroundPlayer = new Vector3(randomFactor * Mathf.Sin(phi) * Mathf.Cos(theta), randomFactor * Mathf.Sin(phi) * Mathf.Sin(phi), randomFactor * Mathf.Cos(theta));
+            }
+        }
     }
 
     private void Update() {
-        if (_isTargetInRange = Vector3.Distance(transform.position, PlayerMovement.Instance.transform.position) <= actionArea && (_willGoTowardsPlayer || isAgressive)) {
+        
+        if (_isTargetInRange = Vector3.Distance(transform.position, PlayerMovement.Instance.transform.position) <= _actionRange && (/*_willGoTowardsPlayer ||*/ isAgressive)) {
             if (isAgressive) _visualScript.AttackAnim(_attackSpeed);
             // movment lock and stop            
             if (_movmentScript) {
                 _movmentScript._isMovmentLocked = true;
-              _movmentScript._navMeshAgent.isStopped = true;
+                if (_movmentScript._navMeshAgent) _movmentScript._navMeshAgent.isStopped = true;
             }
             else if (enemyType == EnemyTypes.shoot) transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(PlayerMovement.Instance.transform.position - transform.position), Time.deltaTime * _rotationSpeed);
         }
         else {
-            if (_willGoTowardsPlayer && !isAgressive) EndActionSetup();
+            if (/*_willGoTowardsPlayer &&*/ !isAgressive) EndActionSetup();
         }
     }
 
@@ -77,7 +87,7 @@ public class EnemyBehaviour : MonoBehaviour {
         //if (!isActionInCooldown && _willGoTowardsPlayer && !_isKamikaze) {
         //    if (enemyType == EnemyTypes.shoot) Shoot();            
         //    else {
-        if (Physics.CheckSphere(_attackPoint.position, actionArea, _player) && !isActionInCooldown && _willGoTowardsPlayer && !_isKamikaze && enemyType != EnemyTypes.shoot) {
+        if (Physics.CheckSphere(_attackPoint.position, actionArea, _player) && !isActionInCooldown /*&& _willGoTowardsPlayer*/ && !_isKamikaze && enemyType != EnemyTypes.shoot) {
             PlayerData.Instance.TakeDamage(_damage);
             isActionInCooldown = true;
         }
@@ -91,20 +101,20 @@ public class EnemyBehaviour : MonoBehaviour {
     }
 
     public void EndActionSetup() { // anim event        
-        if (isAgressive) {
-            _visualScript.AttackAnim(0);
-            if (_isKamikaze) {
-                if (Physics.CheckSphere(_attackPoint.position, actionArea, _player)) PlayerData.Instance.TakeDamage(_damage);
-                _movmentScript._isMovmentLocked = false;
-                if (_movmentScript._navMeshAgent) _movmentScript._navMeshAgent.isStopped = false;
-                isActionInCooldown = false;
-                _data.Activate(false);
-            }
-            else if (enemyType == EnemyTypes.shoot) {
-                Shoot();
-                //isActionInCooldown = false;
-            }
+                                   //if (isAgressive) {
+        _visualScript.AttackAnim(0);
+        if (_isKamikaze) {
+            if (Physics.CheckSphere(_attackPoint.position, actionArea, _player)) PlayerData.Instance.TakeDamage(_damage);
+            _movmentScript._isMovmentLocked = false;
+            if (_movmentScript._navMeshAgent) _movmentScript._navMeshAgent.isStopped = false;
+            isActionInCooldown = false;
+            _data.Activate(false);
         }
+        else if (enemyType == EnemyTypes.shoot) {
+            Shoot();
+            //isActionInCooldown = false;
+        }
+        //}
         //_hitDetection.enabled = false;
         if (!_isTargetInRange) {
             if (_movmentScript) {
@@ -136,8 +146,10 @@ public class EnemyBehaviour : MonoBehaviour {
 
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected() {
-        Gizmos.color = Color.black;
-        Gizmos.DrawWireSphere(_attackPoint.position, actionArea);
+        if (enemyType != EnemyTypes.passive) {
+            Gizmos.color = Color.black;
+            Gizmos.DrawWireSphere(_attackPoint.position, actionArea);
+        }
         if (UnityEditor.EditorApplication.isPlaying) {
             Gizmos.color = Color.blue;
             Gizmos.DrawCube(PlayerMovement.Instance.transform.position + pointAroundPlayer, new Vector3(.1f, .1f, .1f));

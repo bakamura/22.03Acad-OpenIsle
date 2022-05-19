@@ -11,9 +11,9 @@ public class EnemyDamage : MonoBehaviour
     }
 
     private void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.CompareTag("Player") && !_attackScript.isActionInCooldown) {
+        if (collision.gameObject.CompareTag("Player") /*&& !_attackScript.isActionInCooldown*/) {
             PlayerData.Instance.TakeDamage(_attackScript._damage);
-            _attackScript.isActionInCooldown = true;
+            //_attackScript.isActionInCooldown = true;
         }
     }
 }
