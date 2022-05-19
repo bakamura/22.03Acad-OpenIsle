@@ -6,8 +6,8 @@ public class EnemyBehaviour : MonoBehaviour {
     [Header("Components")]
     [SerializeField] private Collider _hitDetection;
     [SerializeField] private Transform _attackPoint;
-    [SerializeField] private GameObject _bulletPrefab;
-    [SerializeField] private Transform _bulletStartPoint;
+    [SerializeField] private GameObject _bulletPrefab;// if is shoot
+    [SerializeField] private Transform _bulletStartPoint;// if is shoot
     [SerializeField] private LayerMask _player;
 
     private EnemyData _data;
@@ -17,23 +17,29 @@ public class EnemyBehaviour : MonoBehaviour {
         fighter,
         shoot,
         neutral,
+        passive
     }
 
-    [Header("Status")]
+    [Header("Base Status")]
     public EnemyTypes enemyType;
     public float _damage;
-    [SerializeField] private float _attackSpeed;
-    [SerializeField] private float _bulletSize;
-    [SerializeField] private float _bulletSpeed;
-    [SerializeField] private short _bulletAmount;
-    [SerializeField, Tooltip("bullet start point in Yaxis + this value = Max Bullet Height")] private float _bulletMaxHeighOffset;
+    [SerializeField] private float _attackSpeed;//if is not passive
+    [SerializeField, Tooltip("if will not move give this a value, else change this value in the EnemyMovment script")] private float _rotationSpeed;//if goes to target
     public float actionArea;
-    public bool _canWander;
+    public bool _canWander;//if goes to player
     [Tooltip("if player is inside the action area, this will follow player")] public bool _willGoTowardsPlayer;
+    [SerializeField] private bool _isKamikaze;//if goes to player
+
     [HideInInspector] public bool isAgressive;
-    [SerializeField] private bool _isKamikaze;
     [HideInInspector] public bool isActionInCooldown;
     private bool _isTargetInRange;
+
+    [Header("Range Status")]
+    [SerializeField] private float _bulletSize;//if is shoot
+    [SerializeField] private float _bulletSpeed;//if is shoot
+    [SerializeField] private short _bulletAmount;//if is shoot
+    [SerializeField, Tooltip("bullet start point in Yaxis + this value = Max Bullet Height")] private float _bulletMaxHeighOffset;//if is shoot
+
     [HideInInspector] public Vector3 pointAroundPlayer { get; private set; }
     private List<BulletEnemy> _bullets;
 
@@ -42,21 +48,24 @@ public class EnemyBehaviour : MonoBehaviour {
         _visualScript = GetComponent<EnemyAnimAndVFX>();
         _movmentScript = GetComponent<EnemyMovment>();
         _data.cancelAttack += ActionInterupt;
-        isAgressive = enemyType != EnemyTypes.neutral;
+        isAgressive = enemyType != EnemyTypes.neutral && enemyType != EnemyTypes.passive;
         if (enemyType == EnemyTypes.shoot) _bullets = new List<BulletEnemy>();
         //_data.cancelAttack += DisableDetection; if with collider
     }
 
     private void Start() {
-        if (_movmentScript._isFlying) pointAroundPlayer = new Vector3(Random.Range(-actionArea * .5f, actionArea * .5f), Random.Range(actionArea * .5f, actionArea * .7f), Random.Range(-actionArea * .5f, actionArea * .5f));
+        if (_movmentScript) pointAroundPlayer = _movmentScript._isFlying ? new Vector3(Random.Range(-actionArea * .5f, actionArea * .5f), Random.Range(actionArea * .5f, actionArea * .7f), Random.Range(-actionArea * .5f, actionArea * .5f)) : Vector3.zero;
     }
 
     private void Update() {
-        if (_isTargetInRange = Vector3.Distance(transform.position, PlayerMovement.Instance.transform.position) <= actionArea && _willGoTowardsPlayer) {
+        if (_isTargetInRange = Vector3.Distance(transform.position, PlayerMovement.Instance.transform.position) <= actionArea && (_willGoTowardsPlayer || isAgressive)) {
             if (isAgressive) _visualScript.AttackAnim(_attackSpeed);
             // movment lock and stop            
-            _movmentScript._isMovmentLocked = true;
-            if (_movmentScript._navMeshAgent) _movmentScript._navMeshAgent.isStopped = true;
+            if (_movmentScript) {
+                _movmentScript._isMovmentLocked = true;
+              _movmentScript._navMeshAgent.isStopped = true;
+            }
+            else if (enemyType == EnemyTypes.shoot) transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(PlayerMovement.Instance.transform.position - transform.position), Time.deltaTime * _rotationSpeed);
         }
         else {
             if (_willGoTowardsPlayer && !isAgressive) EndActionSetup();
@@ -98,11 +107,12 @@ public class EnemyBehaviour : MonoBehaviour {
         }
         //_hitDetection.enabled = false;
         if (!_isTargetInRange) {
-            _movmentScript._isMovmentLocked = false;
-            if (_movmentScript._navMeshAgent) _movmentScript._navMeshAgent.isStopped = false;
+            if (_movmentScript) {
+                _movmentScript._isMovmentLocked = false;
+                _movmentScript._navMeshAgent.isStopped = false;
+            }
         }
         isActionInCooldown = true;
-
     }
 
     private void Shoot() {

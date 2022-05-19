@@ -32,8 +32,8 @@ public class LoadSceneAsync : MonoBehaviour {
             //LoadingSimbol.instance.FillImage(_asyncOperation.progress+0.1f);
             if (_asyncOperation.isDone) {
                 //LoadingSimbol.instance.FillImage(0);
-                _isSceneLoaded = true;
                 _asyncOperation = null;
+                _isSceneLoaded = true;
             }
         }
     }

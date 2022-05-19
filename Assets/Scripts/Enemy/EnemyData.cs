@@ -51,17 +51,17 @@ public class EnemyData : MonoBehaviour {
         if (_currentKnockBackInvencibility <= 0) {
             _currentKnockBackInvencibility = _knockBackInvencibilityTime;
             cancelAttack.Invoke(); //
-            Knockback();
+            _visualScript.StunAnim();
+            if (_enemyMovment) Knockback();
             Invoke(nameof(StopKnockBack), _knockBackDuration);
         }
     }
 
     private void Knockback() {
-        _visualScript.StunAnim();
         _kncockbackDirection = (transform.position - PlayerData.Instance.transform.position).normalized;
-            if (!_enemyMovment._isFlying) _enemyMovment._navMeshAgent.isStopped = true;
-            _enemyMovment._isMovmentLocked = true;
-            InvokeRepeating(nameof(GroundKncockBackMovment), 0, Time.fixedDeltaTime);
+        if (!_enemyMovment._isFlying) _enemyMovment._navMeshAgent.isStopped = true;
+        _enemyMovment._isMovmentLocked = true;
+        InvokeRepeating(nameof(GroundKncockBackMovment), 0, Time.fixedDeltaTime);
     }
 
     private void GroundKncockBackMovment() {
@@ -70,9 +70,9 @@ public class EnemyData : MonoBehaviour {
 
     private void StopKnockBack() {
         _visualScript.EndStunAnim();
-        if (_enemyMovment != null) {
-                CancelInvoke(nameof(GroundKncockBackMovment));
-                if (!_enemyMovment._isFlying) _enemyMovment._navMeshAgent.isStopped = false;
+        if (_enemyMovment) {
+            CancelInvoke(nameof(GroundKncockBackMovment));
+            if (!_enemyMovment._isFlying) _enemyMovment._navMeshAgent.isStopped = false;
             _enemyMovment._isMovmentLocked = false;
         }
     }
