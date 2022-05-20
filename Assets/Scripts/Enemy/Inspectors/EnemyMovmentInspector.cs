@@ -13,7 +13,11 @@ public class EnemyMovmentInspector : Editor {
             inspector._movmentSpeed = EditorGUILayout.FloatField("Movment Speed", inspector._movmentSpeed);
             inspector._rotationSpeed = EditorGUILayout.FloatField("Rotation Speed", inspector._rotationSpeed);
         }
-        if (inspector._willGoTowardsPlayer) inspector._detectionRange = EditorGUILayout.FloatField("Detection Range", inspector._detectionRange);
+        if (inspector._willGoTowardsPlayer) {
+            inspector._detectionRange = EditorGUILayout.FloatField("Detection Range", inspector._detectionRange);
+            inspector._viewAngle = EditorGUILayout.FloatField("Detection Angle", inspector._viewAngle);
+            inspector._FOVcolor = EditorGUILayout.ColorField("FOV Debug Color", inspector._FOVcolor);
+        }
         inspector._canWander = EditorGUILayout.Toggle("Can Wander", inspector._canWander);
         if (inspector._canWander) {
             inspector._randomNavegationArea = EditorGUILayout.FloatField("Navegation Area", inspector._randomNavegationArea);

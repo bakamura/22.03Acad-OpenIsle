@@ -26,8 +26,6 @@ public class EnemyBehaviour : MonoBehaviour {
     public float _attackSpeed;//if is not passive
     public float _rotationSpeed;//if goes to target
     public Vector3 actionArea;
-    //public bool _canWander;
-    //[Tooltip("if player is inside the action area, this will follow player")] public bool _willGoTowardsPlayer;//if is neutral or passive
     public bool _isKamikaze;//if is not passive
 
     [HideInInspector] public bool isAgressive;
@@ -62,8 +60,7 @@ public class EnemyBehaviour : MonoBehaviour {
     }
 
     private void Update() {
-        
-        if (_isTargetInRange = Vector3.Distance(transform.position, PlayerMovement.Instance.transform.position) <= _actionRange && (/*_willGoTowardsPlayer ||*/ isAgressive)) {
+        if (_isTargetInRange = Vector3.Distance(transform.position, PlayerMovement.Instance.transform.position) <= _actionRange) {
             if (isAgressive) _visualScript.AttackAnim(_attackSpeed);
             // movment lock and stop            
             if (_movmentScript) {
@@ -73,21 +70,16 @@ public class EnemyBehaviour : MonoBehaviour {
             else if (enemyType == EnemyTypes.shoot) transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(PlayerMovement.Instance.transform.position - transform.position), Time.deltaTime * _rotationSpeed);
         }
         else {
-            if (/*_willGoTowardsPlayer &&*/ !isAgressive) EndActionSetup();
+            if (!isAgressive) EndActionSetup();
         }
     }
 
     private void FixedUpdate() {
         // action logic
-        //if (!isActionInCooldown && _willGoTowardsPlayer && !_isKamikaze) {
-        //    if (enemyType == EnemyTypes.shoot) Shoot();            
-        //    else {
-        if (Physics.CheckBox(_attackPoint.position, actionArea, Quaternion.identity,_player) && !isActionInCooldown /*&& _willGoTowardsPlayer*/ && !_isKamikaze && enemyType != EnemyTypes.shoot) {
+        if (Physics.CheckBox(_attackPoint.position, actionArea, Quaternion.identity, _player) && !isActionInCooldown && !_isKamikaze && enemyType != EnemyTypes.shoot) {
             PlayerData.Instance.TakeDamage(_damage);
             isActionInCooldown = true;
         }
-        //}
-        //}
     }
 
     public void StartActionSetup() { // anim event
@@ -96,25 +88,16 @@ public class EnemyBehaviour : MonoBehaviour {
     }
 
     public void EndActionSetup() { // anim event        
-                                   //if (isAgressive) {
-        _visualScript.AttackAnim(0);
-        if (_isKamikaze) {
-            if (Physics.CheckBox(_attackPoint.position, actionArea, Quaternion.identity, _player)) PlayerData.Instance.TakeDamage(_damage);
-            _movmentScript._isMovmentLocked = false;
-            if (_movmentScript._navMeshAgent) _movmentScript._navMeshAgent.isStopped = false;
-            isActionInCooldown = false;
-            _data.Activate(false);
+        if (isAgressive) {
+            _visualScript.AttackAnim(0);
+            if (_isKamikaze) KamikazeAttack();
+            else if (enemyType == EnemyTypes.shoot) Shoot();            
         }
-        else if (enemyType == EnemyTypes.shoot) {
-            Shoot();
-            //isActionInCooldown = false;
-        }
-        //}
         //_hitDetection.enabled = false;
         if (!_isTargetInRange) {
             if (_movmentScript) {
                 _movmentScript._isMovmentLocked = false;
-                _movmentScript._navMeshAgent.isStopped = false;
+                if (_movmentScript._navMeshAgent) _movmentScript._navMeshAgent.isStopped = false;
             }
         }
         isActionInCooldown = true;
@@ -134,6 +117,14 @@ public class EnemyBehaviour : MonoBehaviour {
         }
     }
 
+    private void KamikazeAttack() {
+        if (Physics.CheckBox(_attackPoint.position, actionArea, Quaternion.identity, _player)) PlayerData.Instance.TakeDamage(_damage);
+        _movmentScript._isMovmentLocked = false;
+        if (_movmentScript._navMeshAgent) _movmentScript._navMeshAgent.isStopped = false;
+        isActionInCooldown = false;
+        _data.Activate(false);
+    }
+
     private void ActionInterupt() {
         isActionInCooldown = false;
         if (isAgressive) _visualScript.AttackAnim(0);
@@ -141,10 +132,8 @@ public class EnemyBehaviour : MonoBehaviour {
 
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected() {
-        if (enemyType != EnemyTypes.passive) {
-            Gizmos.color = Color.black;
-            Gizmos.DrawWireCube(_attackPoint.position, actionArea);
-        }
+        Gizmos.color = Color.black;
+        Gizmos.DrawWireCube(_attackPoint.position, actionArea);
         if (UnityEditor.EditorApplication.isPlaying) {
             Gizmos.color = Color.blue;
             Gizmos.DrawCube(PlayerMovement.Instance.transform.position + pointAroundPlayer, new Vector3(.1f, .1f, .1f));

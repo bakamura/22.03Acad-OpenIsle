@@ -2,8 +2,7 @@ using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(EnemyBehaviour))]
-public class EnemyBehaviourInspector : Editor
-{
+public class EnemyBehaviourInspector : Editor {
     public override void OnInspectorGUI() {
         EnemyBehaviour inspector = target as EnemyBehaviour;
         //start inspector
@@ -20,11 +19,11 @@ public class EnemyBehaviourInspector : Editor
         GUILayout.Label("BASE STATUS", EditorStyles.boldLabel);
 
         inspector.enemyType = (EnemyBehaviour.EnemyTypes)EditorGUILayout.EnumPopup("Enemy Type", inspector.enemyType);
+        inspector.actionArea = EditorGUILayout.Vector3Field("Action Area", inspector.actionArea);
         if (inspector.enemyType == EnemyBehaviour.EnemyTypes.shoot) inspector._rotationSpeed = EditorGUILayout.FloatField(new GUIContent("Rotation Speed", "if will not move give this a value, else change this value in the EnemyMovment script"), inspector._rotationSpeed);
         if (inspector.enemyType != EnemyBehaviour.EnemyTypes.passive) {
             inspector._damage = EditorGUILayout.FloatField("Damage", inspector._damage);
             inspector._attackSpeed = EditorGUILayout.FloatField("Attack Speed", inspector._attackSpeed);
-            inspector.actionArea = EditorGUILayout.Vector3Field("Action Area", inspector.actionArea);
             if (inspector.enemyType != EnemyBehaviour.EnemyTypes.shoot) inspector._isKamikaze = EditorGUILayout.Toggle("Is Kamikaze", inspector._isKamikaze);
         }
 
