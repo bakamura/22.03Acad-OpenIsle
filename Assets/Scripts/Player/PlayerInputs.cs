@@ -37,8 +37,7 @@ public class PlayerInputs : MonoBehaviour {
 
     [Header("CameraDebug")]
 
-    [SerializeField] private KeyCode _confineCursorKey;
-    private bool _isConfined = false;
+    [SerializeField] private KeyCode _debugPauseTimeKey;
 
     private void Awake() {
         if (Instance == null) Instance = this;
@@ -71,10 +70,8 @@ public class PlayerInputs : MonoBehaviour {
         interactKeyPressed -= Time.deltaTime;
 
         // Debug
-        if (Input.GetKeyDown(_confineCursorKey)) {
-            if (_isConfined) _isConfined = false;
-            else _isConfined = true;
-            Cursor.lockState = _isConfined ? CursorLockMode.Locked : CursorLockMode.None;
+        if (Input.GetKeyDown(_debugPauseTimeKey)) {
+            Time.timeScale = Time.timeScale == 0 ? 1f : 0f;
         }
     }
 }
