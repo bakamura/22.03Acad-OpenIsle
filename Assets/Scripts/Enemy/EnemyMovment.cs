@@ -136,23 +136,7 @@ public class EnemyMovment : MonoBehaviour {
         if (_willGoTowardsPlayer) {
             Gizmos.color = _FOVcolor;
             //Gizmos.DrawWireSphere(transform.position, _detectionRange);
-            //Gizmos.DrawMesh(_FOVMesh, transform.position, transform.rotation);
-            Vector3[] points = new Vector3[5];
-            float angle = _viewAngle / 2;
-            points[0] = Quaternion.Euler(0, -angle, 0) * transform.forward.normalized * _detectionRange + (transform.forward + transform.position);//left side
-            points[1] = Quaternion.Euler(0, angle, 0) * transform.forward.normalized * _detectionRange + (transform.forward + transform.position);//right side
-            points[2] = Quaternion.Euler(angle, 0, 0) * transform.forward.normalized * _detectionRange + (transform.forward + transform.position);//top side
-            points[3] = Quaternion.Euler(-angle, 0, 0) * transform.forward.normalized * _detectionRange + (transform.forward + transform.position);//bottom side
-            points[4] = transform.forward.normalized * _detectionRange + (transform.forward + transform.position);//max reach
-            Gizmos.DrawLine(transform.forward + transform.position, points[0]);
-            Gizmos.DrawLine(transform.forward + transform.position, points[1]);
-            Gizmos.DrawLine(transform.forward + transform.position, points[2]);
-            Gizmos.DrawLine(transform.forward + transform.position, points[3]);
-            Gizmos.DrawLine(transform.forward + transform.position, points[4]);//middle line
-            Gizmos.DrawLine(points[0], points[4]);
-            Gizmos.DrawLine(points[1], points[4]);
-            Gizmos.DrawLine(points[2], points[4]);
-            Gizmos.DrawLine(points[3], points[4]);
+            Gizmos.DrawMesh(_FOVMesh, transform.position, transform.rotation);            
         }
         // wandering area
         if (_canWander) {
@@ -165,39 +149,35 @@ public class EnemyMovment : MonoBehaviour {
         Gizmos.DrawSphere(_currentTarget, .5f);
     }
 
-    //private void OnValidate() {
-    //    _FOVMesh = CreateConeMesh();
-    //}
+    private void OnValidate() {
+        _FOVMesh = CreateConeMesh();
+    }
 
     private Mesh CreateConeMesh() {
         Mesh pyramid = new Mesh();
         int numOfTriangles = 6;
         int numVertices = numOfTriangles * 3;
-
+        float angle = _viewAngle / 2;
+        //NOTE: for the mesh to be rendered propperly all triangles needs to be constructed clokwise. (put a clock in the start point an make the pointer go clokwise when creating the triangle)
         Vector3[] vertices = new Vector3[numVertices];
         int[] triagles = new int[numVertices];
 
         Vector3 Center = Vector3.zero;
-        Vector3 Left = Quaternion.Euler(0, -_viewAngle, 0) * Vector3.forward * _detectionRange;
-        Vector3 Right = Quaternion.Euler(0, _viewAngle, 0) * Vector3.forward * _detectionRange;
+        Vector3 Left = Quaternion.Euler(0, -angle, 0) * Vector3.forward * _detectionRange;
+        Vector3 Right = Quaternion.Euler(0, angle, 0) * Vector3.forward * _detectionRange;
 
-        Vector3 top = Quaternion.Euler(_viewAngle, 0, 0) * Vector3.forward * _detectionRange;
-        Vector3 bottom = Quaternion.Euler(-_viewAngle, 0, 0) * Vector3.forward * _detectionRange;
+        Vector3 top = Quaternion.Euler(angle, 0, 0) * Vector3.forward * _detectionRange;
+        Vector3 bottom = Quaternion.Euler(-angle, 0, 0) * Vector3.forward * _detectionRange;
 
         int currentVert = 0;
         //bottom left
-        vertices[currentVert++] = Left;//center, center
+        vertices[currentVert++] = bottom;//center, center
         vertices[currentVert++] = Center;//bottom, left
-        vertices[currentVert++] = bottom;//left, bottom
-
-        //bottom right
-        vertices[currentVert++] = Center;
-        vertices[currentVert++] = Right;
-        vertices[currentVert++] = bottom;
+        vertices[currentVert++] = Left;//left, bottom
 
         //top left
-        vertices[currentVert++] = Center;
         vertices[currentVert++] = Left;
+        vertices[currentVert++] = Center;
         vertices[currentVert++] = top;
 
         //top right
@@ -205,13 +185,18 @@ public class EnemyMovment : MonoBehaviour {
         vertices[currentVert++] = Right;
         vertices[currentVert++] = top;
 
-        //pyramid base
+        //bottom right
+        vertices[currentVert++] = Center;
+        vertices[currentVert++] = bottom;
         vertices[currentVert++] = Right;
+
+        //pyramid base
         vertices[currentVert++] = top;
+        vertices[currentVert++] = Right;
         vertices[currentVert++] = Left;
 
-        vertices[currentVert++] = Left;
         vertices[currentVert++] = bottom;
+        vertices[currentVert++] = Left;
         vertices[currentVert++] = Right;
 
         for (int i = 0; i < numVertices; i++) triagles[i] = i;
