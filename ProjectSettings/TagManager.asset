@@ -9,6 +9,7 @@ TagManager:
   - HookPoint
   - MovableObject
   - Ground
+  - LightMirror
   layers:
   - Default
   - TransparentFX
