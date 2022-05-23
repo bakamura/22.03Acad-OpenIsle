@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1966,7 +1966,7 @@ MonoBehaviour:
   hookKey: 324
   amuletKey: 101
   interactKey: 102
-  _confineCursorKey: 108
+  _debugPauseTimeKey: 0
 --- !u!136 &1527711549
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2553,7 +2553,7 @@ GameObject:
   - component: {fileID: 2085052304}
   - component: {fileID: 2085052303}
   - component: {fileID: 2085052302}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Terrain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2839,6 +2839,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   saveTheData: 0
+  eraseTheData: 0
   canvasFadeDuration: 0.5
   ingameCanvas: {fileID: 1778534517}
   healthBar: {fileID: 106928994}
