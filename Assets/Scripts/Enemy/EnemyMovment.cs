@@ -155,53 +155,131 @@ public class EnemyMovment : MonoBehaviour {
 
     private Mesh CreateConeMesh() {
         Mesh pyramid = new Mesh();
-        int numOfTriangles = 6;
+        int numOfTriangles = 14;//6;
         int numVertices = numOfTriangles * 3;
-        float angle = _viewAngle / 2;
+        float angle = _viewAngle / 2f;
         //NOTE: for the mesh to be rendered propperly all triangles needs to be constructed clokwise. (put a clock in the start point an make the pointer go clokwise when creating the triangle)
         Vector3[] vertices = new Vector3[numVertices];
-        int[] triagles = new int[numVertices];
+        int[] triangles = new int[numVertices];
 
-        Vector3 Center = Vector3.zero;
-        Vector3 Left = Quaternion.Euler(0, -angle, 0) * Vector3.forward * _detectionRange;
+        Vector3 Center = Vector3.zero;//0 
+
+        Vector3 Left = -Vector3.right;//Quaternion.Euler(0, -angle, 0) * Vector3.forward * _detectionRange;
         Vector3 Right = Quaternion.Euler(0, angle, 0) * Vector3.forward * _detectionRange;
 
-        Vector3 top = Quaternion.Euler(angle, 0, 0) * Vector3.forward * _detectionRange;
+        Vector3 MiddleTopLeft = (-Vector3.right+ Vector3.up)*0.7f;// Quaternion.Euler(-angle / 1.5f, angle / 1.5f, 0) * Vector3.forward * _detectionRange;
+        Vector3 MiddleTopRight = Quaternion.Euler(angle / 1.5f, angle / 1.5f, 0) * Vector3.forward * _detectionRange;
+
+        Vector3 top = Vector3.up;// Quaternion.Euler(angle, 0, 0) * Vector3.forward * _detectionRange;
         Vector3 bottom = Quaternion.Euler(-angle, 0, 0) * Vector3.forward * _detectionRange;
 
+        Vector3 MiddleBottomLeft = Quaternion.Euler(-angle / 1.5f, -angle / 1.5f, 0) * Vector3.forward * _detectionRange;
+        Vector3 MiddleBottomRight = Quaternion.Euler(angle / 1.5f, -angle / 1.5f, 0) * Vector3.forward * _detectionRange;
+
         int currentVert = 0;
-        //bottom left
-        vertices[currentVert++] = bottom;//center, center
-        vertices[currentVert++] = Center;//bottom, left
-        vertices[currentVert++] = Left;//left, bottom
 
         //top left
+        vertices[currentVert++] = top;//8
+        vertices[currentVert++] = Center;//0
+        vertices[currentVert++] = MiddleTopLeft;//1
+        
+        //middle top left
+        vertices[currentVert++] = MiddleTopLeft;//1
+        vertices[currentVert++] = Center;//0
+        vertices[currentVert++] = Left;//2
+        /*
+        //middle bottom left
         vertices[currentVert++] = Left;
         vertices[currentVert++] = Center;
-        vertices[currentVert++] = top;
+        vertices[currentVert++] = MiddleBottomLeft;//4
 
-        //top right
+        //bottom left
+        vertices[currentVert++] = MiddleBottomLeft;
         vertices[currentVert++] = Center;
-        vertices[currentVert++] = Right;
-        vertices[currentVert++] = top;
+        vertices[currentVert++] = bottom;
 
         //bottom right
-        vertices[currentVert++] = Center;
         vertices[currentVert++] = bottom;
+        vertices[currentVert++] = Center;
+        vertices[currentVert++] = MiddleBottomRight;
+
+        //middle bottom right
+        vertices[currentVert++] = MiddleBottomRight;
+        vertices[currentVert++] = Center;
         vertices[currentVert++] = Right;
+
+        //middle top right
+        vertices[currentVert++] = Right;
+        vertices[currentVert++] = Center;
+        vertices[currentVert++] = MiddleTopRight;
+
+        //top right
+        vertices[currentVert++] = MiddleTopRight;
+        vertices[currentVert++] = Center;
+        vertices[currentVert++] = top;
 
         //pyramid base
+        //top
         vertices[currentVert++] = top;
+        vertices[currentVert++] = MiddleTopRight;
+        vertices[currentVert++] = MiddleTopLeft;
+
+        //top middle
+        vertices[currentVert++] = MiddleTopLeft;
+        vertices[currentVert++] = MiddleTopRight;
         vertices[currentVert++] = Right;
+
+        vertices[currentVert++] = Right;
+        vertices[currentVert++] = MiddleTopLeft;
         vertices[currentVert++] = Left;
 
+        //bottom middle
+        vertices[currentVert++] = Left;
+        vertices[currentVert++] = Right;
+        vertices[currentVert++] = MiddleBottomRight;
+
+        vertices[currentVert++] = MiddleBottomRight;
+        vertices[currentVert++] = Left;
+        vertices[currentVert++] = MiddleBottomLeft;
+
+        //bottom
+        vertices[currentVert++] = MiddleBottomLeft;
         vertices[currentVert++] = bottom;
-        vertices[currentVert++] = Left;
-        vertices[currentVert++] = Right;
+        vertices[currentVert++] = MiddleBottomRight;
+        */
+        ////bottom left
+        //vertices[currentVert++] = bottom;
+        //vertices[currentVert++] = Center;
+        //vertices[currentVert++] = Left;
 
-        for (int i = 0; i < numVertices; i++) triagles[i] = i;
+        ////top left
+        //vertices[currentVert++] = Left;
+        //vertices[currentVert++] = Center;
+        //vertices[currentVert++] = top;
+
+        ////top right
+        //vertices[currentVert++] = Center;
+        //vertices[currentVert++] = Right;
+        //vertices[currentVert++] = top;
+
+        ////bottom right
+        //vertices[currentVert++] = Center;
+        //vertices[currentVert++] = bottom;
+        //vertices[currentVert++] = Right;
+
+
+        ////pyramid base
+        //vertices[currentVert++] = top;
+        //vertices[currentVert++] = Right;
+        //vertices[currentVert++] = Left;
+
+        //vertices[currentVert++] = bottom;
+        //vertices[currentVert++] = Left;
+        //vertices[currentVert++] = Right;
+
+        for (int i = 0; i < numVertices; i++) triangles[i] = i;
         pyramid.vertices = vertices;
-        pyramid.triangles = triagles;
+        pyramid.triangles = triangles;
         pyramid.RecalculateNormals();
 
         return pyramid;
