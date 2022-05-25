@@ -20,12 +20,18 @@ public class PuzzleLightMirror : MonoBehaviour {
                 lightHits[i].lit -= Time.fixedDeltaTime;
                 if (lightHits[i].lit > 0) {
                     RaycastHit hit;
-                    Physics.Raycast(transform.position, CorrelateDirections(lightHits[i].angleReceived), out hit);
-                    rayInstance[i].GetComponent<MeshRenderer>().enabled = true;
-                    rayInstance[i].transform.position = (hit.point + transform.position) / 2;
-                    rayInstance[i].transform.eulerAngles = new Vector3(90, Mathf.Atan2(CorrelateDirections(lightHits[i].angleReceived).x, CorrelateDirections(lightHits[i].angleReceived).z) * Mathf.Rad2Deg, 0); // Test
-                    rayInstance[i].transform.localScale = new Vector3(0.5f, Vector3.Distance(transform.position, hit.point) / 2f /*REVIEW*/, 0.5f);
-
+                    if (Physics.Raycast(transform.position, CorrelateDirections(lightHits[i].angleReceived), out hit)) {
+                        rayInstance[i].GetComponent<MeshRenderer>().enabled = true;
+                        rayInstance[i].transform.position = (hit.point + transform.position) / 2;
+                        rayInstance[i].transform.eulerAngles = new Vector3(90, Mathf.Atan2(CorrelateDirections(lightHits[i].angleReceived).x, CorrelateDirections(lightHits[i].angleReceived).z) * Mathf.Rad2Deg, 0); // Test
+                        rayInstance[i].transform.localScale = new Vector3(0.5f, Vector3.Distance(transform.position, hit.point) / 2f /*REVIEW*/, 0.5f);
+                    }
+                    else {
+                        rayInstance[i].GetComponent<MeshRenderer>().enabled = true;
+                        rayInstance[i].transform.position = (CorrelateDirections(lightHits[i].angleReceived) * 256 + transform.position) / 2;
+                        rayInstance[i].transform.eulerAngles = new Vector3(90, Mathf.Atan2(CorrelateDirections(lightHits[i].angleReceived).x, CorrelateDirections(lightHits[i].angleReceived).z) * Mathf.Rad2Deg, 0); // Test
+                        rayInstance[i].transform.localScale = new Vector3(0.5f, Vector3.Distance(transform.position, CorrelateDirections(lightHits[i].angleReceived) * 256) / 2f /*REVIEW*/, 0.5f);
+                    }
                     PuzzleLightMirror mirrorComponent = hit.transform.GetComponent<PuzzleLightMirror>();
                     if (mirrorComponent != null) {
                         for (int j = 0; j < 4; i++) {

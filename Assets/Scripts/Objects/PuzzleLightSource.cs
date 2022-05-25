@@ -15,11 +15,16 @@ public class PuzzleLightSource : MonoBehaviour {
 
     private void Update() {
         RaycastHit hit;
-        Physics.Raycast(transform.position, rayDirection, out hit);
-        rayInstance.transform.position = (hit.point + transform.position) / 2;
-        rayInstance.transform.eulerAngles = new Vector3(90, Mathf.Atan2(rayDirection.x, rayDirection.z) * Mathf.Rad2Deg, 0); // Test
-        rayInstance.transform.localScale = new Vector3(0.5f, Vector3.Distance(transform.position, hit.point) / 2 /*REVIEW*/, 0.5f);
-
+        if (Physics.Raycast(transform.position, rayDirection, out hit)) {
+            rayInstance.transform.position = (hit.point + transform.position) / 2;
+            rayInstance.transform.eulerAngles = new Vector3(90, Mathf.Atan2(rayDirection.x, rayDirection.z) * Mathf.Rad2Deg, 0); // Test
+            rayInstance.transform.localScale = new Vector3(0.5f, Vector3.Distance(transform.position, hit.point) / 2 /*REVIEW*/, 0.5f);
+        }
+        else {
+            rayInstance.transform.position = (rayDirection * 256 + transform.position) / 2;
+            rayInstance.transform.eulerAngles = new Vector3(90, Mathf.Atan2(rayDirection.x, rayDirection.z) * Mathf.Rad2Deg, 0); // Test
+            rayInstance.transform.localScale = new Vector3(0.5f, Vector3.Distance(transform.position, rayDirection * 256) / 2 /*REVIEW*/, 0.5f);
+        }
         PuzzleLightMirror mirrorComponent = hit.transform.GetComponent<PuzzleLightMirror>();
         if (mirrorComponent != null) {
             for (int i = 0; i < mirrorComponent.lightHits.Length; i++) {
