@@ -106,7 +106,7 @@ public class PlayerTools : MonoBehaviour {
         }
         else PlayerInputs.hookKeyReleased = 0;
 
-        _currentActionCoolDown = Mathf.Clamp(_currentActionCoolDown - Time.deltaTime, 0, 30);
+        _currentActionCoolDown -= Time.deltaTime;
 
         if (_hookScript.isHookActive && (PlayerInputs.jumpKeyPressed > 0 || PlayerInputs.hookKeyPressed > 0 || PlayerInputs.dashKeyPressed > 0)) _hookScript.CancelHook();
     }
@@ -114,11 +114,11 @@ public class PlayerTools : MonoBehaviour {
     private void ChangeMesh(Mesh mesh, Material material, float actionDuration) {
         if (actionDuration > 0) {
             //Debug.Log("Movement Lock");
-            PlayerMovement.Instance.movementLock = true;
+            if (mesh != _swordMesh) PlayerMovement.Instance.movementLock = true;
             _currentActionCoolDown = actionDuration + _actionInternalCoolDown;
             Invoke(nameof(UnlockMovement), actionDuration);
         }
-        PlayerData.rb.velocity = new Vector3(0, PlayerData.rb.velocity.y, 0);
+        if (mesh != _swordMesh) PlayerData.rb.velocity = new Vector3(0, PlayerData.rb.velocity.y, 0);
         _toolMeshFilter.mesh = mesh;
         _toolMeshRenderer.material = material;
     }

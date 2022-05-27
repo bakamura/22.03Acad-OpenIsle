@@ -9,6 +9,7 @@ public class ToolHookShot : MonoBehaviour {
     [SerializeField] private LayerMask[] _checkLayers = new LayerMask[3]; // 0 = hookPoint, 1 = enemies, 2 = movable objects
     [SerializeField] private AudioClip[] _hitAudios = new AudioClip[4]; // 0 = hookShot, 1 = hit Something Pullable, 2 = hit something unpullable, 3 = pulling
     [SerializeField] private Transform _hookTransform;
+    //[SerializeField] private Transform _hookGunTransform;
     [SerializeField] private float _hookShotSizeIncrease;
     [System.NonSerialized] public bool isHookActive = false;
     private bool _canStartPulling = false;
@@ -43,7 +44,8 @@ public class ToolHookShot : MonoBehaviour {
 
     public void SendHitDetection() {
         Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out _hitinfo, _hookDistance);
-        _hookTransform.rotation = Quaternion.Euler(Camera.main.transform.eulerAngles.x, Camera.main.transform.eulerAngles.y, Camera.main.transform.eulerAngles.z);
+        //_hookTransform.rotation = Quaternion.Euler(Camera.main.transform.eulerAngles.x, Camera.main.transform.eulerAngles.y, Camera.main.transform.eulerAngles.z);
+        transform.rotation = Quaternion.Euler(Camera.main.transform.eulerAngles.x, Camera.main.transform.eulerAngles.y, Camera.main.transform.eulerAngles.z);
         UpdateTargetDistance();
         _initialTargetDistance = _targetDistance;
         Mathf.Clamp(_initialTargetDistance, 1, _hookDistance);
@@ -168,7 +170,8 @@ public class ToolHookShot : MonoBehaviour {
             _canStartPulling = false;
             isHookActive = false;
             _willHapenMovment = false;
-            _hookTransform.localRotation = Quaternion.identity;
+            //_hookTransform.localRotation = Quaternion.identity;
+            transform.localRotation = Quaternion.identity;
             PlayerData.rb.useGravity = true;
             if (_hitinfo.rigidbody != null) _hitinfo.rigidbody.velocity = Vector3.zero;
             PlayerMovement.Instance.movementLock = false;
