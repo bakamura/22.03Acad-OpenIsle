@@ -11,17 +11,17 @@ public class EnemyMovment : MonoBehaviour {
     private EnemyBehaviour _behaviourData;
 
     [Header("Info")]
-    public float _movmentSpeed;
-    public float _rotationSpeed;
-    public float _detectionRange;// if go to player
-    public float _viewAngle;// if go to player
-    public Color _FOVcolor;
-    public float _randomNavegationArea;// if wanders
-    [Tooltip("the minimal distance it needs to be for a new point generation")] public float minDistanceFromWanderingPoint;// if wanders
-    [Tooltip("the interval bettwen moving to a new point")] public float randomNavPointCooldown;// if wanders
+    [SerializeField] private float _movmentSpeed;
+    [SerializeField] private float _rotationSpeed;
+    [SerializeField] private float _detectionRange;// if go to player
+    [SerializeField] private float _viewAngle;// if go to player
+    [SerializeField] private Color _FOVcolor = Color.red;
+    [SerializeField] private float _randomNavegationArea;// if wanders
+    [SerializeField] private float _minDistanceFromWanderingPoint;// if wanders
+    [SerializeField] private float _randomNavPointCooldown;// if wanders
     public bool _isFlying;
-    public bool _canWander;
-    [Tooltip("if player is inside the action area, this will follow player")] public bool _willGoTowardsPlayer;
+    [SerializeField] private bool _canWander;
+    [SerializeField] private bool _willGoTowardsPlayer;
 
     [HideInInspector] public bool _isMovmentLocked;
     private Vector3 _currentTarget;
@@ -39,7 +39,7 @@ public class EnemyMovment : MonoBehaviour {
         _currentTarget = transform.position;
         if (_navMeshAgent) {
             //_navMeshAgent.speed = _movmentSpeed;
-            _navMeshAgent.stoppingDistance = minDistanceFromWanderingPoint;
+            _navMeshAgent.stoppingDistance = _minDistanceFromWanderingPoint;
             //_navMeshAgent.angularSpeed *= _rotationSpeed;
         }
     }
@@ -106,8 +106,8 @@ public class EnemyMovment : MonoBehaviour {
 
     private void CheckForNewRandomPoint(float distanceFromTarget) {
         if (_randomPoinCoroutine == null) {
-            if (_navMeshAgent) _navMeshAgent.stoppingDistance = minDistanceFromWanderingPoint;
-            if (distanceFromTarget <= minDistanceFromWanderingPoint) _isWandering = false;
+            if (_navMeshAgent) _navMeshAgent.stoppingDistance = _minDistanceFromWanderingPoint;
+            if (distanceFromTarget <= _minDistanceFromWanderingPoint) _isWandering = false;
             if (!_isWandering) {
                 _isWandering = true;
                 _currentTarget = Vector3.zero;
@@ -118,7 +118,7 @@ public class EnemyMovment : MonoBehaviour {
 
     IEnumerator RandomPointCorotine() {
         _isMovmentLocked = true;
-        yield return new WaitForSeconds(randomNavPointCooldown);
+        yield return new WaitForSeconds(_randomNavPointCooldown);
         /*while (_currentTarget == Vector3.zero)*/
         GenerateRandomNavegationPoint();//if dosent want the raycast check, remove the while
         _isMovmentLocked = false;

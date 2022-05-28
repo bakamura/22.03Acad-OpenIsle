@@ -37,7 +37,7 @@ public class EnemyData : MonoBehaviour {
         _currentHealth = _maxHealth;
         _currentKnockBackInvencibility = 0;
         cancelAttack.Invoke();
-        if (_enemyBehaviour.enemyType == EnemyBehaviour.EnemyTypes.neutral) _enemyBehaviour.isAgressive = false;
+        if (_enemyBehaviour._enemyType == EnemyBehaviour.EnemyTypes.neutral) _enemyBehaviour.isAgressive = false;
         gameObject.SetActive(isActivating);
     }
 
@@ -47,7 +47,7 @@ public class EnemyData : MonoBehaviour {
             Activate(false);
             return;
         }
-        if (_enemyBehaviour.enemyType == EnemyBehaviour.EnemyTypes.neutral) _enemyBehaviour.isAgressive = true;
+        if (_enemyBehaviour._enemyType == EnemyBehaviour.EnemyTypes.neutral) _enemyBehaviour.isAgressive = true;
         if (_currentKnockBackInvencibility <= 0) {
             _currentKnockBackInvencibility = _knockBackInvencibilityTime;
             cancelAttack.Invoke(); //

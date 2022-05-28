@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class EnemyBehaviour : MonoBehaviour {
     [Header("Components")]
-    public Collider _hitDetection;
-    public Transform _attackPoint;
-    public GameObject _bulletPrefab;// if is shoot
-    public Transform _bulletStartPoint;// if is shoot
-    public LayerMask _player;//if is not passive
+    [SerializeField] private Collider _hitDetection;
+    [SerializeField] private Transform _attackPoint;
+    [SerializeField] private GameObject _bulletPrefab;// if is shoot
+    [SerializeField] private Transform _bulletStartPoint;// if is shoot
+    [SerializeField] private LayerMask _player;//if is not passive
 
     private EnemyData _data;
     private EnemyAnimAndVFX _visualScript = null;
@@ -21,23 +21,23 @@ public class EnemyBehaviour : MonoBehaviour {
     }
 
     [Header("Base Status")]
-    public EnemyTypes enemyType;
+    public EnemyTypes _enemyType;
     public float _damage;//if is not passive
-    public float _attackSpeed;//if is not passive
-    public float _rotationSpeed;//if goes to target
-    public Vector3 actionArea;
-    public bool _isKamikaze;//if is not passive
+    [SerializeField] private float _attackSpeed;//if is not passive
+    [SerializeField] private float _rotationSpeed;//if goes to target
+    [SerializeField] private Vector3 _actionArea;
+    [SerializeField] private bool _isKamikaze;//if is not passive
 
     [HideInInspector] public bool isAgressive;
-    private bool isActionInCooldown;
+    private bool _isActionInCooldown;
     private bool _isTargetInRange;
     public float _actionRange { get; private set; }
 
     [Header("Range Status")]
-    public float _bulletSize;//if is shoot
-    public float _bulletSpeed;//if is shoot
-    public int _bulletAmount;//if is shoot
-    public float _bulletMaxHeighOffset;//if is shoot
+    [SerializeField] private float _bulletSize;//if is shoot
+    [SerializeField] private float _bulletSpeed;//if is shoot
+    [SerializeField] private int _bulletAmount;//if is shoot
+    [SerializeField] private float _bulletMaxHeighOffset;//if is shoot
 
     [HideInInspector] public Vector3 pointAroundPlayer { get; private set; }
     private List<BulletEnemy> _bullets;
@@ -47,15 +47,15 @@ public class EnemyBehaviour : MonoBehaviour {
         _visualScript = GetComponent<EnemyAnimAndVFX>();
         _movmentScript = GetComponent<EnemyMovment>();
         _data.cancelAttack += ActionInterupt;
-        isAgressive = enemyType != EnemyTypes.neutral && enemyType != EnemyTypes.passive;
-        if (enemyType == EnemyTypes.shoot) _bullets = new List<BulletEnemy>();
-        float totalDistance = Vector3.Distance(_attackPoint.position, transform.position) + actionArea.z * .5f;
+        isAgressive = _enemyType != EnemyTypes.neutral && _enemyType != EnemyTypes.passive;
+        if (_enemyType == EnemyTypes.shoot) _bullets = new List<BulletEnemy>();
+        float totalDistance = Vector3.Distance(_attackPoint.position, transform.position) + _actionArea.z * .5f;
         _actionRange = Mathf.Sqrt(Mathf.Pow(totalDistance, 2) * 2);
         //_data.cancelAttack += DisableDetection; if with collider
     }
 
     private void Start() {
-        float totalDistance = Vector3.Distance(_attackPoint.position, transform.position) + actionArea.z * .5f;
+        float totalDistance = Vector3.Distance(_attackPoint.position, transform.position) + _actionArea.z * .5f;
         pointAroundPlayer = _movmentScript._isFlying ? new Vector3(Random.Range(-totalDistance, totalDistance) * .9f, Random.Range(totalDistance * .5f, totalDistance * .9f), Random.Range(-totalDistance, totalDistance) * .9f) : Vector3.zero;
     }
 
@@ -67,7 +67,7 @@ public class EnemyBehaviour : MonoBehaviour {
                 _movmentScript._isMovmentLocked = true;
                 if (_movmentScript._navMeshAgent) _movmentScript._navMeshAgent.isStopped = true;
             }
-            else if (enemyType == EnemyTypes.shoot) transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(PlayerMovement.Instance.transform.position - transform.position), Time.deltaTime * _rotationSpeed);
+            else if (_enemyType == EnemyTypes.shoot) transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(PlayerMovement.Instance.transform.position - transform.position), Time.deltaTime * _rotationSpeed);
         }
         else {
             if (!isAgressive) EndActionSetup();
@@ -76,14 +76,14 @@ public class EnemyBehaviour : MonoBehaviour {
 
     private void FixedUpdate() {
         // action logic
-        if (Physics.CheckBox(_attackPoint.position, actionArea, Quaternion.identity, _player) && !isActionInCooldown && !_isKamikaze && enemyType != EnemyTypes.shoot) {
+        if (Physics.CheckBox(_attackPoint.position, _actionArea, Quaternion.identity, _player) && !_isActionInCooldown && !_isKamikaze && _enemyType != EnemyTypes.shoot) {
             PlayerData.Instance.TakeDamage(_damage);
-            isActionInCooldown = true;
+            _isActionInCooldown = true;
         }
     }
 
     public void StartActionSetup() { // anim event
-        isActionInCooldown = false;
+        _isActionInCooldown = false;
         //_hitDetection.enabled = true;
     }
 
@@ -91,7 +91,7 @@ public class EnemyBehaviour : MonoBehaviour {
         if (isAgressive) {
             _visualScript.AttackAnim(0);
             if (_isKamikaze) KamikazeAttack();
-            else if (enemyType == EnemyTypes.shoot) Shoot();            
+            else if (_enemyType == EnemyTypes.shoot) Shoot();            
         }
         //_hitDetection.enabled = false;
         if (!_isTargetInRange) {
@@ -100,7 +100,7 @@ public class EnemyBehaviour : MonoBehaviour {
                 if (_movmentScript._navMeshAgent) _movmentScript._navMeshAgent.isStopped = false;
             }
         }
-        isActionInCooldown = true;
+        _isActionInCooldown = true;
     }
 
     private void Shoot() {
@@ -118,22 +118,22 @@ public class EnemyBehaviour : MonoBehaviour {
     }
 
     private void KamikazeAttack() {
-        if (Physics.CheckBox(_attackPoint.position, actionArea, Quaternion.identity, _player)) PlayerData.Instance.TakeDamage(_damage);
+        if (Physics.CheckBox(_attackPoint.position, _actionArea, Quaternion.identity, _player)) PlayerData.Instance.TakeDamage(_damage);
         _movmentScript._isMovmentLocked = false;
         if (_movmentScript._navMeshAgent) _movmentScript._navMeshAgent.isStopped = false;
-        isActionInCooldown = false;
+        _isActionInCooldown = false;
         _data.Activate(false);
     }
 
     private void ActionInterupt() {
-        isActionInCooldown = false;
+        _isActionInCooldown = false;
         if (isAgressive) _visualScript.AttackAnim(0);
     }
 
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected() {
         Gizmos.color = Color.black;
-        Gizmos.DrawWireCube(_attackPoint.position, actionArea);
+        Gizmos.DrawWireCube(_attackPoint.position, _actionArea);
         if (UnityEditor.EditorApplication.isPlaying) {
             Gizmos.color = Color.blue;
             Gizmos.DrawCube(PlayerMovement.Instance.transform.position + pointAroundPlayer, new Vector3(.1f, .1f, .1f));
