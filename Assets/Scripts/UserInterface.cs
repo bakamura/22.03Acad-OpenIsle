@@ -44,6 +44,10 @@ public class UserInterface : MonoBehaviour {
         }
     }
 
+    private void Start() {
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
     private void Update() {
         // Debug Save
         if (saveTheData) {
@@ -57,16 +61,18 @@ public class UserInterface : MonoBehaviour {
 
         // Input
         if (Input.GetKeyDown(pauseKey)) {
-            if (ingameCanvas.interactable) {
+            if (pauseCanvas.interactable) {
+                Cursor.lockState = CursorLockMode.Locked;
+                ingameCanvasAlpha = ActivateCanvas(ingameCanvas, true, true);
+                pauseCanvasAlpha = ActivateCanvas(pauseCanvas, false);
+                Invoke(nameof(SetTimeScale), canvasFadeDuration);
+            }
+            else {
+                Cursor.lockState = CursorLockMode.Confined;
                 ingameCanvasAlpha = ActivateCanvas(ingameCanvas, false, true);
                 pauseCanvasAlpha = ActivateCanvas(pauseCanvas, true);
                 Time.timeScale = 0;
                 isGamePaused = true;
-            }
-            else {
-                ingameCanvasAlpha = ActivateCanvas(ingameCanvas, true, true);
-                pauseCanvasAlpha = ActivateCanvas(pauseCanvas, false);
-                Invoke(nameof(SetTimeScale), canvasFadeDuration);
             }
         }
 

@@ -44,7 +44,8 @@ public class SettingsMenu : MonoBehaviour {
     }
 }
 
-class SliderData {
+[System.Serializable]
+public class SliderData {
     public string name;
     public Slider slider;
     public TextMeshProUGUI valueText;
