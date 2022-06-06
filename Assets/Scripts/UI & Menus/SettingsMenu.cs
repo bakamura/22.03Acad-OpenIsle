@@ -14,6 +14,15 @@ public class SettingsMenu : MonoBehaviour {
     [SerializeField] private SliderData _sfxVol;
     private float _currentSliderValue;
 
+    private void Start() {
+        _masterVol.slider.value = GameManager.MasterVol;
+        _musicVol.slider.value = GameManager.MusicVol;
+        _sfxVol.slider.value = GameManager.SfxVol;
+        _masterVol.valueText.text = (GameManager.MasterVol * 100).ToString("F0");
+        _musicVol.valueText.text = (GameManager.MusicVol * 100).ToString("F0");
+        _sfxVol.valueText.text = (GameManager.SfxVol * 100).ToString("F0");
+    }
+
     public void SetVolume(int volToChange) {
         SliderData slider = GetSliderVol(volToChange);
         _mixer.SetFloat(slider.name, Mathf.Log10(_currentSliderValue) * 20); // Slider lowest must be 0.001 !!!
