@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4583303968370659574}
   - component: {fileID: 1765373554273018940}
   - component: {fileID: 2301729921195604888}
+  - component: {fileID: 4230875480418764274}
   m_Layer: 0
   m_Name: Cogumelo_1
   m_TagString: Untagged
@@ -26,13 +27,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 251957027333490153}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 100, y: 100, z: 200}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: -0.7071068}
+  m_LocalPosition: {x: -0.0047, y: -0.4723, z: 0.6659}
+  m_LocalScale: {x: 50, y: 50, z: 104}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 270, y: 0, z: 0}
 --- !u!33 &4583303968370659574
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -101,3 +102,17 @@ LODGroup:
     renderers:
     - renderer: {fileID: 1765373554273018940}
   m_Enabled: 1
+--- !u!136 &4230875480418764274
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 251957027333490153}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.017030817
+  m_Height: 0.077020355
+  m_Direction: 1
+  m_Center: {x: -0.00024227619, y: 0.00023914338, z: 0.004111335}
