@@ -6,6 +6,7 @@ public class AmuletObject : MonoBehaviour {
 
     [SerializeField] private Material _materialToChange;
     [SerializeField] private LayerMask _enemyLayerMask;
+    [SerializeField] private bool _updateCollider = true;
     private Material _standarMaterial;
     private MeshRenderer _meshRender;
     private Collider _collider;
@@ -22,8 +23,8 @@ public class AmuletObject : MonoBehaviour {
 
     public void Changedimension() {
         if (Vector3.Distance(transform.position, PlayerMovement.Instance.transform.position) < PlayerTools.amuletDistance) {
-            _collider.enabled = !_collider.enabled;
-            if (_collider.enabled) DetectForEnemy();
+            if(_updateCollider) _collider.enabled = !_collider.enabled;
+            //if (_collider.enabled) DetectForEnemy();
             if (_meshRender.material == _standarMaterial) _meshRender.material = _materialToChange;
             else _meshRender.material = _standarMaterial;
         }
