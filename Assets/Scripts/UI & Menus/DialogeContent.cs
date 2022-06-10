@@ -19,12 +19,11 @@ public class DialogeContent : ScriptableObject
 public class DialogeCustomInformation {
     public string characterName;
     [TextArea(1, 5)] public string dialoge;
-    public TMP_FontAsset[] font;
+    //public TMP_FontAsset[] font;
     [Min(0)]public float[] fontSize;
     public float[] writeInterval;
-    public FontStyles[] fontStyle;
-    //public bool bold;
-    //public bool italic;
+    public bool[] bold;
+    public bool[] italic;
     public enum AnimationTypes {
         Wobble,
         Wave,
