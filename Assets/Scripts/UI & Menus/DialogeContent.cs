@@ -7,21 +7,15 @@ using TMPro;
 public class DialogeContent : ScriptableObject
 {
     public static char startAndEndEditChar = '*';
-    //public DialogeText[] dialogeText;
     [Tooltip("Use the '*' To start and end an editting piece")]public DialogeCustomInformation[] dialogeInformatation;
 }
-//[System.Serializable]
-//public class DialogeText {
-//    public string characterName;
-//    [TextArea(1, 5)] public string dialoge;
-//}
 [System.Serializable]
 public class DialogeCustomInformation {
     public string characterName;
     [TextArea(1, 5)] public string dialoge;
-    //public TMP_FontAsset[] font;
-    [Min(0)]public float[] fontSize;
-    public float[] writeInterval;
+    public TMP_FontAsset[] font;
+    [Min(0), Tooltip("Set to 0 if dosent want to change")] public float[] fontSize;
+    [Min(0), Tooltip("Set to 0 if dosent want to change")] public float[] writeInterval;
     public bool[] bold;
     public bool[] italic;
     public enum AnimationTypes {
@@ -29,7 +23,22 @@ public class DialogeCustomInformation {
         Wave,
         Shake
     };
-    public float[] animationIntensity;
+    [Min(0), Tooltip("Set to 0 if dosent want to change")] public float[] animationIntensity;
     public AnimationTypes[] animationType;
-    public Color[] color;
+    [Tooltip("Set Alpha Channel to 0 if dosent want to change")] public Color[] color;
+}
+public class ChangedFormatation {
+    public bool fontChanged;
+    public bool fontSizeChanged;
+    public bool boldChanged;
+    public bool italicChanged;
+    public bool colorChanged;
+
+    public void ResetValues() {
+        fontChanged = false;
+        fontSizeChanged = false;
+        boldChanged = false;
+        italicChanged = false;
+        colorChanged = false;
+    }
 }

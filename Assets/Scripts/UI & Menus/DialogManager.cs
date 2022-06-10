@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 
 public class DialogManager : MonoBehaviour {
+    //http://digitalnativestudios.com/textmeshpro/docs/rich-text/
     public static DialogManager Instance { get; private set; }
 
     [Header("Components")]
@@ -22,11 +23,10 @@ public class DialogManager : MonoBehaviour {
     private DialogeCustomInformation[] _currentDialoge;
     private float _charInterval;
     private char[] _currentCharArray;
-    //private bool _isEditting = false;
-    private bool _canStartEditting = false;
-    private short _edittingState; // 0 = no edditing, 1 = start edditing, 2 = end editting
+    private short _edittingState; // 0 = not editting, 1 = start editting, 2 = is editting, 3 = end editting
     private int _currentEffectIndex;
     private Dictionary<Vector3, Vector3> _vectorsToAnim = new Dictionary<Vector3, Vector3>();
+    private ChangedFormatation _currentFormatationChanges = new ChangedFormatation();
 
     private void Awake() {
         if (Instance == null) {
@@ -47,8 +47,9 @@ public class DialogManager : MonoBehaviour {
             if (_currentWrittingCoroutine != null) {//stop dialoge anim
                 StopCoroutine(_currentWrittingCoroutine);
                 _currentWrittingCoroutine = null;
-                _dialogText.text = _currentDialoge[_currentDialogeBox].dialoge;
+                _dialogText.text = "";
                 _vectorsToAnim.Clear();
+                _currentFormatationChanges.ResetValues();
                 for (int i = 0; i < _currentCharArray.Length; i++) SetTextConfigs(_currentCharArray[i], i);
                 _nextDialogeIcon.enabled = true;
             }
@@ -61,6 +62,7 @@ public class DialogManager : MonoBehaviour {
                     _nextDialogeIcon.enabled = false;
                     _currentDialoge = null;
                     _vectorsToAnim.Clear();
+                    _currentFormatationChanges.ResetValues();
                 }
                 else _currentWrittingCoroutine = StartCoroutine(WriteDialoge());//next dialoge box                
             }
@@ -71,7 +73,6 @@ public class DialogManager : MonoBehaviour {
         if (_currentWrittingCoroutine == null) {
             _currentDialogeBox = 0;
             _currentDialoge = dialogData;
-            //_dialogText.text = _currentDialoge[_currentDialogeBox].dialoge;
             _currentWrittingCoroutine = StartCoroutine(WriteDialoge());
             return true;
         }
@@ -84,10 +85,8 @@ public class DialogManager : MonoBehaviour {
     private IEnumerator WriteDialoge() {
         _nextDialogeIcon.enabled = false;
         _characterNameText.text = _currentDialoge[_currentDialogeBox].characterName;
-        //_dialogText.text = _currentDialoge[_currentDialogeBox].dialoge;
         _dialogText.text = "";
         _currentCharArray = _currentDialoge[_currentDialogeBox].dialoge.ToCharArray();
-        //UpdateCharsVisibility(false, true);
         for (int i = 0; i < _currentCharArray.Length; i++) {
             SetTextConfigs(_currentCharArray[i], i);
             yield return new WaitForSeconds(_charInterval);
@@ -97,50 +96,57 @@ public class DialogManager : MonoBehaviour {
     }
 
     private void SetTextConfigs(char c, int charIndex) {
-        _charInterval = _standardWriteSpeed;
-        if (c == DialogeContent.startAndEndEditChar) {
-            _dialogText.text += ' ';
+        if (c == DialogeContent.startAndEndEditChar) _edittingState++;
+        else _dialogText.text += c;
+
+        if (_edittingState == 1) {//enables basic editting on section
+            if (_currentDialoge[_currentDialogeBox].font.Length > _currentEffectIndex) {
+                if (_currentDialoge[_currentDialogeBox].font[_currentEffectIndex] != null) {
+                    _dialogText.text += $"<font={_currentDialoge[_currentDialogeBox].font[_currentEffectIndex]}>";
+                    _currentFormatationChanges.fontChanged = true;
+                }
+            }
+            if (_currentDialoge[_currentDialogeBox].fontSize.Length > _currentEffectIndex) {
+                if (_currentDialoge[_currentDialogeBox].fontSize[_currentEffectIndex] != 0) {
+                    _dialogText.text += $"<size={_currentDialoge[_currentDialogeBox].fontSize[_currentEffectIndex]}>";
+                    _currentFormatationChanges.fontSizeChanged = true;
+                }
+            }
+            if (_currentDialoge[_currentDialogeBox].writeInterval.Length > _currentEffectIndex) if (_currentDialoge[_currentDialogeBox].writeInterval[_currentEffectIndex] != 0) _charInterval = _currentDialoge[_currentDialogeBox].writeInterval[_currentEffectIndex];
+
+            if (_currentDialoge[_currentDialogeBox].color.Length > _currentEffectIndex) {
+                if (_currentDialoge[_currentDialogeBox].color[_currentEffectIndex].a != 0) {
+                    _dialogText.text += $"<color=#{ColorUtility.ToHtmlStringRGBA(_currentDialoge[_currentDialogeBox].color[_currentEffectIndex])}>";
+                    _currentFormatationChanges.colorChanged = true;
+                }
+            }
+            if (_currentDialoge[_currentDialogeBox].bold.Length > _currentEffectIndex) {
+                if (_currentDialoge[_currentDialogeBox].bold[_currentEffectIndex]) {
+                    _dialogText.text += "<b>";
+                    _currentFormatationChanges.boldChanged = true;
+                }
+            }
+            if (_currentDialoge[_currentDialogeBox].italic.Length > _currentEffectIndex) {
+                if (_currentDialoge[_currentDialogeBox].italic[_currentEffectIndex]) {
+                    _dialogText.text += "<i>";
+                    _currentFormatationChanges.italicChanged = true;
+                }
+            }            
             _edittingState++;
-            //_isEditting = !_isEditting;
-            //if (!_isEditting) _currentEffectIndex++;
         }
-        if (_edittingState == 1 && _canStartEditting) {// starts the edition to the text section
-            //if (_currentDialoge[_currentDialogeBox].font.Length > 0) _dialogText.textInfo.characterInfo[charIndex].fontAsset = _currentDialoge[_currentDialogeBox].font[_currentEffectIndex];
-            if (_currentDialoge[_currentDialogeBox].fontSize.Length > 0) _dialogText.text += "<size=" + _currentDialoge[_currentDialogeBox].fontSize[_currentEffectIndex] + ">";
-            if (_currentDialoge[_currentDialogeBox].writeInterval.Length > 0) _charInterval = _currentDialoge[_currentDialogeBox].writeInterval[_currentEffectIndex];
-            if (_currentDialoge[_currentDialogeBox].color.Length > 0) _dialogText.text  += "<color=" + _currentDialoge[_currentDialogeBox].color[_currentEffectIndex] + ">";
-            if (_currentDialoge[_currentDialogeBox].bold.Length > 0) if (_currentDialoge[_currentDialogeBox].bold[_currentEffectIndex]) _dialogText.text += "<b>";
-            if (_currentDialoge[_currentDialogeBox].italic.Length > 0) if (_currentDialoge[_currentDialogeBox].italic[_currentEffectIndex]) _dialogText.text += "<i>";
-            //if (_currentDialoge[_currentDialogeBox].animationType.Length > 0) for (int i = 0; i < 4; i++) _vectorsToAnim.Add(_dialogText.textInfo.meshInfo[charIndex].vertices[i], _dialogText.textInfo.meshInfo[charIndex].vertices[i]);//_charsToAnimate.Add(_dialogText.textInfo.meshInfo[charIndex * 2]);
-            //_edittingState++;
-        }
-        else if (_edittingState == 2) {// ends the edition to the text section
-            if (_currentDialoge[_currentDialogeBox].fontSize.Length > 0) _dialogText.text += "</size>";
-            if (_currentDialoge[_currentDialogeBox].color.Length > 0) _dialogText.text += "</color>";
-            if (_currentDialoge[_currentDialogeBox].bold.Length > 0) if (_currentDialoge[_currentDialogeBox].bold[_currentEffectIndex]) _dialogText.text += "</b>";
-            if (_currentDialoge[_currentDialogeBox].italic.Length > 0) if (_currentDialoge[_currentDialogeBox].italic[_currentEffectIndex]) _dialogText.text += "</i>";
+        else if (_edittingState == 3) {//disables basic editting on section
+            if (_currentFormatationChanges.fontChanged) _dialogText.text += "</font>";
+            if (_currentFormatationChanges.fontSizeChanged) _dialogText.text += "</size>";
+            _charInterval = _standardWriteSpeed;
+            if (_currentFormatationChanges.colorChanged) _dialogText.text += "</color>";
+            if (_currentFormatationChanges.boldChanged) _dialogText.text += "</b>";
+            if (_currentFormatationChanges.italicChanged) _dialogText.text += "</i>";
             _currentEffectIndex++;
             _edittingState = 0;
-            _canStartEditting = false;
+            _currentFormatationChanges.ResetValues();
         }
-        if (_edittingState == 1) _canStartEditting = true;
-        if (c != DialogeContent.startAndEndEditChar) _dialogText.text += c;
-        //if (c == DialogeContent.startAndEndEditChar) {
-        //    //_dialogText.text += ' ';
-        //    _isEditting = !_isEditting;
-        //    if (!_isEditting) _currentEffectIndex++;
-        //}
-        //else {
-        //    //_dialogText.text += c;
-        //    if (_isEditting && c != ' ') {
-        //        if (_currentDialoge[_currentDialogeBox].font.Length > 0) _dialogText.textInfo.characterInfo[charIndex].fontAsset = _currentDialoge[_currentDialogeBox].font[_currentEffectIndex];
-        //        if (_currentDialoge[_currentDialogeBox].fontSize.Length > 0) _dialogText.textInfo.characterInfo[charIndex].scale = _currentDialoge[_currentDialogeBox].fontSize[_currentEffectIndex];
-        //        if (_currentDialoge[_currentDialogeBox].writeInterval.Length > 0) _charInterval = _currentDialoge[_currentDialogeBox].writeInterval[_currentEffectIndex];
-        //        if (_currentDialoge[_currentDialogeBox].color.Length > 0) _dialogText.textInfo.characterInfo[charIndex].color = _currentDialoge[_currentDialogeBox].color[_currentEffectIndex];
-        //        _dialogText.textInfo.characterInfo[charIndex].style = _currentDialoge[_currentDialogeBox].fontStyle[_currentEffectIndex];
-        //        if (_currentDialoge[_currentDialogeBox].animationType.Length > 0) for (int i = 0; i < 4; i++) _vectorsToAnim.Add(_dialogText.textInfo.meshInfo[charIndex].vertices[i], _dialogText.textInfo.meshInfo[charIndex].vertices[i]);//_charsToAnimate.Add(_dialogText.textInfo.meshInfo[charIndex * 2]);
-        //    }
-        //}
+        //adds this char to current animation list if is set to animate
+        //if (_edittingState > 0 && _edittingState < 3) if (_currentDialoge[_currentDialogeBox].animationType.Length > 0) for (int i = 0; i < 4; i++) _vectorsToAnim.Add(_dialogText.textInfo.meshInfo[charIndex].vertices[i], _dialogText.textInfo.meshInfo[charIndex].vertices[i]);//_charsToAnimate.Add(_dialogText.textInfo.meshInfo[charIndex * 2]);
     }
 
     private void TextAnimation() {

@@ -7,8 +7,8 @@ TerrainLayer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: TerraPuzzle
-  m_DiffuseTexture: {fileID: 2800000, guid: 8a02d01f8a83bb5408984c67c7c02dc8, type: 3}
-  m_NormalMapTexture: {fileID: 0}
+  m_DiffuseTexture: {fileID: 2800000, guid: 6dfe1e07728ea324980ef09a62da0fdc, type: 3}
+  m_NormalMapTexture: {fileID: 2800000, guid: 9bafa2153e22c7049a6dc255ee0a925d, type: 3}
   m_MaskMapTexture: {fileID: 0}
   m_TileSize: {x: 2, y: 2}
   m_TileOffset: {x: 0, y: 0}
