@@ -9,24 +9,24 @@ public class DialogManager : MonoBehaviour {
     public static DialogManager Instance { get; private set; }
 
     [Header("Components")]
-    [SerializeField] private TMP_Text _dialogText;
+    [SerializeField] private TMP_Text _dialogeText;
     [SerializeField] private TMP_Text _characterNameText;
     [SerializeField] private Image _nextDialogeIcon;
 
     [Header("Info")]
     [SerializeField, Tooltip("If there is no Font defined by the current dialoge, this will be the font")] private TMP_FontAsset _standardFont;
     [SerializeField, Tooltip("If there is no WriteInterval defined by the current dialoge, this will be the WriteInterval")] private float _standardWriteSpeed;
-    [SerializeField] private float testing;
 
     private Coroutine _currentWrittingCoroutine = null;
     private int _currentDialogeBox;
-    private DialogeCustomInformation[] _currentDialoge;
+    private DialogeFormatationInfo[] _currentDialoge;
     private float _charInterval;
     private char[] _currentCharArray;
     private short _edittingState; // 0 = not editting, 1 = start editting, 2 = is editting, 3 = end editting
-    private int _currentEffectIndex;
-    private Dictionary<Vector3, Vector3> _vectorsToAnim = new Dictionary<Vector3, Vector3>();
-    private ChangedFormatation _currentFormatationChanges = new ChangedFormatation();
+    private int _currentEffectIndex = -1;
+    private readonly Dictionary<int, DialogeAnimationInfo> _vectorsToAnim = new Dictionary<int, DialogeAnimationInfo>();
+    private readonly ChangedFormatation _currentFormatationChanges = new ChangedFormatation();
+    private byte _edittingCharCount;//counts how many edit chars had in the current dialoge to animations properly work
 
     private void Awake() {
         if (Instance == null) {
@@ -40,14 +40,14 @@ public class DialogManager : MonoBehaviour {
         SkipText();
         TextAnimation();
     }
-
     private void SkipText() {
         if (PlayerInputs.interactKeyPressed > 0 && _currentDialoge != null) {
             PlayerInputs.interactKeyPressed = 0;
             if (_currentWrittingCoroutine != null) {//stop dialoge anim
                 StopCoroutine(_currentWrittingCoroutine);
                 _currentWrittingCoroutine = null;
-                _dialogText.text = "";
+                _edittingCharCount = 0;
+                _dialogeText.text = "";
                 _vectorsToAnim.Clear();
                 _currentFormatationChanges.ResetValues();
                 for (int i = 0; i < _currentCharArray.Length; i++) SetTextConfigs(_currentCharArray[i], i);
@@ -55,21 +55,29 @@ public class DialogManager : MonoBehaviour {
             }
             else {
                 _currentDialogeBox++;
-                _currentEffectIndex = 0;
-                if (_currentDialogeBox >= _currentDialoge.Length) {//end of dialoge
+                _currentEffectIndex = -1;
+                if (_currentDialogeBox >= _currentDialoge.Length) {//end of dialoge                    
                     _characterNameText.text = "";
-                    _dialogText.text = "";
+                    _dialogeText.text = "";
                     _nextDialogeIcon.enabled = false;
+                    _edittingCharCount = 0;
                     _currentDialoge = null;
                     _vectorsToAnim.Clear();
                     _currentFormatationChanges.ResetValues();
                 }
-                else _currentWrittingCoroutine = StartCoroutine(WriteDialoge());//next dialoge box                
+                else {//next dialoge box
+                    _nextDialogeIcon.enabled = false;
+                    _characterNameText.text = _currentDialoge[_currentDialogeBox].characterName;
+                    _dialogeText.text = "";
+                    _vectorsToAnim.Clear();
+                    _currentFormatationChanges.ResetValues();
+                    _currentWrittingCoroutine = StartCoroutine(WriteDialoge());
+                }
             }
         }
     }
 
-    public bool StartDialoge(DialogeCustomInformation[] dialogData) {
+    public bool StartDialoge(DialogeFormatationInfo[] dialogData) {
         if (_currentWrittingCoroutine == null) {
             _currentDialogeBox = 0;
             _currentDialoge = dialogData;
@@ -77,18 +85,16 @@ public class DialogManager : MonoBehaviour {
             return true;
         }
         else {
-            Debug.LogError("Already with text");
+            Debug.LogWarning("Dialoge Manager Already with text");
             return false;
         }
     }
 
     private IEnumerator WriteDialoge() {
-        _nextDialogeIcon.enabled = false;
-        _characterNameText.text = _currentDialoge[_currentDialogeBox].characterName;
-        _dialogText.text = "";
         _currentCharArray = _currentDialoge[_currentDialogeBox].dialoge.ToCharArray();
         for (int i = 0; i < _currentCharArray.Length; i++) {
-            SetTextConfigs(_currentCharArray[i], i);
+            if (_currentCharArray[i] == DialogeContent.startAndEndEditChar) _edittingCharCount++;
+            SetTextConfigs(_currentCharArray[i], i - (_edittingCharCount));
             yield return new WaitForSeconds(_charInterval);
         }
         _nextDialogeIcon.enabled = true;
@@ -96,120 +102,114 @@ public class DialogManager : MonoBehaviour {
     }
 
     private void SetTextConfigs(char c, int charIndex) {
-        if (c == DialogeContent.startAndEndEditChar) _edittingState++;
-        else _dialogText.text += c;
+        if (c == DialogeContent.startAndEndEditChar) {
+            _edittingState++;
+            StandardFormatation();
+        }
+        else {
+            _dialogeText.text += c;
+            //adds this char verticies to current animation list if is set to animate
+            if (_edittingState > 0) AnimationFormatation(charIndex);
+        }
+    }
 
+    private void StandardFormatation() {
         if (_edittingState == 1) {//enables basic editting on section
+            _currentEffectIndex++;
             if (_currentDialoge[_currentDialogeBox].font.Length > _currentEffectIndex) {
                 if (_currentDialoge[_currentDialogeBox].font[_currentEffectIndex] != null) {
-                    _dialogText.text += $"<font={_currentDialoge[_currentDialogeBox].font[_currentEffectIndex]}>";
+                    _dialogeText.text += $"<font={_currentDialoge[_currentDialogeBox].font[_currentEffectIndex]}>";
                     _currentFormatationChanges.fontChanged = true;
                 }
             }
             if (_currentDialoge[_currentDialogeBox].fontSize.Length > _currentEffectIndex) {
-                if (_currentDialoge[_currentDialogeBox].fontSize[_currentEffectIndex] != 0) {
-                    _dialogText.text += $"<size={_currentDialoge[_currentDialogeBox].fontSize[_currentEffectIndex]}>";
+                if (_currentDialoge[_currentDialogeBox].fontSize[_currentEffectIndex] > 0) {
+                    _dialogeText.text += $"<size={_currentDialoge[_currentDialogeBox].fontSize[_currentEffectIndex]}>";
                     _currentFormatationChanges.fontSizeChanged = true;
                 }
             }
             if (_currentDialoge[_currentDialogeBox].writeInterval.Length > _currentEffectIndex) if (_currentDialoge[_currentDialogeBox].writeInterval[_currentEffectIndex] != 0) _charInterval = _currentDialoge[_currentDialogeBox].writeInterval[_currentEffectIndex];
 
             if (_currentDialoge[_currentDialogeBox].color.Length > _currentEffectIndex) {
-                if (_currentDialoge[_currentDialogeBox].color[_currentEffectIndex].a != 0) {
-                    _dialogText.text += $"<color=#{ColorUtility.ToHtmlStringRGBA(_currentDialoge[_currentDialogeBox].color[_currentEffectIndex])}>";
+                if (_currentDialoge[_currentDialogeBox].color[_currentEffectIndex].a > 0) {
+                    _dialogeText.text += $"<color=#{ColorUtility.ToHtmlStringRGBA(_currentDialoge[_currentDialogeBox].color[_currentEffectIndex])}>";
                     _currentFormatationChanges.colorChanged = true;
                 }
             }
             if (_currentDialoge[_currentDialogeBox].bold.Length > _currentEffectIndex) {
                 if (_currentDialoge[_currentDialogeBox].bold[_currentEffectIndex]) {
-                    _dialogText.text += "<b>";
+                    _dialogeText.text += "<b>";
                     _currentFormatationChanges.boldChanged = true;
                 }
             }
             if (_currentDialoge[_currentDialogeBox].italic.Length > _currentEffectIndex) {
                 if (_currentDialoge[_currentDialogeBox].italic[_currentEffectIndex]) {
-                    _dialogText.text += "<i>";
+                    _dialogeText.text += "<i>";
                     _currentFormatationChanges.italicChanged = true;
                 }
-            }            
+            }
             _edittingState++;
         }
         else if (_edittingState == 3) {//disables basic editting on section
-            if (_currentFormatationChanges.fontChanged) _dialogText.text += "</font>";
-            if (_currentFormatationChanges.fontSizeChanged) _dialogText.text += "</size>";
+            if (_currentFormatationChanges.fontChanged) _dialogeText.text += "</font>";
+            if (_currentFormatationChanges.fontSizeChanged) _dialogeText.text += "</size>";
             _charInterval = _standardWriteSpeed;
-            if (_currentFormatationChanges.colorChanged) _dialogText.text += "</color>";
-            if (_currentFormatationChanges.boldChanged) _dialogText.text += "</b>";
-            if (_currentFormatationChanges.italicChanged) _dialogText.text += "</i>";
-            _currentEffectIndex++;
+            if (_currentFormatationChanges.colorChanged) _dialogeText.text += "</color>";
+            if (_currentFormatationChanges.boldChanged) _dialogeText.text += "</b>";
+            if (_currentFormatationChanges.italicChanged) _dialogeText.text += "</i>";
             _edittingState = 0;
             _currentFormatationChanges.ResetValues();
         }
-        //adds this char to current animation list if is set to animate
-        //if (_edittingState > 0 && _edittingState < 3) if (_currentDialoge[_currentDialogeBox].animationType.Length > 0) for (int i = 0; i < 4; i++) _vectorsToAnim.Add(_dialogText.textInfo.meshInfo[charIndex].vertices[i], _dialogText.textInfo.meshInfo[charIndex].vertices[i]);//_charsToAnimate.Add(_dialogText.textInfo.meshInfo[charIndex * 2]);
+    }
+
+    private void AnimationFormatation(int charIndex) {
+        if (_currentDialoge[_currentDialogeBox].animationDetails.Length > _currentEffectIndex) {
+            if (_currentDialoge[_currentDialogeBox].animationDetails[_currentEffectIndex].animationIntensity > 0) {
+                _vectorsToAnim.Add(charIndex, _currentDialoge[_currentDialogeBox].animationDetails[_currentEffectIndex]);//saving the chars of the mesh that will be animated    
+            }
+        }
     }
 
     private void TextAnimation() {
         if (_vectorsToAnim.Count > 0) {
-            switch (_currentDialoge[_currentDialogeBox].animationType[_currentEffectIndex]) {
-                case DialogeCustomInformation.AnimationTypes.Wobble:
-                    _dialogText.ForceMeshUpdate();
-                    Mesh meshWobble = _dialogText.mesh;
-                    Vector3[] verticesWobble = meshWobble.vertices;
-                    for (int a = 0; a < verticesWobble.Length; a++) if (_vectorsToAnim.ContainsKey(verticesWobble[a])) verticesWobble[a] += WobbleCalc(Time.time + a, _currentDialoge[_currentDialogeBox].animationIntensity[_currentEffectIndex]);
-                    _dialogText.mesh.vertices = verticesWobble;
-                    _dialogText.canvasRenderer.SetMesh(meshWobble);
-                    break;
-                case DialogeCustomInformation.AnimationTypes.Shake:
-                    _dialogText.ForceMeshUpdate();
-                    Mesh meshShake = _dialogText.mesh;
-                    Vector3[] verticesShake = meshShake.vertices;
-                    Vector3 currentShakeVal = ShakeCalc(0, _currentDialoge[_currentDialogeBox].animationIntensity[_currentEffectIndex]);
-                    for (int a = 0; a < verticesShake.Length; a++) {
-                        if (_vectorsToAnim.ContainsKey(verticesShake[a])) {
-                            if (a % 4 == 0) currentShakeVal = ShakeCalc(Time.time + a, _currentDialoge[_currentDialogeBox].animationIntensity[_currentEffectIndex]);
-                            verticesShake[a] += currentShakeVal;
-                        }
+            _dialogeText.ForceMeshUpdate();
+            Mesh mesh = _dialogeText.mesh;
+            Vector3[] vertices = mesh.vertices;
+            for (int a = 0; a < _dialogeText.textInfo.characterCount; a++) {
+                if (_vectorsToAnim.ContainsKey(a)) {
+                    int index = _dialogeText.textInfo.characterInfo[a].vertexIndex;
+                    switch (_vectorsToAnim[a].animationType) {
+                        case DialogeAnimationInfo.AnimationTypes.Wobble:
+                            vertices[index] += WobbleCalc(1 + a, _vectorsToAnim[a].animationIntensity);
+                            vertices[index + 1] += WobbleCalc(Time.time + a, _vectorsToAnim[a].animationIntensity);
+                            vertices[index + 2] += WobbleCalc(Time.time + a, _vectorsToAnim[a].animationIntensity);
+                            vertices[index + 3] += WobbleCalc(Time.time + a, _vectorsToAnim[a].animationIntensity);
+                            break;
+                        case DialogeAnimationInfo.AnimationTypes.Shake:
+                            Vector3 currentShakeVal = ShakeCalc(_vectorsToAnim[a].animationIntensity);
+                            vertices[index] += currentShakeVal;
+                            vertices[index + 1] += currentShakeVal;
+                            vertices[index + 2] += currentShakeVal;
+                            vertices[index + 3] += currentShakeVal;
+                            break;
+                        case DialogeAnimationInfo.AnimationTypes.Wave:
+                            vertices[index] += WaveCalc(vertices[index].x, _vectorsToAnim[a].animationIntensity);
+                            vertices[index + 1] += WaveCalc(vertices[index + 1].x, _vectorsToAnim[a].animationIntensity);
+                            vertices[index + 2] += WaveCalc(vertices[index + 2].x, _vectorsToAnim[a].animationIntensity);
+                            vertices[index + 3] += WaveCalc(vertices[index + 3].x, _vectorsToAnim[a].animationIntensity);
+                            break;
                     }
-                    _dialogText.mesh.vertices = verticesShake;
-                    _dialogText.canvasRenderer.SetMesh(meshShake);
-                    break;
-                case DialogeCustomInformation.AnimationTypes.Wave:
-                    //for (int i = 0; i < animChar.mesh.vertices.Length; i++) {
-                    //                    animChar.mesh.vertices[i] += new Vector3(0, Mathf.Sin(Time.time * 2 + animChar.mesh.vertices[i].x * .01f) * 10, 0);
-                    //                    _dialogText.UpdateGeometry(animChar.mesh, GetMeshIndex(animChar.mesh));
-                    //                }
-                    //                Vector3[] verts = _dialogText.textInfo.meshInfo[animChar.materialReferenceIndex].vertices;
-                    //                for (int i = 0; i < 4; i++) {
-                    //                    Vector3 origin = verts[animChar.vertexIndex + i];
-                    //                    verts[animChar.vertexIndex + i] = origin + new Vector3(0, Mathf.Sin(Time.time * 2 + origin.x * .01f) * 10, 0);
-                    //                }
-                    //                for (int j = 0; j < _dialogText.textInfo.meshInfo.Length; j++) {
-                    //                    _dialogText.textInfo.meshInfo[j].mesh.vertices = _dialogText.textInfo.meshInfo[j].vertices;
-                    //                    _dialogText.UpdateGeometry(_dialogText.textInfo.meshInfo[j].mesh, j);
-                    //                }
-                    break;
+                }
             }
+            _dialogeText.mesh.vertices = vertices;
+            _dialogeText.canvasRenderer.SetMesh(mesh);
         }
-
-        //        _dialogText.ForceMeshUpdate();
-        //Mesh m = _dialogText.mesh;
-        //Vector3[] vertices = m.vertices;
-        //Vector3 currentShakeVal = ShakeCalc(0, testing);
-        //for (int a = 0; a < vertices.Length; a++) {            
-        //    if(a % 4 == 0) currentShakeVal = ShakeCalc(Time.time + a, testing);
-        //    vertices[a] += currentShakeVal;
-        //    //vertices[a] += WobbleCalc(Time.time + a, testing);
-        //}
-
-        //_dialogText.mesh.vertices = vertices;
-        //_dialogText.canvasRenderer.SetMesh(m);
     }
 
     private Vector3 WobbleCalc(float time, float intensity) {
         return new Vector3(Mathf.Sin(time * (1.1f + intensity)), Mathf.Sin(time * (.8f + intensity)), 0);
     }
-    private Vector3 ShakeCalc(float time, float intensity) {
+    private Vector3 ShakeCalc(float intensity) {
         return new Vector3(Random.Range(-intensity, intensity), Random.Range(-intensity, intensity), 0);
     }
     private Vector3 WaveCalc(float currentVertexXValue, float intensity) {

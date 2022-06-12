@@ -14,21 +14,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogeInformatation:
   - characterName: 1
-    dialoge: Texto 1 *AA* *bb*
+    dialoge: '*aaa**ccc**ddd*'
     font: []
     fontSize:
     - 50
     - 30
     writeInterval:
-    - 2
-    - 0
+    - 1
+    - 0.5
     bold: 01
     italic: 0001
-    animationIntensity: []
-    animationType: 
     color:
     - {r: 1, g: 0, b: 0, a: 1}
     - {r: 0, g: 0.026599884, b: 1, a: 1}
+    animationDetails:
+    - animationType: 0
+      animationIntensity: 7
+    - animationType: 1
+      animationIntensity: 7
+    - animationType: 2
+      animationIntensity: 7
   - characterName: 2
     dialoge: Texto 2
     font: []
@@ -36,6 +41,5 @@ MonoBehaviour:
     writeInterval: []
     bold: 
     italic: 
-    animationIntensity: []
-    animationType: 
     color: []
+    animationDetails: []
