@@ -40,6 +40,7 @@ public class DialogManager : MonoBehaviour {
         SkipText();
         TextAnimation();
     }
+    //the player inputs to continue dialoge
     private void SkipText() {
         if (PlayerInputs.interactKeyPressed > 0 && _currentDialoge != null) {
             PlayerInputs.interactKeyPressed = 0;
@@ -90,6 +91,7 @@ public class DialogManager : MonoBehaviour {
         }
     }
 
+    //writes char per char in the dialoge box
     private IEnumerator WriteDialoge() {
         _currentCharArray = _currentDialoge[_currentDialogeBox].dialoge.ToCharArray();
         for (int i = 0; i < _currentCharArray.Length; i++) {
@@ -113,6 +115,7 @@ public class DialogManager : MonoBehaviour {
         }
     }
 
+    //will do the basic formatation of the text Ex: size, fonStyle, Color, etc
     private void StandardFormatation() {
         if (_edittingState == 1) {//enables basic editting on section
             _currentEffectIndex++;
@@ -162,6 +165,7 @@ public class DialogManager : MonoBehaviour {
         }
     }
 
+    //saves each char that needs to be animated in a dictionary to be redrawn in order to perform the animation
     private void AnimationFormatation(int charIndex) {
         if (_currentDialoge[_currentDialogeBox].animationDetails.Length > _currentEffectIndex) {
             if (_currentDialoge[_currentDialogeBox].animationDetails[_currentEffectIndex].animationIntensity > 0) {
@@ -170,6 +174,7 @@ public class DialogManager : MonoBehaviour {
         }
     }
 
+    //makes the characters animate
     private void TextAnimation() {
         if (_vectorsToAnim.Count > 0) {
             _dialogeText.ForceMeshUpdate();

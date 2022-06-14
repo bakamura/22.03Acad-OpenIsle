@@ -15,11 +15,11 @@ public class LoadScene : MonoBehaviour {
         ChangeCompletely
     };
 
-    //Evitar uso desnecessario de colliders
     private void OnTriggerEnter(Collider other) {
         if (other.CompareTag("Player")){
             switch (_loadType) {
                 case LoadTypes.Async:
+                    //will only load if ist not currently loading and if not already loaded
                     if (_asyncOperation == null && !_isSceneLoaded) {
                         _asyncOperation = SceneManager.LoadSceneAsync(SceneToLoad, LoadSceneMode.Additive);
                         _isSceneLoaded = true;

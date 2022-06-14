@@ -7,7 +7,7 @@ public class EnemyBehaviour : MonoBehaviour {
     [SerializeField] private Collider _hitDetection;
     [SerializeField] private Transform _attackPoint;
     [SerializeField] private GameObject _bulletPrefab;// if is shoot
-    [SerializeField] private Transform _bulletStartPoint;// if is shoot
+    //[SerializeField] private Transform _bulletStartPoint;// if is shoot
     [SerializeField] private LayerMask _player;//if is not passive
 
     private EnemyData _data;
@@ -25,7 +25,7 @@ public class EnemyBehaviour : MonoBehaviour {
     public float _damage;//if is not passive
     [SerializeField] private float _attackSpeed;//if is not passive
     [SerializeField] private float _rotationSpeed;//if goes to target
-    [SerializeField] private Vector3 _actionArea;
+    [SerializeField] private float _actionArea;
     [SerializeField] private bool _isKamikaze;//if is not passive
 
     [HideInInspector] public bool isAgressive;
@@ -49,14 +49,25 @@ public class EnemyBehaviour : MonoBehaviour {
         _data.cancelAttack += ActionInterupt;
         isAgressive = _enemyType != EnemyTypes.neutral && _enemyType != EnemyTypes.passive;
         if (_enemyType == EnemyTypes.shoot) _bullets = new List<BulletEnemy>();
-        float totalDistance = Vector3.Distance(_attackPoint.position, transform.position) + _actionArea.z * .5f;
-        _actionRange = Mathf.Sqrt(Mathf.Pow(totalDistance, 2) * 2);
+        float totalDistance = Vector3.Distance(_attackPoint.position, transform.position) + _actionArea; //_actionArea.z * .5f;
+        _actionRange = totalDistance;//Mathf.Sqrt(Mathf.Pow(totalDistance, 3));//due to the action area be a cube, it make that the distance to initiate the action is the hypotenuse of the cube
         //_data.cancelAttack += DisableDetection; if with collider
     }
 
     private void Start() {
-        float totalDistance = Vector3.Distance(_attackPoint.position, transform.position) + _actionArea.z * .5f;
-        pointAroundPlayer = _movmentScript._isFlying ? new Vector3(Random.Range(-totalDistance, totalDistance) * .9f, Random.Range(totalDistance * .5f, totalDistance * .9f), Random.Range(-totalDistance, totalDistance) * .9f) : Vector3.zero;
+        float totalDistance = Vector3.Distance(_attackPoint.position, transform.position) + _actionArea;//_actionArea.z * .5f;
+        pointAroundPlayer = _movmentScript._isFlying ? RandomPointInsideSphere(totalDistance) : Vector3.zero;
+        //new Vector3(Random.Range(-totalDistance, totalDistance) * .9f, Random.Range(totalDistance * .5f, totalDistance * .9f), Random.Range(-totalDistance, totalDistance) * .9f)
+    }
+
+    private Vector3 RandomPointInsideSphere(float radius) {
+        float x = Random.Range(-radius, radius) * .9f;
+        float y = Random.Range(radius * .5f, radius * .9f);
+        float z = Random.Range(-radius, radius) * .9f;
+        return radius * Mathf.Pow(Random.Range(0f,1f),1/3)/ 
+            Mathf.Sqrt(Mathf.Pow(x, 2) + 
+            Mathf.Pow(y, 2) + 
+            Mathf.Pow(z, 2)) * new Vector3(x,y,z);
     }
 
     private void Update() {
@@ -74,14 +85,16 @@ public class EnemyBehaviour : MonoBehaviour {
         }
     }
 
+    //detects if the target is in the range of attack
     private void FixedUpdate() {
         // action logic
-        if (Physics.CheckBox(_attackPoint.position, _actionArea, Quaternion.identity, _player) && !_isActionInCooldown && !_isKamikaze && _enemyType != EnemyTypes.shoot) {
+        if (Physics.CheckSphere(_attackPoint.position, _actionArea, _player) && !_isActionInCooldown && !_isKamikaze && _enemyType != EnemyTypes.shoot) {
             PlayerData.Instance.TakeDamage(_damage);
             _isActionInCooldown = true;
         }
     }
 
+    //removes the cooldow of the attack 
     public void StartActionSetup() { // anim event
         _isActionInCooldown = false;
         //_hitDetection.enabled = true;
@@ -94,7 +107,7 @@ public class EnemyBehaviour : MonoBehaviour {
             else if (_enemyType == EnemyTypes.shoot) Shoot();            
         }
         //_hitDetection.enabled = false;
-        if (!_isTargetInRange) {
+        if (!_isTargetInRange) {//if it lost its target will try to start moving
             if (_movmentScript) {
                 _movmentScript._isMovmentLocked = false;
                 if (_movmentScript._navMeshAgent) _movmentScript._navMeshAgent.isStopped = false;
@@ -106,19 +119,19 @@ public class EnemyBehaviour : MonoBehaviour {
     private void Shoot() {
         if (_bullets.Count < _bulletAmount) {
             GameObject bullet = Instantiate(_bulletPrefab, transform.position, Quaternion.identity, null);
-            bullet.GetComponent<BulletEnemy>().Activate(true, _bulletStartPoint.position, PlayerData.Instance.transform, _bulletSize, _bulletSpeed, _bulletMaxHeighOffset, _damage);
+            bullet.GetComponent<BulletEnemy>().Activate(true, _attackPoint.position, PlayerData.Instance.transform, _bulletSize, _bulletSpeed, _bulletMaxHeighOffset, _damage);
             _bullets.Add(bullet.GetComponent<BulletEnemy>());
         }
         else {
             foreach (BulletEnemy bullet in _bullets) {
-                if (!bullet.isActiveAndEnabled) bullet.Activate(true, _bulletStartPoint.position, PlayerData.Instance.transform, _bulletSize, _bulletSpeed, _bulletMaxHeighOffset, _damage);
+                if (!bullet.isActiveAndEnabled) bullet.Activate(true, _attackPoint.position, PlayerData.Instance.transform, _bulletSize, _bulletSpeed, _bulletMaxHeighOffset, _damage);
                 break;
             }
         }
     }
 
     private void KamikazeAttack() {
-        if (Physics.CheckBox(_attackPoint.position, _actionArea, Quaternion.identity, _player)) PlayerData.Instance.TakeDamage(_damage);
+        if (Physics.CheckSphere(_attackPoint.position, _actionArea, _player)) PlayerData.Instance.TakeDamage(_damage);
         _movmentScript._isMovmentLocked = false;
         if (_movmentScript._navMeshAgent) _movmentScript._navMeshAgent.isStopped = false;
         _isActionInCooldown = false;
@@ -133,10 +146,12 @@ public class EnemyBehaviour : MonoBehaviour {
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected() {
         Gizmos.color = Color.black;
-        Gizmos.DrawWireCube(_attackPoint.position, _actionArea);
+        Gizmos.DrawWireSphere(_attackPoint.position, _actionArea);
         if (UnityEditor.EditorApplication.isPlaying) {
             Gizmos.color = Color.blue;
             Gizmos.DrawCube(PlayerMovement.Instance.transform.position + pointAroundPlayer, new Vector3(.1f, .1f, .1f));
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(PlayerMovement.Instance.transform.position, _actionRange);
         }
     }
 #endif

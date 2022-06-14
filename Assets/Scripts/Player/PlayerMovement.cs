@@ -38,7 +38,7 @@ public class PlayerMovement : MonoBehaviour {
 
     void Update() {
         isGrounded = Physics.OverlapBox(transform.position + groundCheckPoint, _boxSize / 2, Quaternion.identity, groundLayer).Length > 0;
-        _dashCurrentCooldown -= Time.deltaTime;
+        _dashCurrentCooldown -= Time.deltaTime;//updates de dash cooldown
 
         if (!movementLock) {
             // Jump
@@ -52,7 +52,7 @@ public class PlayerMovement : MonoBehaviour {
             if (PlayerInputs.dashKeyPressed > 0 && _dashCurrentCooldown <= 0 /*&& HorizontalMovementAndRotation().magnitude > 0*/) {
                 PlayerInputs.dashKeyPressed = 0;
                 _dashCurrentCooldown = _dashInernalCooldown;
-
+                //if the player is doing movment inputs the dash will go to the direction of the movment, in other case will go to the current foward direction
                 float targetLookAngle = new Vector2(PlayerInputs.horizontalAxis, PlayerInputs.verticalAxis).magnitude > 0 ?
                     (Mathf.Atan2(PlayerInputs.horizontalAxis, PlayerInputs.verticalAxis) * Mathf.Rad2Deg) + Camera.main.transform.eulerAngles.y :
                     Mathf.Atan2(transform.forward.x, transform.forward.z) * Mathf.Rad2Deg;
@@ -68,11 +68,12 @@ public class PlayerMovement : MonoBehaviour {
         // Movement
         if (!movementLock) {
             Vector3 hMovement = HorizontalMovementAndRotation() * Time.fixedDeltaTime;
-            float expectedMag = (PlayerData.rb.velocity + hMovement).magnitude;
+            //float expectedMag = (PlayerData.rb.velocity + hMovement).magnitude;
             PlayerData.rb.velocity += hMovement;
         }
     }
 
+    //updates the rotation and movment of the player
     private Vector3 HorizontalMovementAndRotation() {
         if (PlayerInputs.horizontalAxis != 0 || PlayerInputs.verticalAxis != 0) {
             float targetLookAngle = (Mathf.Atan2(PlayerInputs.horizontalAxis, PlayerInputs.verticalAxis) * Mathf.Rad2Deg) + Camera.main.transform.eulerAngles.y;
@@ -83,6 +84,7 @@ public class PlayerMovement : MonoBehaviour {
             Vector3 moveDirection = (Quaternion.Euler(0, targetLookAngle, 0) * Vector3.forward).normalized;
             return moveDirection * _movementAcceleration;
         }
+        //if the player is not moving aply a desaceleration to it, and its stronger if is on grond
         else return (isGrounded ? -4 : -0.125f) * new Vector3(PlayerData.rb.velocity.x, 0, PlayerData.rb.velocity.z).normalized;
     }
 

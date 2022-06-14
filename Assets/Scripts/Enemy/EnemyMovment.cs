@@ -68,16 +68,17 @@ public class EnemyMovment : MonoBehaviour {
         }
     }
 
+    //rotates the enemy towards its target
     private void SetRotation(Vector3 target) {
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(target - transform.position), Time.deltaTime * _rotationSpeed);
     }
 
     private void MovmentLogic() {
         float distanceFromTarget;
-        if (_willGoTowardsPlayer) {
+        if (_willGoTowardsPlayer) {//if the enemy will move and will follow the player
             distanceFromTarget = Vector3.Distance(PlayerMovement.Instance.transform.position, transform.position);
             if (distanceFromTarget <= _detectionRange && Vector3.Angle(transform.forward, (PlayerMovement.Instance.transform.position - transform.position).normalized) <= _viewAngle / 2) {//move to player
-                if (_randomPoinCoroutine != null) {
+                if (_randomPoinCoroutine != null) {//stop the wandering coroutine
                     StopCoroutine(_randomPoinCoroutine);
                     _randomPoinCoroutine = null;
                     _isMovmentLocked = false;
@@ -87,7 +88,7 @@ public class EnemyMovment : MonoBehaviour {
                 _isWandering = false;
                 _currentTarget = PlayerMovement.Instance.transform.position;
             }
-            else if (_canWander) {
+            else if (_canWander) {//if the enemy will move and didnt find the player, and can wander
                 _isFollowingPlayer = false;
                 distanceFromTarget = Vector3.Distance(_currentTarget, transform.position);
                 CheckForNewRandomPoint(distanceFromTarget);
@@ -153,6 +154,7 @@ public class EnemyMovment : MonoBehaviour {
         _FOVMesh = CreateConeMesh();
     }
 
+    //creates the visual cone in the editor thar represents the FOV
     private Mesh CreateConeMesh() {
         Mesh pyramid = new Mesh();
         int numOfTriangles = 14;

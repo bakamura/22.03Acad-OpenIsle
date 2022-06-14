@@ -34,6 +34,6 @@ public class AmuletObject : MonoBehaviour {
     private void DetectForEnemy() {
         //new Vector3(_meshRender.bounds.size.x * transform.localScale.x, _meshRender.bounds.size.y * transform.localScale.y, _meshRender.bounds.size.z * transform.localScale.z)
         Collider[] hits = Physics.OverlapBox(transform.position, transform.lossyScale / 2, Quaternion.identity, _enemyLayerMask);
-        foreach (Collider enemy in hits)  enemy.GetComponent<EnemyData>().TakeDamage(999);        
+        foreach (Collider enemy in hits)  enemy.GetComponent<EnemyData>().TakeDamage(999, 0, 0);        
     }
 }

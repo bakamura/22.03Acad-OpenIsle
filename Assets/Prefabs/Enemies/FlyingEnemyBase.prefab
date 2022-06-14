@@ -233,9 +233,11 @@ MonoBehaviour:
   _movmentSpeed: 0
   _rotationSpeed: 0
   _detectionRange: 7
+  _viewAngle: 0
+  _FOVcolor: {r: 1, g: 0, b: 0, a: 1}
   _randomNavegationArea: 0
-  minDistanceFromWanderingPoint: 0
-  randomNavPointCooldown: 0
+  _minDistanceFromWanderingPoint: 0
+  _randomNavPointCooldown: 0
   _isFlying: 1
   _canWander: 0
   _willGoTowardsPlayer: 0
@@ -253,7 +255,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxHealth: 100
-  _knockBackAmount: 6
+  _knockBackResistance: 0
   _knockBackDuration: 3
   _knockBackInvencibilityTime: 5
 --- !u!114 &3850324672492117541
@@ -271,22 +273,20 @@ MonoBehaviour:
   _hitDetection: {fileID: 3850324671442750557}
   _attackPoint: {fileID: 3850324671442750558}
   _bulletPrefab: {fileID: 58410805208611659, guid: 9cf669c4be53d774ea93b69b8b11861e, type: 3}
-  _bulletStartPoint: {fileID: 1566392830369777652}
   _player:
     serializedVersion: 2
     m_Bits: 3
-  enemyType: 3
+  _enemyType: 0
   _damage: 0
   _attackSpeed: 0
   _rotationSpeed: 0
-  actionArea: 0
+  _actionArea: {x: 1, y: 1, z: 1}
   _isKamikaze: 0
   isAgressive: 0
   _bulletSize: 0
   _bulletSpeed: 0
   _bulletAmount: 0
   _bulletMaxHeighOffset: 0
-  pointAroundPlayer: {x: 0, y: 0, z: 0}
 --- !u!114 &3850324672492117551
 MonoBehaviour:
   m_ObjectHideFlags: 0

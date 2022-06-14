@@ -15,12 +15,13 @@ public class EnemyData : MonoBehaviour {
 
     [SerializeField] private float _maxHealth;
     private float _currentHealth;
-    [SerializeField] private float _knockBackAmount;
+    [SerializeField, Range(0f, 1f), Tooltip("how much the knockBackForce is actually aplied")] private float _knockBackResistance;
     [SerializeField] private float _knockBackDuration;
     [SerializeField] private float _knockBackInvencibilityTime;
     private float _currentKnockBackInvencibility;
     [System.NonSerialized] public UnityAction cancelAttack;
     private Vector3 _kncockbackDirection;
+    private float _knockbackForce;
 
     private void Awake() {
         _enemyMovment = GetComponent<EnemyMovment>();
@@ -33,6 +34,7 @@ public class EnemyData : MonoBehaviour {
         _currentKnockBackInvencibility -= Time.deltaTime;
     }
 
+
     public void Activate(bool isActivating) {
         _currentHealth = _maxHealth;
         _currentKnockBackInvencibility = 0;
@@ -41,8 +43,9 @@ public class EnemyData : MonoBehaviour {
         gameObject.SetActive(isActivating);
     }
 
-    public void TakeDamage(float damageAmount) {
+    public void TakeDamage(float damageAmount, float knockBackAmount, float hitStunDuration) {
         _currentHealth -= damageAmount;
+        _knockbackForce = knockBackAmount;
         if (_currentHealth <= 0) {
             Activate(false);
             return;
@@ -53,7 +56,7 @@ public class EnemyData : MonoBehaviour {
             cancelAttack.Invoke(); //
             _visualScript.StunAnim();
             if (_enemyMovment) Knockback();
-            Invoke(nameof(StopKnockBack), _knockBackDuration);
+            Invoke(nameof(StopKnockBack), Mathf.Clamp(hitStunDuration * _knockBackResistance, 1f, 10));
         }
     }
 
@@ -61,17 +64,17 @@ public class EnemyData : MonoBehaviour {
         _kncockbackDirection = (transform.position - PlayerData.Instance.transform.position).normalized;
         if (!_enemyMovment._isFlying) _enemyMovment._navMeshAgent.isStopped = true;
         _enemyMovment._isMovmentLocked = true;
-        InvokeRepeating(nameof(GroundKncockBackMovment), 0, Time.fixedDeltaTime);
+        InvokeRepeating(nameof(KnockBackMovment), 0, Time.fixedDeltaTime);
     }
 
-    private void GroundKncockBackMovment() {
-        transform.position += _knockBackAmount * Time.fixedDeltaTime * _kncockbackDirection;
+    private void KnockBackMovment() {
+        transform.position += (_knockbackForce * _knockBackResistance) * Time.fixedDeltaTime * _kncockbackDirection;
     }
 
     private void StopKnockBack() {
         _visualScript.EndStunAnim();
         if (_enemyMovment) {
-            CancelInvoke(nameof(GroundKncockBackMovment));
+            CancelInvoke(nameof(KnockBackMovment));
             if (!_enemyMovment._isFlying) _enemyMovment._navMeshAgent.isStopped = false;
             _enemyMovment._isMovmentLocked = false;
         }

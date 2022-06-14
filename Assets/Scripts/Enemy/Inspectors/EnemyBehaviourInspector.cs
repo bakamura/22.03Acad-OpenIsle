@@ -16,7 +16,7 @@ public class EnemyBehaviourInspector : Editor {
         //inspector._attackPoint = EditorGUILayout.ObjectField("Attack Point", inspector._attackPoint, typeof(Transform), true) as Transform;
         if (enemyType.enumValueIndex == (int)EnemyBehaviour.EnemyTypes.shoot) {// inspector._enemyType == EnemyBehaviour.EnemyTypes.shoot
             EditorGUILayout.PropertyField(bulletPrefab, new GUIContent("Bullet Prefab"));
-            EditorGUILayout.PropertyField(bulletStartPoint, new GUIContent("Bullet Start Point"));
+            //EditorGUILayout.PropertyField(bulletStartPoint, new GUIContent("Bullet Start Point"));
             //inspector._bulletPrefab = EditorGUILayout.ObjectField("Bullet Prefab", inspector._bulletPrefab, typeof(GameObject), true) as GameObject;
             //inspector._bulletStartPoint = EditorGUILayout.ObjectField("Bullet Start Point", inspector._bulletStartPoint, typeof(Transform), true) as Transform;
         }
