@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c87912a9637d1704698abe876a03e908
+guid: 9a39f46cc4411464fb040db41bcfc561
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
@@ -7,7 +7,7 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: defaultMat
+      name: Material.003
     second: {fileID: 2100000, guid: 40bca8b42916d73499c8dd9ae8725127, type: 2}
   materials:
     materialImportMode: 2
@@ -38,7 +38,10 @@ ModelImporter:
     clipAnimations: []
     isReadable: 0
   meshes:
-    lODScreenPercentages: []
+    lODScreenPercentages:
+    - 0.25
+    - 0.125
+    - 0.01
     globalScale: 1
     meshCompression: 0
     addColliders: 0
