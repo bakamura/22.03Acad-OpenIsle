@@ -17,6 +17,7 @@ public class MovableBox : MonoBehaviour {
         transform.position += _currentMovement * Time.deltaTime;
     }
 
+    // Starts Moving to a direction (in only one axis) until reaches its last position, plus it's scale in that direction
     public void MoveToPosition() {
         if (_currentMovement == Vector3.zero && PlayerData.rb.transform.position.y - (PlayerData.rb.transform.lossyScale.y / 2f) < transform.position.y + (transform.lossyScale.y / 2f) + 0.05f) {
             Vector2 direction = new Vector3(transform.position.x - PlayerData.rb.transform.position.x, transform.position.z - PlayerData.rb.transform.position.z);
@@ -25,10 +26,12 @@ public class MovableBox : MonoBehaviour {
         }
     }
 
+    // Stops the movement from 'MoveToPosition'
     private void StopMovement() {
         _currentMovement = Vector3.zero;
     }
 
+    // Translates an angle (float) to a Vector3
     private Vector3 GetDirection(float angle) {
         switch (angle) {
             case float a when a >= 315 || a < 45: return Vector3.right;
@@ -39,6 +42,7 @@ public class MovableBox : MonoBehaviour {
         }
     }
 
+    // Stops the movement if the box is hitting a wall
     private void OnCollisionStay(Collision collision) {
         if (collision.transform.tag == "Ground") {
             if (_currentMovement == Vector3.zero) Debug.Log("Couldn't Stop Movement of box because it wasn't moving already!");

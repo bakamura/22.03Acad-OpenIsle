@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
+// Stores useful data regardless of an Object
 public static class GameManager {
 
     public static int currentSaveFile = 0;

@@ -17,10 +17,12 @@ public class AmuletObject : MonoBehaviour {
         _standarMaterial = _meshRender.material;
     }
 
+    // Assign it's method to the amulet delegate
     private void Start() {
         PlayerTools.onActivateAmulet += Changedimension;
     }
 
+    // (De)Activates a wall collision and visibility when called
     public void Changedimension() {
         if (Vector3.Distance(transform.position, PlayerMovement.Instance.transform.position) < PlayerTools.amuletDistance) {
             if(_updateCollider) _collider.enabled = !_collider.enabled;
@@ -31,6 +33,7 @@ public class AmuletObject : MonoBehaviour {
     }
 
     // May not be used
+    // When a wall collider is enabled, it instantly defeats any enemies 'inside' it
     private void DetectForEnemy() {
         //new Vector3(_meshRender.bounds.size.x * transform.localScale.x, _meshRender.bounds.size.y * transform.localScale.y, _meshRender.bounds.size.z * transform.localScale.z)
         Collider[] hits = Physics.OverlapBox(transform.position, transform.lossyScale / 2, Quaternion.identity, _enemyLayerMask);

@@ -24,17 +24,15 @@ public class PlatformFragile : MonoBehaviour {
         if (GetComponent<PlatformMoving>() != null) _hasMovement = true;
     }
 
+    // Starts Countdown to break itself
     private void OnCollisionEnter(Collision collision) {
         if (collision.transform.tag == "Player" && PlayerData.rb.transform.position.y - (PlayerData.rb.transform.lossyScale.y / 2f) > transform.position.y + (transform.lossyScale.y / 2f) - 0.05f) {
-            Invoke(nameof(Shake), 0);
+            // Animate Shake
             Invoke(nameof(Break), _delayToBreak);
         }
     }
 
-    private void Shake() {
-        // Animate
-    }
-
+    // Disables Collider and Visibility
     private void Break() {
         // Play sound
         _col.enabled = false;
@@ -43,6 +41,7 @@ public class PlatformFragile : MonoBehaviour {
         Invoke(nameof(Respawn), _delayToRespawn);
     }
 
+    // Enables Collider and Visibility
     private void Respawn() {
         if (isActive) {
             _col.enabled = true;

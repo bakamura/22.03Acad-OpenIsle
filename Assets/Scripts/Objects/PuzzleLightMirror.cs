@@ -12,9 +12,12 @@ public class PuzzleLightMirror : MonoBehaviour {
     private void Start() {
         for (int i = 0; i < rayInstance.Length; i++) rayInstance[i] = Instantiate(rayPrefab);
         PlayerTools.onActivateAmulet += ChangeRotation;
+        if(isRotated) transform.eulerAngles += new Vector3(0, 180, 0);
     }
 
     private void FixedUpdate() {
+        // Casts a ray if is being hit from a specific direction, from 'PuzzleLightSource' or 'PuzzleLightMirror', simulating a 90° reflection with an object, based on the reflector's angle
+
         for (int i = 0; i < 4; i++) {
             if (lightHits[i] != null) {
                 lightHits[i].lit -= Time.fixedDeltaTime;
@@ -62,6 +65,7 @@ public class PuzzleLightMirror : MonoBehaviour {
             }
     }
 
+    // Associates the direction it receives from to the direction the deflection goes
     private Vector3 CorrelateDirections(float angleReceived) {
         if (isRotated) {
             switch (angleReceived) {
@@ -83,12 +87,14 @@ public class PuzzleLightMirror : MonoBehaviour {
         }
     }
 
+    // Changes the angle of the object, affecting the direction the deflection goes
     public void ChangeRotation() {
         isRotated = !isRotated;
         transform.eulerAngles += new Vector3(0, 180, 0);
     }
 }
 
+// Stores info about being hit by a ray from a specific angle.
 public class LightHit {
 
     public float lit = 0.2f;

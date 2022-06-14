@@ -31,6 +31,7 @@ public class PlayerData : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<CapsuleCollider>();
 
+        // Gets info related to the player from the savefile
         SaveData save = SaveSystem.LoadProgress(GameManager.currentSaveFile);
         if (save != null) {
             transform.position = new Vector3(save.position[0], save.position[1], save.position[2]);
@@ -45,6 +46,7 @@ public class PlayerData : MonoBehaviour {
         _currentHealth = maxHealth; // Change to read memory when it's implemented
     }
 
+    // Takes damage 'amount' when method called by an enemy
     public void TakeDamage(float amount) {
         _currentHealth -= amount;
         UserInterface.Instance.ChangeHealthBar(_currentHealth);

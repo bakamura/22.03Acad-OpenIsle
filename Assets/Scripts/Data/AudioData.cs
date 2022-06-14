@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.Audio;
 
+// Stores useful info about Audio
 [Serializable]
 public class AudioData {
     public AudioClip[] audioClips;

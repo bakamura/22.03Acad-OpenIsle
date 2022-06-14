@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
@@ -8,6 +6,7 @@ using TMPro;
 public class SettingsMenu : MonoBehaviour {
 
     [Header("Audio")]
+
     [SerializeField] private AudioMixer _mixer;
     [SerializeField] private SliderData _masterVol;
     [SerializeField] private SliderData _musicVol;
@@ -15,6 +14,7 @@ public class SettingsMenu : MonoBehaviour {
     private float _currentSliderValue;
 
     private void Start() {
+        // Sets GUI sliders to what is written in the GM
         _masterVol.slider.value = GameManager.MasterVol;
         _musicVol.slider.value = GameManager.MusicVol;
         _sfxVol.slider.value = GameManager.SfxVol;
@@ -23,13 +23,15 @@ public class SettingsMenu : MonoBehaviour {
         _sfxVol.valueText.text = (GameManager.SfxVol * 100).ToString("F0");
     }
 
+    // Adjusts the volume 'volToChange' to it's slider's value, and it's corresponding text
     public void SetVolume(int volToChange) {
         SliderData slider = GetSliderVol(volToChange);
-        _mixer.SetFloat(slider.name, Mathf.Log10(_currentSliderValue) * 20); // Slider lowest must be 0.001 !!!
+        _mixer.SetFloat(slider.name, Mathf.Log10(_currentSliderValue) * 20); // Slider lowest must be 0.001
         GetManagerVol(volToChange) = Mathf.Round(slider.slider.value * 1000f) / 1000f;
         slider.valueText.text = (slider.slider.value * 100f).ToString("F0");
     }
 
+    // Correlates an Int to a GM variable
     private ref float GetManagerVol(int volVarID) {
         switch (volVarID) {
             case 0: return ref GameManager.MasterVol;
@@ -41,6 +43,7 @@ public class SettingsMenu : MonoBehaviour {
         }
     }
 
+    // Correlates an Int to a slider in the GUI
     private SliderData GetSliderVol(int volVarID) {
         switch (volVarID) {
             case 0: return _masterVol;
@@ -53,6 +56,7 @@ public class SettingsMenu : MonoBehaviour {
     }
 }
 
+// Stores relevant data of a slider
 [System.Serializable]
 public class SliderData {
     public string name;

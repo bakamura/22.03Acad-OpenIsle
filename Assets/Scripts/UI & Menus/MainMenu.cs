@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,10 +12,12 @@ public class MainMenu : MonoBehaviour {
     [SerializeField] private CanvasInfo quit;
     private int currentMenu = 0;
 
+    // Starts on the Main Menu Canvas
     private void Start() {
         MenuBtn(0);
     }
 
+    // More info on Method definition
     private void Update() {
         UserInterface.FadeCanvas(main.canvas, main.alpha, canvasFadeDuration / 2);
         UserInterface.FadeCanvas(save.canvas, save.alpha, canvasFadeDuration / 2);
@@ -25,15 +25,17 @@ public class MainMenu : MonoBehaviour {
         UserInterface.FadeCanvas(quit.canvas, quit.alpha, canvasFadeDuration / 2);
     }
 
+    // Sets every canvas alpha to 0, then Invokes 'FadeIn'
     public void MenuBtn(int canvasID) {
-        if (!(canvasID == 0)) main.alpha = UserInterface.ActivateCanvas(main.canvas, false);
-        if (!(canvasID == 1)) save.alpha = UserInterface.ActivateCanvas(save.canvas, false);
-        if (!(canvasID == 2)) settings.alpha = UserInterface.ActivateCanvas(settings.canvas, false);
-        if (!(canvasID == 3)) quit.alpha = UserInterface.ActivateCanvas(quit.canvas, false);
+        main.alpha = UserInterface.ActivateCanvas(main.canvas, false);
+        save.alpha = UserInterface.ActivateCanvas(save.canvas, false);
+        settings.alpha = UserInterface.ActivateCanvas(settings.canvas, false);
+        quit.alpha = UserInterface.ActivateCanvas(quit.canvas, false);
         Invoke(nameof(FadeIn), canvasFadeDuration / 2);
         currentMenu = canvasID;
     }
 
+    // Sets the current menu's alpha to 1
     private void FadeIn() {
         switch (currentMenu) {
             case 0:
@@ -61,8 +63,9 @@ public class MainMenu : MonoBehaviour {
     }
 }
 
+// Stores relevant info about a CanvasGroup
 [System.Serializable]
 public class CanvasInfo {
     public CanvasGroup canvas;
-    [HideInInspector] public float alpha = 0;
+    [HideInInspector] public float alpha = 0; // not the current alpha, but the target alpha ('UserInterface.FadeCanvas' for more details)
 }

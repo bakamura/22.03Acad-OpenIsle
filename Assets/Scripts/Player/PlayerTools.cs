@@ -57,8 +57,11 @@ public class PlayerTools : MonoBehaviour {
         if (instance == null) instance = this;
         else if (instance != this) Destroy(gameObject);
     }
+    
 
+    // Checks each tool's input and the action cooldown (not exposed to the player)
     private void Update() {
+        // Sword
         if (PlayerMovement.Instance.isGrounded && PlayerData.Instance.hasSword && _currentActionCoolDown <= 0 && PlayerInputs.swordKeyPressed > 0) {
             PlayerInputs.swordKeyPressed = 0;
             ChangeMesh(_swordMesh, _swordMaterial, _swordActionDuration);
@@ -68,6 +71,7 @@ public class PlayerTools : MonoBehaviour {
             Invoke(nameof(SwordStart), 0.1f);
             Invoke(nameof(SwordEnd), 0.4f);
         }
+        // Enter aiming (Hook)
         else if (PlayerData.Instance.hasHook && _currentActionCoolDown <= 0 && PlayerInputs.hookKeyPressed > 0 && !AlternateToolHookShot.Instance.active) {
             PlayerInputs.hookKeyPressed = 0;
             isAiming = true;
@@ -75,6 +79,7 @@ public class PlayerTools : MonoBehaviour {
             ChangeCameraFollow(_hookCameraPoint);
             ChangeMesh(_hookMesh, _hookMaterial, 0);
         }
+        // Amulet
         else if (PlayerData.Instance.hasAmulet && _currentActionCoolDown <= 0 && PlayerInputs.amuletKeyPressed > 0) {
             PlayerInputs.amuletKeyPressed = 0;
             ChangeMesh(_amuletMesh, _amuletMaterial, _amuletActionDuration);
@@ -83,10 +88,7 @@ public class PlayerTools : MonoBehaviour {
 
             onActivateAmulet.Invoke(); //
         }
-        if (!PlayerMovement.Instance.isGrounded) {
-            isAiming = false;
-            ChangeCameraFollow(transform);
-        }
+        // Shoots Hook
         if (isAiming) {
             transform.rotation = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, Camera.main.transform.eulerAngles.z);
             if (PlayerInputs.hookKeyReleased > 0) {
@@ -111,6 +113,7 @@ public class PlayerTools : MonoBehaviour {
         if (_hookScript.isHookActive && (PlayerInputs.jumpKeyPressed > 0 || PlayerInputs.hookKeyPressed > 0 || PlayerInputs.dashKeyPressed > 0)) _hookScript.CancelHook();
     }
 
+    // Changes the mesh in the tool object, to the current tool being used (tool stays there until another is used)
     private void ChangeMesh(Mesh mesh, Material material, float actionDuration) {
         if (actionDuration > 0) {
             //Debug.Log("Movement Lock");
@@ -123,26 +126,31 @@ public class PlayerTools : MonoBehaviour {
         _toolMeshRenderer.material = material;
     }
 
+    // Re-enables movement after performing action
     private void UnlockMovement() {
         // May have issues with hook function
         //Debug.Log("Movement Unlock");
         PlayerMovement.Instance.movementLock = false;
     }
 
+    // Starts sword action
     private void SwordStart() {
         _swordCollider.enabled = true;
         swordCollisions.Clear();
     }
 
+    // Ends sword action
     private void SwordEnd() {
         _swordCollider.enabled = false;
     }
 
+    // Ends hook action
     public void EndHook() {
         UnlockMovement();
         _currentActionCoolDown = _actionInternalCoolDown;
     }
 
+    // Sets the object the camera is following (for the hook aim)
     private void ChangeCameraFollow(Transform followObject) {
         _hookAimUI.alpha = (followObject == _hookCameraPoint) ? 1f : 0f;
         cinemachineCam.Follow = followObject;

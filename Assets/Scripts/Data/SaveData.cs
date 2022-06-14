@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Stores relevant data to the game. Is used by SaveSystem.cs
 [System.Serializable]
 public class SaveData {
 

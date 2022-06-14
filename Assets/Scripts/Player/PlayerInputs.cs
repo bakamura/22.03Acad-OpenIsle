@@ -44,6 +44,7 @@ public class PlayerInputs : MonoBehaviour {
         else if (Instance != this) Destroy(gameObject);
     }
 
+    // Stores input data into variables
     private void Update() {
         if (canInput) {
             // Axis

@@ -3,8 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ToolSword : MonoBehaviour {
+
     [SerializeField] private float _knockBackForce = 5f;
     [SerializeField] private float _stunDuration;
+
+    // If the collision is not in this "Swing"'s already hit list,
+    // Enemy: deals damage
+    // Object: destroy it (if "Breakable")
     private void OnTriggerEnter(Collider other) {
         if (!PlayerTools.instance.swordCollisions.Contains(other)) {
             switch (other.tag) {
@@ -12,7 +17,6 @@ public class ToolSword : MonoBehaviour {
                     other.GetComponent<EnemyData>().TakeDamage(PlayerTools.instance.swordDamage, _knockBackForce, _stunDuration);
                     break;
                 case "Breakable":
-                    //case used to the vines in the platform area and the breakable doors in puzzle area
                     other.GetComponent<BreakableObjects>().DestroyObject();
                     break;
             }

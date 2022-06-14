@@ -105,6 +105,7 @@ public class PlayerMovement : MonoBehaviour {
         }
     }
 
+    // Converts a Vector2 into an angle (float)
     public static float GetAngle(float x, float y) {
         float angle = Mathf.Atan2(y, x) * Mathf.Rad2Deg;
         if (angle < 0) angle += 360;
