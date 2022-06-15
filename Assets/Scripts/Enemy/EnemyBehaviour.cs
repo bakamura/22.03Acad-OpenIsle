@@ -61,13 +61,22 @@ public class EnemyBehaviour : MonoBehaviour {
     }
 
     private Vector3 RandomPointInsideSphere(float radius) {
-        float x = Random.Range(-radius, radius) * .9f;
-        float y = Random.Range(radius * .5f, radius * .9f);
-        float z = Random.Range(-radius, radius) * .9f;
-        return radius * Mathf.Pow(Random.Range(0f,1f),1/3)/ 
-            Mathf.Sqrt(Mathf.Pow(x, 2) + 
-            Mathf.Pow(y, 2) + 
-            Mathf.Pow(z, 2)) * new Vector3(x,y,z);
+        float theta = Random.Range(0, Mathf.PI*2);
+        float v = Random.Range(radius * .5f, radius * .9f);
+        float phi = Mathf.Acos((2 * v) - 1) * Mathf.Rad2Deg;
+        float r = Mathf.Pow(radius*.9f, 1 / 3);
+        float x = r * Mathf.Sin(phi) * Mathf.Cos(theta);
+        float y = Mathf.Abs(r * Mathf.Sin(phi) * Mathf.Sin(theta));
+        float z = r * Mathf.Cos(phi);
+        Debug.Log(new Vector3(x, y, z));
+        return new Vector3(x,y,z);
+        //float x = Random.Range(-byte.MaxValue, byte.MaxValue);
+        //float y = Random.Range(-byte.MaxValue, byte.MaxValue);
+        //float z = Random.Range(-byte.MaxValue, byte.MaxValue);
+        //x *= 1 / Mathf.Sqrt(Mathf.Pow(x, 2) + Mathf.Pow(y, 2) + Mathf.Pow(z, 2));
+        //y *= 1 / Mathf.Sqrt(Mathf.Pow(x, 2) + Mathf.Pow(y, 2) + Mathf.Pow(z, 2));
+        //z *= 1 / Mathf.Sqrt(Mathf.Pow(x, 2) + Mathf.Pow(y, 2) + Mathf.Pow(z, 2));
+        //return new Vector3(x, y, z) * radius * .9f;
     }
 
     private void Update() {
@@ -146,12 +155,12 @@ public class EnemyBehaviour : MonoBehaviour {
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected() {
         Gizmos.color = Color.black;
-        Gizmos.DrawWireSphere(_attackPoint.position, _actionArea);
+        Gizmos.DrawWireSphere(_attackPoint.position, _actionArea);            
         if (UnityEditor.EditorApplication.isPlaying) {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawCube(PlayerMovement.Instance.transform.position + pointAroundPlayer, new Vector3(.1f, .1f, .1f));
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(PlayerMovement.Instance.transform.position, _actionRange);
+            Gizmos.color = Color.blue;
+            Gizmos.DrawCube(PlayerMovement.Instance.transform.position + pointAroundPlayer, new Vector3(.1f, .1f, .1f));
         }
     }
 #endif

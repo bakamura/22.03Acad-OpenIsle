@@ -34,7 +34,6 @@ public class EnemyData : MonoBehaviour {
         _currentKnockBackInvencibility -= Time.deltaTime;
     }
 
-
     public void Activate(bool isActivating) {
         _currentHealth = _maxHealth;
         _currentKnockBackInvencibility = 0;

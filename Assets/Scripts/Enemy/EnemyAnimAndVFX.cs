@@ -13,7 +13,7 @@ public class EnemyAnimAndVFX : MonoBehaviour {
     private void Awake() {
         _animator = GetComponent<Animator>();
         _audio = GetComponent<AudioSource>();
-        foreach (EnemyAudio data in _audioDatas) _audioDictionary.Add((int)data.soundType, data);
+        //foreach (EnemyAudio data in _audioDatas) _audioDictionary.Add((int)data.soundType, data);
     }
 
     private void Update() {
@@ -29,7 +29,7 @@ public class EnemyAnimAndVFX : MonoBehaviour {
 
     public void StunAnim() {
         _animator.SetTrigger("STUN");
-        PlaySoundEffect(EnemyAudio.soundTypes.Stun, 0f);
+        //PlaySoundEffect(EnemyAudio.soundTypes.Stun, 0f);
     }
 
     public void EndStunAnim() {
@@ -38,7 +38,7 @@ public class EnemyAnimAndVFX : MonoBehaviour {
 
     public void MovmentAnim(float isMoving) {
         _animator.SetFloat("TARGET", isMoving);
-        if (isMoving > 0) PlaySoundEffect(EnemyAudio.soundTypes.Walk, 0f);
+        //if (isMoving > 0) PlaySoundEffect(EnemyAudio.soundTypes.Walk, 0f);
     }
 
     public void PlaySoundEffect(EnemyAudio.soundTypes sound, float soundDelay) {
