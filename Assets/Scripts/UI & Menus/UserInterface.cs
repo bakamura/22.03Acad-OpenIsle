@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UserInterface : MonoBehaviour {
@@ -67,7 +66,8 @@ public class UserInterface : MonoBehaviour {
                 Cursor.lockState = CursorLockMode.Locked;
                 ingameCanvasAlpha = ActivateCanvas(ingameCanvas, true, true);
                 pauseCanvasAlpha = ActivateCanvas(pauseCanvas, false);
-                Invoke(nameof(SetTimeScale), canvasFadeDuration);
+                //Invoke(nameof(SetTimeScale), canvasFadeDuration);
+                SetTimeScale(); // Invoke doesn't work when 'Time.timeScale = 0'. For now, transition is instant
             }
             else {
                 Cursor.lockState = CursorLockMode.Confined;
@@ -88,7 +88,16 @@ public class UserInterface : MonoBehaviour {
         Time.timeScale = 1;
         isGamePaused = false;
     }
-    
+
+    // Saves the game progress
+    public void SaveBtn() {
+        SaveSystem.SaveProgress(GameManager.currentSaveFile);
+    }
+
+    public void GoToMainMenuBtn() {
+        SceneManager.LoadScene(0);
+    }
+
     // Updates the health bar
     public void ChangeHealthBar(float currentHealth) {
         healthBar.fillAmount = currentHealth / PlayerData.Instance.maxHealth;
@@ -109,4 +118,5 @@ public class UserInterface : MonoBehaviour {
         if (targetAlpha == 1f && targetAlpha > canvas.alpha) canvas.alpha += Time.unscaledDeltaTime / fadeDuration;
         else if (targetAlpha == 0f) canvas.alpha -= Time.unscaledDeltaTime / fadeDuration;
     }
+
 }

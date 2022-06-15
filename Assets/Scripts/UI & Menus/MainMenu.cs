@@ -55,7 +55,7 @@ public class MainMenu : MonoBehaviour {
 
     public void PlaySaveBtn(int saveFileID) {
         GameManager.currentSaveFile = saveFileID;
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(SaveSystem.LoadProgress(saveFileID).currentScene);
     }
 
     public void QuitGameBtn() {

@@ -1,12 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine.SceneManagement;
 
 // Stores relevant data to the game. Is used by SaveSystem.cs
 [System.Serializable]
 public class SaveData {
 
     // Player 
+    public int currentScene;
     public float[] position = new float[3];
     public float[] rotation = new float[4];
     public bool hasSword;
@@ -21,6 +20,7 @@ public class SaveData {
     public bool[] brokenWalls;
 
     public SaveData(PlayerData playerData/*, WorldData worldData */) {
+        currentScene = SceneManager.GetActiveScene().buildIndex;
         position[0] = playerData.transform.position.x;
         position[1] = playerData.transform.position.y;
         position[2] = playerData.transform.position.z;

@@ -31,24 +31,26 @@ public class PlayerTools : MonoBehaviour {
     [SerializeField] private Material _hookMaterial;
     [SerializeField] private CinemachineFreeLook cinemachineCam;
     [HideInInspector] public bool isAiming = false;
-    // Naka (alternate script)
-    [SerializeField] private AlternateToolHookShot _hookAlternateScript;
-    public float hookSpeed;
-    public float playerHookSpeed;
-    public float objectHookSpeed;
-    public float maxHookDistance; // In seconds, when going
-    public float hookReturnDuration = 1;
-    public float hookCorrectionDistance;
     // Vini
     [SerializeField] private ToolHookShot _hookScript;
     public Transform _hookCameraPoint;
     [SerializeField] private CanvasGroup _hookAimUI;
+    // Naka (alternate script) UNUSED
+    //[SerializeField] private AlternateToolHookShot _hookAlternateScript;
+    //public float hookSpeed;
+    //public float playerHookSpeed;
+    //public float objectHookSpeed;
+    //public float maxHookDistance; // In seconds, when going
+    //public float hookReturnDuration = 1;
+    //public float hookCorrectionDistance;
 
     [Header("Amulet")]
 
     [SerializeField] private Mesh _amuletMesh;
     [SerializeField] private Material _amuletMaterial;
     [SerializeField] private float _amuletActionDuration;
+    [Tooltip("In % amount from max")]
+    [SerializeField] private float _amuletHealthCost;
 
     public static float amuletDistance = 7;
     public static UnityAction onActivateAmulet;
@@ -72,7 +74,7 @@ public class PlayerTools : MonoBehaviour {
             Invoke(nameof(SwordEnd), 0.4f);
         }
         // Enter aiming (Hook)
-        else if (PlayerData.Instance.hasHook && _currentActionCoolDown <= 0 && PlayerInputs.hookKeyPressed > 0 && !AlternateToolHookShot.Instance.active) {
+        else if (PlayerData.Instance.hasHook && _currentActionCoolDown <= 0 && PlayerInputs.hookKeyPressed > 0 /*&& !AlternateToolHookShot.Instance.active*/) {
             PlayerInputs.hookKeyPressed = 0;
             isAiming = true;
             //ChangeCameraFollow(_toolMeshFilter.transform);
@@ -86,6 +88,7 @@ public class PlayerTools : MonoBehaviour {
             isAiming = false;
             ChangeCameraFollow(transform);
 
+            PlayerData.Instance.TakeDamage(_amuletHealthCost * PlayerData.Instance.maxHealth);
             onActivateAmulet.Invoke(); //
         }
         // Shoots Hook
