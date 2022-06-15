@@ -61,15 +61,21 @@ public class EnemyBehaviour : MonoBehaviour {
     }
 
     private Vector3 RandomPointInsideSphere(float radius) {
-        float theta = Random.Range(0, Mathf.PI*2);
-        float v = Random.Range(radius * .5f, radius * .9f);
-        float phi = Mathf.Acos((2 * v) - 1) * Mathf.Rad2Deg;
-        float r = Mathf.Pow(radius*.9f, 1 / 3);
-        float x = r * Mathf.Sin(phi) * Mathf.Cos(theta);
-        float y = Mathf.Abs(r * Mathf.Sin(phi) * Mathf.Sin(theta));
-        float z = r * Mathf.Cos(phi);
-        Debug.Log(new Vector3(x, y, z));
-        return new Vector3(x,y,z);
+        //var u = radius;//Mathf.random();
+        //float v = radius;//Mathf.random();
+        //var theta = u * 2 * Mathf.PI;
+        //float phi = Mathf.Acos(2 * v - 1);
+        //var r = Mathf.Pow(radius/*Mathf.random()*/, 1/3);
+        //var sinTheta = Mathf.Sin(theta);
+        //var cosTheta = Mathf.Cos(theta);
+        //var sinPhi = Mathf.Sin(phi);
+        //var cosPhi = Mathf.Cos(phi);
+        //var x = r * sinPhi * cosTheta;
+        //var y = r * sinPhi * sinTheta;
+        //var z = r * cosPhi;
+        //return new Vector3(x,y,z);
+        Vector3 point = .9f * radius * Random.insideUnitSphere;
+        return new Vector3(point.x, Mathf.Abs(point.y), point.z);
         //float x = Random.Range(-byte.MaxValue, byte.MaxValue);
         //float y = Random.Range(-byte.MaxValue, byte.MaxValue);
         //float z = Random.Range(-byte.MaxValue, byte.MaxValue);
@@ -157,8 +163,8 @@ public class EnemyBehaviour : MonoBehaviour {
         Gizmos.color = Color.black;
         Gizmos.DrawWireSphere(_attackPoint.position, _actionArea);            
         if (UnityEditor.EditorApplication.isPlaying) {
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(PlayerMovement.Instance.transform.position, _actionRange);
+            //Gizmos.color = Color.red;
+            //Gizmos.DrawSphere(PlayerMovement.Instance.transform.position, _actionRange);
             Gizmos.color = Color.blue;
             Gizmos.DrawCube(PlayerMovement.Instance.transform.position + pointAroundPlayer, new Vector3(.1f, .1f, .1f));
         }
