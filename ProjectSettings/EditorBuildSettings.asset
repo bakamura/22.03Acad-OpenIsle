@@ -9,6 +9,18 @@ EditorBuildSettings:
     path: Assets/Scenes/BuildScenes/MainMenu.unity
     guid: ebe4704bf392554429e979a93eccbe85
   - enabled: 1
-    path: Assets/Scenes/TestScene/RandomTestScene.unity
-    guid: 033ed8c9b1a60b744a5c44165ce1340e
+    path: Assets/Scenes/BuildScenes/GeneralScene.unity
+    guid: 31b0f4a47398cd24baaa2f8661237f5d
+  - enabled: 1
+    path: Assets/Scenes/BuildScenes/CenaCombateTeste.unity
+    guid: 2d60ac08e6ebd7049a488c016412f5d5
+  - enabled: 1
+    path: Assets/Scenes/BuildScenes/CenaParkourTeste.unity
+    guid: d4fbe11350f435b46b140b204b1ccc56
+  - enabled: 1
+    path: Assets/Scenes/BuildScenes/CenaPuzzleTeste.unity
+    guid: c3b2e9a36501f31458696902a8a9f360
+  - enabled: 1
+    path: Assets/Scenes/BuildScenes/CenaCentroTeste.unity
+    guid: 4eacda883fb920c4ebf97d6d0a379d73
   m_configObjects: {}

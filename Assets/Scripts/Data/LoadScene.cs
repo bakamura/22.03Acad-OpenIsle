@@ -17,6 +17,7 @@ public class LoadScene : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other) {
         if (other.CompareTag("Player")){
+            Debug.Log("a");
             switch (_loadType) {
                 case LoadTypes.Async:
                     //will only load if ist not currently loading and if not already loaded

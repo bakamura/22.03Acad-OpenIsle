@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748171, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4719,7 +4719,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5034070110717034518}
-  m_LocalRotation: {x: -0.02497659, y: 0.000000017201012, z: 4.2975679e-10, w: 0.999688}
+  m_LocalRotation: {x: -0.024976611, y: -0.000000017201012, z: -4.2975712e-10, w: 0.999688}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -4734,7 +4734,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5342530435304456613}
-  m_LocalRotation: {x: -0.024976611, y: -0.000000017201012, z: -4.2975712e-10, w: 0.999688}
+  m_LocalRotation: {x: -0.02497659, y: 0.000000017201012, z: 4.2975679e-10, w: 0.999688}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -4830,7 +4830,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &857052483695049847
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5442,7 +5442,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!222 &4192370795669756661
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5468,7 +5468,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!222 &4325055929168617718
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5701,6 +5701,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hookDistance: 50
   _hookSpeed: 10
+  _hookStunDuration: 0
   _checkLayers:
   - serializedVersion: 2
     m_Bits: 128
@@ -5727,6 +5728,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7a05d370a098b84db945feda46966e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _knockBackForce: 5
+  _stunDuration: 0
+  _audios: []
 --- !u!1 &4347595893599823776
 GameObject:
   m_ObjectHideFlags: 0
@@ -6052,19 +6056,13 @@ MonoBehaviour:
   _hookMaterial: {fileID: 2100000, guid: 9ada96c60c9838042ba14a324a18b772, type: 2}
   cinemachineCam: {fileID: 7547368957746076338}
   isAiming: 0
-  _hookAlternateScript: {fileID: 0}
-  hookSpeed: 20
-  playerHookSpeed: 10
-  objectHookSpeed: 20
-  maxHookDistance: 20
-  hookReturnDuration: 0.5
-  hookCorrectionDistance: 1.25
   _hookScript: {fileID: 4347595893515690486}
   _hookCameraPoint: {fileID: 4347595892681621873}
   _hookAimUI: {fileID: 8952528123782516361}
   _amuletMesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
   _amuletMaterial: {fileID: 2100000, guid: 248c6bd936d6f61408576722d9c39a35, type: 2}
   _amuletActionDuration: 0.5
+  _amuletHealthCost: 0
 --- !u!1 &4347595894653779546
 GameObject:
   m_ObjectHideFlags: 0
@@ -6086,7 +6084,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4347595894653779547
 Transform:
   m_ObjectHideFlags: 0
@@ -6402,7 +6400,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4156499789987054917}
-  m_LocalRotation: {x: 0.02497643, y: 0.000000017201012, z: 4.29754e-10, w: -0.999688}
+  m_LocalRotation: {x: 0.02497643, y: -0.000000017201012, z: -4.2975404e-10, w: -0.999688}
   m_LocalPosition: {x: 632, y: 556, z: 1950}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -6767,7 +6765,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7676037624972992900
 RectTransform:
   m_ObjectHideFlags: 0
