@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyBehaviour : MonoBehaviour {
-    [Header("Components")]
+    //[Header("Components")]
     [SerializeField] private Collider _hitDetection;
     [SerializeField] private Transform _attackPoint;
     [SerializeField] private GameObject _bulletPrefab;// if is shoot
@@ -20,7 +20,7 @@ public class EnemyBehaviour : MonoBehaviour {
         passive //if only wants it to go towards player and never do nothing
     }
 
-    [Header("Base Status")]
+    //[Header("Base Status")]
     public EnemyTypes _enemyType;
     public float _damage;//if is not passive
     [SerializeField] private float _attackSpeed;//if is not passive
@@ -33,11 +33,16 @@ public class EnemyBehaviour : MonoBehaviour {
     private bool _isTargetInRange;
     public float _actionRange { get; private set; }
 
-    [Header("Range Status")]
+    //[Header("Range Status")]
     [SerializeField] private float _bulletSize;//if is shoot
     [SerializeField] private float _bulletSpeed;//if is shoot
     [SerializeField] private int _bulletAmount;//if is shoot
     [SerializeField] private float _bulletMaxHeighOffset;//if is shoot
+
+#if UNITY_EDITOR
+    //[Header("Debug")]
+    [SerializeField] private bool _showAttackArea;
+#endif
 
     [HideInInspector] public Vector3 pointAroundPlayer { get; private set; }
     private List<BulletEnemy> _bullets;
@@ -160,8 +165,10 @@ public class EnemyBehaviour : MonoBehaviour {
 
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected() {
-        Gizmos.color = Color.black;
-        Gizmos.DrawWireSphere(_attackPoint.position, _actionArea);            
+        if (_showAttackArea) {
+            Gizmos.color = Color.black;
+            Gizmos.DrawWireSphere(_attackPoint.position, _actionArea);            
+        }
         if (UnityEditor.EditorApplication.isPlaying) {
             //Gizmos.color = Color.red;
             //Gizmos.DrawSphere(PlayerMovement.Instance.transform.position, _actionRange);

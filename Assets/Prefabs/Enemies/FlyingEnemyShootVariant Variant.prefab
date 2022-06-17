@@ -7,9 +7,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3850324671442750558, guid: b53718f3cbb3d2649922835b559b0575, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 3850324672492117523, guid: b53718f3cbb3d2649922835b559b0575, type: 3}
       propertyPath: m_Name
-      value: FlyingEnemyShootVariant
+      value: FlyingEnemyShootVariant Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 3850324672492117540, guid: b53718f3cbb3d2649922835b559b0575, type: 3}
+      propertyPath: _maxHealth
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3850324672492117540, guid: b53718f3cbb3d2649922835b559b0575, type: 3}
+      propertyPath: _knockBackResistance
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3850324672492117541, guid: b53718f3cbb3d2649922835b559b0575, type: 3}
       propertyPath: _damage
@@ -17,6 +29,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3850324672492117541, guid: b53718f3cbb3d2649922835b559b0575, type: 3}
       propertyPath: enemyType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3850324672492117541, guid: b53718f3cbb3d2649922835b559b0575, type: 3}
+      propertyPath: _enemyType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3850324672492117541, guid: b53718f3cbb3d2649922835b559b0575, type: 3}
+      propertyPath: _actionArea
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3850324672492117541, guid: b53718f3cbb3d2649922835b559b0575, type: 3}
@@ -62,7 +82,7 @@ PrefabInstance:
     - target: {fileID: 3850324672492117541, guid: b53718f3cbb3d2649922835b559b0575, type: 3}
       propertyPath: _bulletStartPoint
       value: 
-      objectReference: {fileID: 8800238074842709565}
+      objectReference: {fileID: 0}
     - target: {fileID: 3850324672492117541, guid: b53718f3cbb3d2649922835b559b0575, type: 3}
       propertyPath: _bulletMaxHeighOffset
       value: 5
@@ -116,6 +136,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3850324672492117548, guid: b53718f3cbb3d2649922835b559b0575, type: 3}
+      propertyPath: _viewAngle
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 3850324672492117548, guid: b53718f3cbb3d2649922835b559b0575, type: 3}
       propertyPath: _movmentSpeed
       value: 5
       objectReference: {fileID: 0}
@@ -140,8 +164,16 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3850324672492117548, guid: b53718f3cbb3d2649922835b559b0575, type: 3}
+      propertyPath: _randomNavPointCooldown
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3850324672492117548, guid: b53718f3cbb3d2649922835b559b0575, type: 3}
       propertyPath: minDistanceFromWanderingPoint
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3850324672492117548, guid: b53718f3cbb3d2649922835b559b0575, type: 3}
+      propertyPath: _minDistanceFromWanderingPoint
+      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b53718f3cbb3d2649922835b559b0575, type: 3}
@@ -153,10 +185,5 @@ Transform:
 --- !u!136 &6553672034829841812 stripped
 CapsuleCollider:
   m_CorrespondingSourceObject: {fileID: 3850324671442750557, guid: b53718f3cbb3d2649922835b559b0575, type: 3}
-  m_PrefabInstance: {fileID: 8042382326874061257}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &8800238074842709565 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1566392830369777652, guid: b53718f3cbb3d2649922835b559b0575, type: 3}
   m_PrefabInstance: {fileID: 8042382326874061257}
   m_PrefabAsset: {fileID: 0}

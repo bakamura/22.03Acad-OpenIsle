@@ -56,11 +56,35 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4865877115328566532, guid: c346e102eaddb2c4bb849b7c401ce5bc, type: 3}
+      propertyPath: _viewAngle
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 4865877115328566532, guid: c346e102eaddb2c4bb849b7c401ce5bc, type: 3}
+      propertyPath: _detectionRange
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4865877115328566532, guid: c346e102eaddb2c4bb849b7c401ce5bc, type: 3}
       propertyPath: _willGoTowardsPlayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4865877115328566532, guid: c346e102eaddb2c4bb849b7c401ce5bc, type: 3}
+      propertyPath: _randomNavPointCooldown
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4865877115328566532, guid: c346e102eaddb2c4bb849b7c401ce5bc, type: 3}
+      propertyPath: _minDistanceFromWanderingPoint
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4865877115328566540, guid: c346e102eaddb2c4bb849b7c401ce5bc, type: 3}
+      propertyPath: _maxHealth
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4865877115328566541, guid: c346e102eaddb2c4bb849b7c401ce5bc, type: 3}
       propertyPath: actionArea
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4865877115328566541, guid: c346e102eaddb2c4bb849b7c401ce5bc, type: 3}
+      propertyPath: _actionArea
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4865877115328566541, guid: c346e102eaddb2c4bb849b7c401ce5bc, type: 3}
@@ -69,7 +93,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4865877115328566587, guid: c346e102eaddb2c4bb849b7c401ce5bc, type: 3}
       propertyPath: m_Name
-      value: GroundEnemyMelee
+      value: GroundEnemyMelee Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 4865877116359051126, guid: c346e102eaddb2c4bb849b7c401ce5bc, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 2.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c346e102eaddb2c4bb849b7c401ce5bc, type: 3}

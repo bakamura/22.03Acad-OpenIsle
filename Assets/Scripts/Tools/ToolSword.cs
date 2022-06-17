@@ -24,11 +24,11 @@ public class ToolSword : MonoBehaviour {
             switch (other.tag) {
                 case "Enemy":
                     other.GetComponent<EnemyData>().TakeDamage(PlayerTools.instance.swordDamage, _knockBackForce, _stunDuration);
-                    PlaySoundEffect(HitAudio.soundTypes.HitEnemy, 0);
+                    //PlaySoundEffect(HitAudio.soundTypes.HitEnemy, 0);
                     break;
                 case "Breakable":
                     other.GetComponent<BreakableObjects>().DestroyObject();
-                    PlaySoundEffect(HitAudio.soundTypes.HitObject, 0);
+                    //PlaySoundEffect(HitAudio.soundTypes.HitObject, 0);
                     break;
             }
             PlayerTools.instance.swordCollisions.Add(other);
