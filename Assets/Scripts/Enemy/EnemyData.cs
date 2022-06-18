@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using System;
 
 public class EnemyData : MonoBehaviour {
 
@@ -19,7 +20,8 @@ public class EnemyData : MonoBehaviour {
     [SerializeField] private float _knockBackDuration;
     [SerializeField] private float _knockBackInvencibilityTime;
     private float _currentKnockBackInvencibility;
-    [System.NonSerialized] public UnityAction cancelAttack;
+    [HideInInspector] public UnityAction cancelAttack;
+    [HideInInspector] public Action OnEnemyDefeat;
     private Vector3 _kncockbackDirection;
     private float _knockbackForce;
 
@@ -46,6 +48,7 @@ public class EnemyData : MonoBehaviour {
         _currentHealth -= damageAmount;
         _knockbackForce = knockBackAmount;
         if (_currentHealth <= 0) {
+            OnEnemyDefeat.Invoke();
             Activate(false);
             return;
         }

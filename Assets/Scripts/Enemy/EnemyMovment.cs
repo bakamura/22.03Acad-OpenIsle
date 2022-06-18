@@ -4,13 +4,13 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyMovment : MonoBehaviour {
-    [Header("Components")]
+    //[Header("Components")]
     //[SerializeField] private LayerMask _obstacleLayer;
     [HideInInspector] public NavMeshAgent _navMeshAgent;
     private EnemyAnimAndVFX _visualData;
     private EnemyBehaviour _behaviourData;
 
-    [Header("Info")]
+    //[Header("Info")]
     [SerializeField] private float _movmentSpeed;
     [SerializeField] private float _rotationSpeed;
     [SerializeField] private float _detectionRange;// if go to player
@@ -23,8 +23,14 @@ public class EnemyMovment : MonoBehaviour {
     [SerializeField] private bool _canWander;
     [SerializeField] private bool _willGoTowardsPlayer;
 
+#if UNITY_EDITOR
+    //[Header("Debug")]
+    [SerializeField] private bool _showConeView;
+    [SerializeField] private bool _showRandomNavegationPoint;
+#endif
+
     [HideInInspector] public bool _isMovmentLocked;
-    private Vector3 _currentTarget;
+    private Vector3 _currentTarget = Vector3.zero;
     private bool _isWandering;
     private bool _isFollowingPlayer;
     private Coroutine _randomPoinCoroutine = null;
@@ -36,7 +42,7 @@ public class EnemyMovment : MonoBehaviour {
         _visualData = GetComponent<EnemyAnimAndVFX>();
         _behaviourData = GetComponent<EnemyBehaviour>();
         _startPoint = transform.position;
-        _currentTarget = transform.position;
+        //_currentTarget = transform.position;
         if (_navMeshAgent) {
             //_navMeshAgent.speed = _movmentSpeed;
             _navMeshAgent.stoppingDistance = _minDistanceFromWanderingPoint;
@@ -134,20 +140,21 @@ public class EnemyMovment : MonoBehaviour {
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected() {
         // detection area
-        if (_willGoTowardsPlayer) {
+        if (_willGoTowardsPlayer && _showConeView) {
             Gizmos.color = _FOVcolor;
             //Gizmos.DrawWireSphere(transform.position, _detectionRange);
             Gizmos.DrawMesh(_FOVMesh, transform.position, transform.rotation);            
         }
         // wandering area
-        if (_canWander) {
+        if (_canWander && _showRandomNavegationPoint) {
             Gizmos.color = Color.green;
-            if (UnityEditor.EditorApplication.isPlaying) Gizmos.DrawWireSphere(_startPoint, _randomNavegationArea);
-            else Gizmos.DrawWireSphere(transform.position, _randomNavegationArea);
+            //if (UnityEditor.EditorApplication.isPlaying) Gizmos.DrawWireSphere(_startPoint, _randomNavegationArea);
+            Gizmos.DrawWireSphere(transform.position, _randomNavegationArea);
+            //else Gizmos.DrawWireSphere(transform.position, _randomNavegationArea);
         }
         // current moving target point
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(_currentTarget, .5f);
+        //Gizmos.color = Color.red;
+        //Gizmos.DrawSphere(_currentTarget, .5f);
     }
 
     private void OnValidate() {
