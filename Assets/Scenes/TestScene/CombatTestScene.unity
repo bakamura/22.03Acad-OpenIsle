@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748171, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3988,24 +3988,22 @@ MonoBehaviour:
     - {x: 0, y: -4, z: -3}
     - {x: -5, y: -4, z: -3}
     spawnInterval: 0.5
-    selectRandomSpawnPoint: 0
+    selectRandomSpawnPoint: 1
   - enemies:
     - {fileID: 6553672035877627866, guid: 3fabca490acabb94d8d7dd05880127ce, type: 3}
     - {fileID: 6553672035877627866, guid: 3fabca490acabb94d8d7dd05880127ce, type: 3}
     - {fileID: 6553672035877627866, guid: 3fabca490acabb94d8d7dd05880127ce, type: 3}
-    spawnPoint: []
+    spawnPoint:
+    - {x: 5, y: -4, z: -3}
+    - {x: 0, y: -4, z: -3}
+    - {x: -5, y: -4, z: -3}
     spawnInterval: 1
     selectRandomSpawnPoint: 1
-  _spawnPoints:
-  - {x: 5, y: -4, z: 0}
-  - {x: 0, y: -4, z: 0}
-  - {x: -5, y: -4, z: 0}
   _doorsToOpen:
   - {fileID: 283962267}
   - {fileID: 510898789}
   _currentWaveDebug: 0
-  _seeStandardSpawnPoints: 1
-  _seeWaveFixedSpawnPoints: 1
+  _seeWaveSpawnPoints: 0
 --- !u!65 &2034796335
 BoxCollider:
   m_ObjectHideFlags: 0
