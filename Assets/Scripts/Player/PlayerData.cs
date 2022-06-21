@@ -32,14 +32,14 @@ public class PlayerData : MonoBehaviour {
         col = GetComponent<CapsuleCollider>();
 
         // Gets info related to the player from the savefile
-        SaveData save = SaveSystem.LoadProgress(GameManager.currentSaveFile);
-        if (save != null) {
-            transform.position = new Vector3(save.position[0], save.position[1], save.position[2]);
-            transform.eulerAngles = new Vector3(save.rotation[0], save.rotation[1], save.rotation[2]);
-            hasSword = save.hasSword;
-            hasHook = save.hasHook;
-            hasAmulet = save.hasAmulet;
-        }
+        //SaveData save = SaveSystem.LoadProgress(GameManager.currentSaveFile);
+        //if (save != null) {
+        //    transform.position = new Vector3(save.position[0], save.position[1], save.position[2]);
+        //    transform.eulerAngles = new Vector3(save.rotation[0], save.rotation[1], save.rotation[2]);
+        //    hasSword = save.hasSword;
+        //    hasHook = save.hasHook;
+        //    hasAmulet = save.hasAmulet;
+        //}
     }
 
     private void Start() {
