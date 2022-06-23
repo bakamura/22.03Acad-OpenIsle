@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6726b2e1f2778c944bb9b70680582458
+guid: 33e65cb2346798941b4c0381298d9ba1
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
@@ -7,7 +7,7 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: defaultMat
+      name: espinhos
     second: {fileID: 2100000, guid: ae7006535425c96409d64518110e25c6, type: 2}
   materials:
     materialImportMode: 2
@@ -38,7 +38,9 @@ ModelImporter:
     clipAnimations: []
     isReadable: 0
   meshes:
-    lODScreenPercentages: []
+    lODScreenPercentages:
+    - 0.25
+    - 0.01
     globalScale: 1
     meshCompression: 0
     addColliders: 0
