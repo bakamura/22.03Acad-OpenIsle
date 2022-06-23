@@ -42,7 +42,7 @@ public class PlayerMovement : MonoBehaviour {
 
         if (!movementLock) {
             // Jump
-            if (PlayerInputs.jumpKeyPressed > 0 && isGrounded) {
+            if (PlayerInputs.jumpKeyPressed > 0 && isGrounded && PlayerData.rb.useGravity) {
                 PlayerInputs.jumpKeyPressed = 0;
 
                 PlayerData.rb.velocity = new Vector3(PlayerData.rb.velocity.x, _jumpStrengh, PlayerData.rb.velocity.z);
