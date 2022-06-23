@@ -5,10 +5,12 @@ using UnityEngine;
 public class Ladder : MonoBehaviour {
 
     [SerializeField] private float _climbSpeed;
+    [SerializeField] private KeyCode _climbKey;
     private bool _canClimb = false;
 
+
     private void FixedUpdate() {
-        if (_canClimb) PlayerData.rb.velocity = new Vector3(PlayerData.rb.velocity.x, (PlayerInputs.jumpKeyPressed > 0 ? 1 : -1) * _climbSpeed, PlayerData.rb.velocity.z);
+        if (_canClimb) PlayerData.rb.velocity = new Vector3(PlayerData.rb.velocity.x, (Input.GetKey(_climbKey) ? 1 : -1) * _climbSpeed, PlayerData.rb.velocity.z);
     }
 
     private void OnTriggerEnter(Collider other) {
