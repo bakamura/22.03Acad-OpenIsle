@@ -24,6 +24,10 @@ public class PlayerData : MonoBehaviour {
     public bool hasHook;
     public bool hasAmulet;
 
+    [Header("CheatEngine")]
+
+    private bool _cheatsOn = false;
+
     private void Awake() {
         if (Instance == null) Instance = this;
         else if (Instance != this) Destroy(this);
@@ -31,6 +35,7 @@ public class PlayerData : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<CapsuleCollider>();
 
+        // UNCOMENT WHEN FINISH TESTING
         // Gets info related to the player from the savefile
         //SaveData save = SaveSystem.LoadProgress(GameManager.currentSaveFile);
         //if (save != null) {
@@ -44,6 +49,30 @@ public class PlayerData : MonoBehaviour {
 
     private void Start() {
         _currentHealth = maxHealth; // Change to read memory when it's implemented
+    }
+
+    // Cheat Engine
+    private void Update() {
+        if (Input.GetKey(KeyCode.N) && Input.GetKey(KeyCode.A) && Input.GetKeyDown(KeyCode.K)) {
+            _cheatsOn = !_cheatsOn;
+            if (_cheatsOn) {
+                print("Cheats ON");
+                maxHealth = 9999999;
+                _currentHealth = maxHealth;
+
+                rb.useGravity = false;
+            }
+            else {
+                print("Cheats OFF");
+                maxHealth = 100;
+                _currentHealth = maxHealth;
+
+                rb.useGravity = true;
+            }
+        }
+        if (_cheatsOn) {
+            rb.velocity = new Vector3(rb.velocity.x, 7 * ((Input.GetKey(KeyCode.Space) ? 1 : 0) + (Input.GetKey(KeyCode.LeftControl) ? -1 : 0)), rb.velocity.z);
+        }
     }
 
     // Takes damage 'amount' when method called by an enemy

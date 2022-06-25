@@ -9,6 +9,7 @@ public class MainMenu : MonoBehaviour {
     [SerializeField] private CanvasInfo main;
     [SerializeField] private CanvasInfo save;
     [SerializeField] private CanvasInfo settings;
+    [SerializeField] private CanvasInfo credits;
     [SerializeField] private CanvasInfo quit;
     private int currentMenu = 0;
 
@@ -49,6 +50,9 @@ public class MainMenu : MonoBehaviour {
                 break;
             case 3:
                 quit.alpha = UserInterface.ActivateCanvas(quit.canvas, true);
+                break;
+            case 4:
+                credits.alpha = UserInterface.ActivateCanvas(credits.canvas, true);
                 break;
         }
     }

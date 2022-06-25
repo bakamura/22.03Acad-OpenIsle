@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour {
 
     [Header("Movement")]
 
-    [SerializeField] private float _movementAcceleration = 5f;
+    public float _movementAcceleration = 5f; // Changed due to cheats
     [Tooltip("How Fast the object rotates to input")]
     [SerializeField] private float _turnSmoothTime = .1f;
     private float _turnSmoothVelc; // Used by SmoothDampAngle because a static function can't store states.
