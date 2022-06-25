@@ -19,6 +19,7 @@ public class UserInterface : MonoBehaviour {
     [Header("In Game")]
 
     [SerializeField] private CanvasGroup ingameCanvas;
+    public CanvasGroup transitionImage;
     private float ingameCanvasAlpha = 1;
     [SerializeField] private Image healthBar;
     public Image swordBtnImage; // Save system OR object interaction wil set these.
