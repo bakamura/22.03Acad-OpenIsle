@@ -35,6 +35,7 @@ public class PlayerTools : MonoBehaviour {
     [SerializeField] private ToolHookShot _hookScript;
     public Transform _hookCameraPoint;
     [SerializeField] private CanvasGroup _hookAimUI;
+    [SerializeField] private MeshRenderer[] _hookChain = new MeshRenderer[2];
     // Naka (alternate script) UNUSED
     //[SerializeField] private AlternateToolHookShot _hookAlternateScript;
     //public float hookSpeed;
@@ -59,7 +60,7 @@ public class PlayerTools : MonoBehaviour {
         if (instance == null) instance = this;
         else if (instance != this) Destroy(gameObject);
     }
-    
+
 
     // Checks each tool's input and the action cooldown (not exposed to the player)
     private void Update() {
@@ -124,6 +125,9 @@ public class PlayerTools : MonoBehaviour {
             _currentActionCoolDown = actionDuration + _actionInternalCoolDown;
             Invoke(nameof(UnlockMovement), actionDuration);
         }
+        //enables and disable the chains from the hook depending on the current mesh
+        if (mesh == _hookMesh) foreach (MeshRenderer chain in _hookChain) chain.enabled = true;
+        else foreach (MeshRenderer chain in _hookChain) chain.enabled = false;
         if (mesh != _swordMesh) PlayerData.rb.velocity = new Vector3(0, PlayerData.rb.velocity.y, 0);
         _toolMeshFilter.mesh = mesh;
         _toolMeshRenderer.material = material;
