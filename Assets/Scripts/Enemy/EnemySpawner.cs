@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class EnemySpawner : MonoBehaviour {
     [SerializeField] private EnemyWave[] _waves;
     //[SerializeField] private Vector3[] _spawnPoints;//standard spawn points
     [SerializeField] private GameObject[] _doorsToOpen;
+    [SerializeField] private UnityEvent _OnEndWavesEvents;
 #if UNITY_EDITOR
     [SerializeField, Min(0)] private int _currentWaveDebug; //used to see the spawn points of the wave index
     //[SerializeField] private bool _seeStandardSpawnPoints;
@@ -67,6 +69,7 @@ public class EnemySpawner : MonoBehaviour {
             if (_currentWave == _waves.Length) {//if this is the last wave end the spawner
                 //Debug.Log("endChalenge");
                 foreach (GameObject doors in _doorsToOpen) doors.SetActive(false);
+                _OnEndWavesEvents.Invoke();
                 _isCompleted = true;
                 //_audioSource.Play();
             }
@@ -78,12 +81,6 @@ public class EnemySpawner : MonoBehaviour {
     }
 
     private void OnDrawGizmosSelected() {
-        //if (_seeStandardSpawnPoints) {
-        //    if (_spawnPoints.Length > 0) {
-        //        Gizmos.color = Color.red;
-        //        foreach (Vector3 point in _spawnPoints) Gizmos.DrawSphere(transform.position + point, .3f);
-        //    }
-        //}
         if (_seeWaveSpawnPoints) {
             if (_waves[_currentWaveDebug].spawnPoint.Length > 0 && _currentWaveDebug < _waves.Length) {
                 Gizmos.color = Color.blue;

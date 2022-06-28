@@ -8137,7 +8137,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &1670358418
 Light:
   m_ObjectHideFlags: 0
@@ -12058,6 +12058,9 @@ MonoBehaviour:
   _hookScript: {fileID: 4347595893515690486}
   _hookCameraPoint: {fileID: 4347595892681621873}
   _hookAimUI: {fileID: 8952528123782516361}
+  _hookChain:
+  - {fileID: 0}
+  - {fileID: 0}
   _amuletMesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
   _amuletMaterial: {fileID: 2100000, guid: 248c6bd936d6f61408576722d9c39a35, type: 2}
   _amuletActionDuration: 0.5
@@ -12400,7 +12403,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4156499789987054917}
   m_LocalRotation: {x: 0.02497643, y: 0.000000017201012, z: 4.29754e-10, w: -0.999688}
-  m_LocalPosition: {x: 697, y: 828.6, z: 2286}
+  m_LocalPosition: {x: 563.9623, y: 478.19, z: 685.21484}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

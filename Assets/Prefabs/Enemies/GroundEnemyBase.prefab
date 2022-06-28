@@ -151,6 +151,8 @@ MonoBehaviour:
   _isFlying: 0
   _canWander: 0
   _willGoTowardsPlayer: 0
+  _showConeView: 0
+  _showRandomNavegationPoint: 0
   _isMovmentLocked: 0
 --- !u!114 &4865877115328566540
 MonoBehaviour:
@@ -180,7 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a599e9f2551f6524b9a4b2ac08790bf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hitDetection: {fileID: 4865877116359051125}
+  _hitDetection: {fileID: 0}
   _attackPoint: {fileID: 4865877116359051126}
   _bulletPrefab: {fileID: 58410805208611659, guid: 9cf669c4be53d774ea93b69b8b11861e, type: 3}
   _player:
@@ -197,6 +199,7 @@ MonoBehaviour:
   _bulletSpeed: 0
   _bulletAmount: 0
   _bulletMaxHeighOffset: 0
+  _showAttackArea: 0
 --- !u!114 &4865877115328566535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -354,8 +357,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4865877116359051126}
-  - component: {fileID: 4865877116359051125}
-  m_Layer: 8
+  - component: {fileID: 8289313188335160189}
+  m_Layer: 0
   m_Name: HitDetection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -376,19 +379,18 @@ Transform:
   m_Father: {fileID: 4865877115328566530}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &4865877116359051125
-CapsuleCollider:
+--- !u!65 &8289313188335160189
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4865877116359051124}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  m_Radius: 0.7
-  m_Height: 2
-  m_Direction: 1
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4865877116533493456
 GameObject:
@@ -401,7 +403,7 @@ GameObject:
   - component: {fileID: 4865877116533493457}
   - component: {fileID: 4865877116533493459}
   - component: {fileID: 4865877116533493458}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: foward
   m_TagString: Untagged
   m_Icon: {fileID: 0}

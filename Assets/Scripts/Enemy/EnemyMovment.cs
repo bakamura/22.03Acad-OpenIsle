@@ -70,8 +70,9 @@ public class EnemyMovment : MonoBehaviour {
         if (!_isMovmentLocked && _currentTarget != Vector3.zero) {
             Vector3 _movmentDirection = _isFollowingPlayer ? ((_currentTarget + _behaviourData.pointAroundPlayer) - transform.position).normalized : (_currentTarget - transform.position).normalized;
             transform.position += _movmentSpeed * Time.deltaTime * _movmentDirection;
-            SetRotation(_currentTarget);
+            
         }
+        if(_currentTarget != Vector3.zero) SetRotation(_currentTarget);
     }
 
     //rotates the enemy towards its target
