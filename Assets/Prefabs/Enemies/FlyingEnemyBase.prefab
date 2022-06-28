@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3850324671442750558}
-  - component: {fileID: 1358705907196573126}
+  - component: {fileID: 1416246474993326761}
+  - component: {fileID: 5589498304605645761}
   m_Layer: 0
-  m_Name: HitDetection
+  m_Name: ActionArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,8 +32,8 @@ Transform:
   m_Father: {fileID: 3850324672492117546}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1358705907196573126
-BoxCollider:
+--- !u!135 &1416246474993326761
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -42,8 +43,21 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5589498304605645761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3850324671442750556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a73d50be2997cdc41ad10ae07146995b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _behaviour: {fileID: 3850324672492117541}
 --- !u!1 &3850324671549556216
 GameObject:
   m_ObjectHideFlags: 0
@@ -163,7 +177,6 @@ Transform:
   m_Children:
   - {fileID: 3850324671442750558}
   - {fileID: 3850324671549556217}
-  - {fileID: 3140446525350066259}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -229,8 +242,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _navMeshAgent: {fileID: 0}
-  _movmentSpeed: 0
-  _rotationSpeed: 0
+  _movmentSpeed: 10
+  _rotationSpeed: 3
   _detectionRange: 7
   _viewAngle: 0
   _FOVcolor: {r: 1, g: 0, b: 0, a: 1}
@@ -271,24 +284,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a599e9f2551f6524b9a4b2ac08790bf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hitDetection: {fileID: 0}
-  _attackPoint: {fileID: 3850324671442750558}
+  _actionArea: {fileID: 1416246474993326761}
   _bulletPrefab: {fileID: 58410805208611659, guid: 9cf669c4be53d774ea93b69b8b11861e, type: 3}
+  _bulletStartPoint: {fileID: 0}
   _player:
     serializedVersion: 2
     m_Bits: 8
   _enemyType: 0
-  _damage: 0
-  _attackSpeed: 0
+  _damage: 5
+  _attackSpeed: 2
   _rotationSpeed: 0
-  _actionArea: 0
   _isKamikaze: 0
   isAgressive: 0
   _bulletSize: 0
   _bulletSpeed: 0
   _bulletAmount: 0
   _bulletMaxHeighOffset: 0
-  _showAttackArea: 0
 --- !u!114 &3850324672492117551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -449,48 +460,4 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!1 &8432698568069555412
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3140446525350066259}
-  - component: {fileID: 1866951114217989192}
-  m_Layer: 0
-  m_Name: HitDetection (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3140446525350066259
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8432698568069555412}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.8}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 3850324672492117546}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1866951114217989192
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8432698568069555412}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}

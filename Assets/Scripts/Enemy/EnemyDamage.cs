@@ -9,11 +9,9 @@ public class EnemyDamage : MonoBehaviour
     private void Awake() {
         _attackScript = GetComponent<EnemyBehaviour>();
     }
-
-    private void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.CompareTag("Player") /*&& !_attackScript.isActionInCooldown*/) {
-            PlayerData.Instance.TakeDamage(_attackScript._damage);
-            //_attackScript.isActionInCooldown = true;
+    private void OnTriggerEnter(Collider other) {
+        if (other.CompareTag("Player")) {
+            _attackScript.EnemyAction();
         }
     }
 }

@@ -14,19 +14,20 @@ public class EnemyMovment : MonoBehaviour {
     [SerializeField] private float _movmentSpeed;
     [SerializeField] private float _rotationSpeed;
     [SerializeField] private float _detectionRange;// if go to player
-    [SerializeField] private float _viewAngle;// if go to player
-    [SerializeField] private Color _FOVcolor = Color.red;
+    [SerializeField, Range(10f, 120f)] private float _viewAngle;// if go to player
+    [SerializeField] private Color _FOVcolor = new Color(1, 0, 0, .5f);
     [SerializeField] private float _randomNavegationArea;// if wanders
-    [SerializeField] private float _minDistanceFromWanderingPoint;// if wanders
+    /*[SerializeField] */
+    private const float _minDistanceFromWanderingPoint = .1f;// if wanders
     [SerializeField] private float _randomNavPointCooldown;// if wanders
     public bool _isFlying;
     [SerializeField] private bool _canWander;
-    [SerializeField] private bool _willGoTowardsPlayer;
+    [SerializeField] private bool _followPlayer;
 
 #if UNITY_EDITOR
     //[Header("Debug")]
     [SerializeField] private bool _showConeView;
-    [SerializeField] private bool _showRandomNavegationPoint;
+    [SerializeField] private bool _showRandomNavegationArea;
 #endif
 
     [HideInInspector] public bool _isMovmentLocked;
@@ -68,11 +69,10 @@ public class EnemyMovment : MonoBehaviour {
 
     private void FlyingMovment() {
         if (!_isMovmentLocked && _currentTarget != Vector3.zero) {
-            Vector3 _movmentDirection = _isFollowingPlayer ? ((_currentTarget + _behaviourData.pointAroundPlayer) - transform.position).normalized : (_currentTarget - transform.position).normalized;
+            Vector3 _movmentDirection = _isFollowingPlayer && !_behaviourData._isKamikaze ? ((_currentTarget + _behaviourData.pointAroundPlayer) - transform.position).normalized : (_currentTarget - transform.position).normalized;
             transform.position += _movmentSpeed * Time.deltaTime * _movmentDirection;
-            
+            SetRotation(_currentTarget);
         }
-        if(_currentTarget != Vector3.zero) SetRotation(_currentTarget);
     }
 
     //rotates the enemy towards its target
@@ -82,7 +82,7 @@ public class EnemyMovment : MonoBehaviour {
 
     private void MovmentLogic() {
         float distanceFromTarget;
-        if (_willGoTowardsPlayer) {//if the enemy will move and will follow the player
+        if (_followPlayer) {//if the enemy will move and will follow the player
             distanceFromTarget = Vector3.Distance(PlayerMovement.Instance.transform.position, transform.position);
             if (distanceFromTarget <= _detectionRange && Vector3.Angle(transform.forward, (PlayerMovement.Instance.transform.position - transform.position).normalized) <= _viewAngle / 2) {//move to player
                 if (_randomPoinCoroutine != null) {//stop the wandering coroutine
@@ -141,21 +141,15 @@ public class EnemyMovment : MonoBehaviour {
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected() {
         // detection area
-        if (_willGoTowardsPlayer && _showConeView) {
+        if (_followPlayer && _showConeView) {
             Gizmos.color = _FOVcolor;
-            //Gizmos.DrawWireSphere(transform.position, _detectionRange);
-            Gizmos.DrawMesh(_FOVMesh, transform.position, transform.rotation);            
+            Gizmos.DrawMesh(_FOVMesh, transform.position, transform.rotation);
         }
         // wandering area
-        if (_canWander && _showRandomNavegationPoint) {
+        if (_canWander && _showRandomNavegationArea) {
             Gizmos.color = Color.green;
-            //if (UnityEditor.EditorApplication.isPlaying) Gizmos.DrawWireSphere(_startPoint, _randomNavegationArea);
             Gizmos.DrawWireSphere(transform.position, _randomNavegationArea);
-            //else Gizmos.DrawWireSphere(transform.position, _randomNavegationArea);
         }
-        // current moving target point
-        //Gizmos.color = Color.red;
-        //Gizmos.DrawSphere(_currentTarget, .5f);
     }
 
     private void OnValidate() {
@@ -193,22 +187,22 @@ public class EnemyMovment : MonoBehaviour {
         vertices[currentVert++] = top;
         vertices[currentVert++] = Center;
         vertices[currentVert++] = MiddleTopLeft;
-        
+
         //middle top left
         vertices[currentVert++] = MiddleTopLeft;
         vertices[currentVert++] = Center;
         vertices[currentVert++] = Left;
-        
+
         //middle bottom left
         vertices[currentVert++] = Left;
         vertices[currentVert++] = Center;
         vertices[currentVert++] = MiddleBottomLeft;
-        
+
         //bottom left
         vertices[currentVert++] = MiddleBottomLeft;
         vertices[currentVert++] = Center;
         vertices[currentVert++] = bottom;
-        
+
         //bottom right
         vertices[currentVert++] = bottom;
         vertices[currentVert++] = Center;
@@ -234,21 +228,21 @@ public class EnemyMovment : MonoBehaviour {
         vertices[currentVert++] = top;
         vertices[currentVert++] = MiddleTopLeft;
         vertices[currentVert++] = MiddleTopRight;
-        
+
         //top middle
         vertices[currentVert++] = MiddleTopRight;
         vertices[currentVert++] = MiddleTopLeft;
         vertices[currentVert++] = Right;
-        
+
         vertices[currentVert++] = Right;
         vertices[currentVert++] = MiddleTopLeft;
         vertices[currentVert++] = Left;
-        
+
         //bottom middle
         vertices[currentVert++] = Left;
         vertices[currentVert++] = MiddleBottomRight;
         vertices[currentVert++] = Right;
-        
+
         vertices[currentVert++] = MiddleBottomRight;
         vertices[currentVert++] = Left;
         vertices[currentVert++] = MiddleBottomLeft;
