@@ -6,7 +6,7 @@ using UnityEngine.Events;
 public class EnemySpawner : MonoBehaviour {
     [SerializeField] private EnemyWave[] _waves;
     //[SerializeField] private Vector3[] _spawnPoints;//standard spawn points
-    [SerializeField] private GameObject[] _doorsToOpen;
+    [SerializeField] private BoxCollider[] _doorsToOpen;
     [SerializeField] private UnityEvent _OnEndWavesEvents;
 #if UNITY_EDITOR
     [SerializeField, Min(0)] private int _currentWaveDebug; //used to see the spawn points of the wave index
@@ -28,7 +28,7 @@ public class EnemySpawner : MonoBehaviour {
     private void OnTriggerEnter(Collider other) {
         //if the player enter and the doors are still closed the waves will start
         if (other.CompareTag("Player") && _spawnEnemyesCoroutine == null && !_isCompleted) {
-            foreach (GameObject doors in _doorsToOpen) doors.SetActive(true);//closes all doors
+            foreach (BoxCollider doors in _doorsToOpen) doors.isTrigger = false; //closes all doors
             _spawnEnemyesCoroutine = StartCoroutine(SpawnEnemies());
         }
     }
@@ -68,7 +68,7 @@ public class EnemySpawner : MonoBehaviour {
             _currentWave++;
             if (_currentWave == _waves.Length) {//if this is the last wave end the spawner
                 //Debug.Log("endChalenge");
-                foreach (GameObject doors in _doorsToOpen) doors.SetActive(false);
+                foreach (BoxCollider doors in _doorsToOpen) doors.isTrigger = true;
                 _OnEndWavesEvents.Invoke();
                 _isCompleted = true;
                 //_audioSource.Play();

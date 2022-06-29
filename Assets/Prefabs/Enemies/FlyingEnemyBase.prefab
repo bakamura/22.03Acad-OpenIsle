@@ -243,18 +243,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _navMeshAgent: {fileID: 0}
   _movmentSpeed: 10
-  _rotationSpeed: 3
+  _rotationSpeed: 5
   _detectionRange: 7
-  _viewAngle: 0
+  _viewAngle: 60
   _FOVcolor: {r: 1, g: 0, b: 0, a: 1}
-  _randomNavegationArea: 0
-  _minDistanceFromWanderingPoint: 0
-  _randomNavPointCooldown: 0
+  _randomNavegationArea: 3
+  _randomNavPointCooldown: 1
   _isFlying: 1
-  _canWander: 0
-  _willGoTowardsPlayer: 0
+  _canWander: 1
+  _followPlayer: 1
   _showConeView: 0
-  _showRandomNavegationPoint: 0
+  _showRandomNavegationArea: 0
   _isMovmentLocked: 0
 --- !u!114 &3850324672492117540
 MonoBehaviour:
