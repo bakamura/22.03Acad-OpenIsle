@@ -4,7 +4,7 @@ using UnityEngine;
 [CustomEditor(typeof(EnemyMovment))]
 [CanEditMultipleObjects]
 public class EnemyMovmentInspector : Editor {
-    SerializedProperty isFlying, movmentSpeed, rotationSpeed, followPlayer, detectionRange, viewAngle, FOVColor, canWander, randomNavegationArea, minDistanceFromWanderingPoint, randomNavPointCooldown, showConeView, showRandomNavegationArea;
+    SerializedProperty isFlying, movmentSpeed, rotationSpeed, followPlayer, detectionRange, viewAngle, FOVColor, canWander, randomNavegationArea, minDistanceFromWanderingPoint, randomNavPointCooldown, showConeView, showRandomNavegationArea, goStraightToPlayer;
     public override void OnInspectorGUI() {
         GUILayout.Label("STATUS", EditorStyles.boldLabel);
         EditorGUILayout.PropertyField(isFlying, new GUIContent("Is Flying"));
@@ -12,26 +12,26 @@ public class EnemyMovmentInspector : Editor {
             EditorGUILayout.PropertyField(movmentSpeed, new GUIContent("Movment Speed"));
             EditorGUILayout.PropertyField(rotationSpeed, new GUIContent("Rotation Speed"));
         }
-        if (followPlayer.boolValue) {
-            EditorGUILayout.PropertyField(detectionRange, new GUIContent("Detection Range"));
-            EditorGUILayout.PropertyField(viewAngle, new GUIContent("View Angle"));
+        EditorGUILayout.PropertyField(goStraightToPlayer, new GUIContent("Go Straight to Player", "ignores the FOV and follows the player forever, needs the EnemyBehaviourScript to work better"));
+        if (!goStraightToPlayer.boolValue) {
+            EditorGUILayout.PropertyField(followPlayer, new GUIContent("Follow Player", "needs the EnemyBehaviourScript to work better"));
+            if (followPlayer.boolValue) {
+                EditorGUILayout.PropertyField(detectionRange, new GUIContent("Detection Range"));
+                EditorGUILayout.PropertyField(viewAngle, new GUIContent("View Angle"));
+            }
+            EditorGUILayout.PropertyField(canWander, new GUIContent("Can Wander"));
+            if (canWander.boolValue) {
+                EditorGUILayout.PropertyField(randomNavegationArea, new GUIContent("Random Navegation Area"));
+                //EditorGUILayout.PropertyField(minDistanceFromWanderingPoint, new GUIContent("Min Distance From Wandering Point", "the minimal distance it needs to be for a new point generation"));
+                EditorGUILayout.PropertyField(randomNavPointCooldown, new GUIContent("Random NavPoint Cooldown", "the interval bettwen moving to a new point"));
+            }
+            GUILayout.Label("DEBUG", EditorStyles.boldLabel);
+            if (followPlayer.boolValue) {
+                EditorGUILayout.PropertyField(showConeView, new GUIContent("Show Cone View Gizmo"));
+                //EditorGUILayout.PropertyField(FOVColor, new GUIContent("View Cone Color"));
+            }
+            if (canWander.boolValue) EditorGUILayout.PropertyField(showRandomNavegationArea, new GUIContent("Show Random Nav Point Gizmo"));
         }
-        EditorGUILayout.PropertyField(canWander, new GUIContent("Can Wander"));
-        if (canWander.boolValue) {
-            EditorGUILayout.PropertyField(randomNavegationArea, new GUIContent("Random Navegation Area"));
-            //EditorGUILayout.PropertyField(minDistanceFromWanderingPoint, new GUIContent("Min Distance From Wandering Point", "the minimal distance it needs to be for a new point generation"));
-            EditorGUILayout.PropertyField(randomNavPointCooldown, new GUIContent("Random NavPoint Cooldown", "the interval bettwen moving to a new point"));
-        }
-        EditorGUILayout.PropertyField(followPlayer, new GUIContent("Follow Player", "needs the EnemyBehaviourScript to work"));
-
-        GUILayout.Label("DEBUG", EditorStyles.boldLabel);
-
-        if (followPlayer.boolValue) {
-            EditorGUILayout.PropertyField(showConeView, new GUIContent("Show Cone View Gizmo"));
-            //EditorGUILayout.PropertyField(FOVColor, new GUIContent("View Cone Color"));
-        }
-        if(canWander.boolValue) EditorGUILayout.PropertyField(showRandomNavegationArea, new GUIContent("Show Random Nav Point Gizmo"));
-
         serializedObject.ApplyModifiedProperties();
     }
 
@@ -49,5 +49,6 @@ public class EnemyMovmentInspector : Editor {
         randomNavPointCooldown = serializedObject.FindProperty("_randomNavPointCooldown");
         showConeView = serializedObject.FindProperty("_showConeView");
         showRandomNavegationArea = serializedObject.FindProperty("_showRandomNavegationArea");
+        goStraightToPlayer = serializedObject.FindProperty("_goStraightToPlayer");
     }
 }

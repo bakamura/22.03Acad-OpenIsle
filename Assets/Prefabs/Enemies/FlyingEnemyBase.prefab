@@ -252,9 +252,9 @@ MonoBehaviour:
   _isFlying: 1
   _canWander: 1
   _followPlayer: 1
+  _goStraightToPlayer: 1
   _showConeView: 0
   _showRandomNavegationArea: 0
-  _isMovmentLocked: 0
 --- !u!114 &3850324672492117540
 MonoBehaviour:
   m_ObjectHideFlags: 0

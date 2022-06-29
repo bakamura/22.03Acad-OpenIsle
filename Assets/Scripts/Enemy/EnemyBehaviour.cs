@@ -106,7 +106,7 @@ public class EnemyBehaviour : MonoBehaviour {
         if (isAgressive) _visualScript.AttackAnim(_attackSpeed);
         // movment lock and stop            
         if (_movmentScript) {//if the enemy can move, will make it stop to attack the target
-            _movmentScript._isMovmentLocked = true;
+            _movmentScript.SetMovmentLock(true);
             if (_movmentScript._navMeshAgent) _movmentScript._navMeshAgent.isStopped = true;
         }
         //this is in case of a turret enemy
@@ -121,7 +121,7 @@ public class EnemyBehaviour : MonoBehaviour {
     public void EndActionSetup() { // anim event        
         if (!_isTargetInRange) {//if it lost its target will try to start moving
             if (_movmentScript) {
-                _movmentScript._isMovmentLocked = false;
+                _movmentScript.SetMovmentLock(false);
                 if (_movmentScript._navMeshAgent) _movmentScript._navMeshAgent.isStopped = false;
             }
             _visualScript.AttackAnim(0);
@@ -145,7 +145,7 @@ public class EnemyBehaviour : MonoBehaviour {
 
     private void KamikazeAttack() {
         if (Physics.CheckSphere(transform.position, _actionArea.radius, _player)) PlayerData.Instance.TakeDamage(_damage);
-        _movmentScript._isMovmentLocked = false;
+        _movmentScript.SetMovmentLock(false);
         if (_movmentScript._navMeshAgent) _movmentScript._navMeshAgent.isStopped = false;
         //_isActionInCooldown = false;
         _data.Activate(false);

@@ -23,6 +23,7 @@ public class EnemyMovment : MonoBehaviour {
     public bool _isFlying;
     [SerializeField] private bool _canWander;
     [SerializeField] private bool _followPlayer;
+    [SerializeField] private bool _goStraightToPlayer;
 
 #if UNITY_EDITOR
     //[Header("Debug")]
@@ -30,7 +31,15 @@ public class EnemyMovment : MonoBehaviour {
     [SerializeField] private bool _showRandomNavegationArea;
 #endif
 
-    [HideInInspector] public bool _isMovmentLocked;
+    [HideInInspector]
+    public bool isMovmentLocked { get; private set;}
+    //public bool isMovmentLocked {
+    //    get { return isMovmentLocked; }
+    //    set {
+    //        isMovmentLocked = value;
+    //        _visualData.MovmentAnim(value ? 0f : 1f);
+    //    }
+    //}
     private Vector3 _currentTarget = Vector3.zero;
     private bool _isWandering;
     private bool _isFollowingPlayer;
@@ -55,12 +64,17 @@ public class EnemyMovment : MonoBehaviour {
         MovmentLogic();
         if (!_isFlying && _navMeshAgent) GroundMovment();
         else FlyingMovment();
-        if (!_isMovmentLocked) _visualData.MovmentAnim(1f);
-        else _visualData.MovmentAnim(0f);
+        //if (!isMovmentLocked) _visualData.MovmentAnim(1f);
+        //else _visualData.MovmentAnim(0f);
+    }
+
+    public void SetMovmentLock(bool canMove) {
+        isMovmentLocked = canMove;
+        _visualData.MovmentAnim(canMove ? 0f : 1f);
     }
 
     private void GroundMovment() {
-        if (!_isMovmentLocked && _currentTarget != Vector3.zero) {
+        if (!isMovmentLocked && _currentTarget != Vector3.zero) {
             _navMeshAgent.isStopped = false;
             _navMeshAgent.destination = _currentTarget;
         }
@@ -68,7 +82,7 @@ public class EnemyMovment : MonoBehaviour {
     }
 
     private void FlyingMovment() {
-        if (!_isMovmentLocked && _currentTarget != Vector3.zero) {
+        if (!isMovmentLocked && _currentTarget != Vector3.zero) {
             Vector3 _movmentDirection = _isFollowingPlayer && !_behaviourData._isKamikaze ? ((_currentTarget + _behaviourData.pointAroundPlayer) - transform.position).normalized : (_currentTarget - transform.position).normalized;
             transform.position += _movmentSpeed * Time.deltaTime * _movmentDirection;
             SetRotation(_currentTarget);
@@ -81,34 +95,37 @@ public class EnemyMovment : MonoBehaviour {
     }
 
     private void MovmentLogic() {
-        float distanceFromTarget;
         if (_followPlayer) {//if the enemy will move and will follow the player
-            distanceFromTarget = Vector3.Distance(PlayerMovement.Instance.transform.position, transform.position);
-            if (distanceFromTarget <= _detectionRange && Vector3.Angle(transform.forward, (PlayerMovement.Instance.transform.position - transform.position).normalized) <= _viewAngle / 2) {//move to player
-                if (_randomPoinCoroutine != null) {//stop the wandering coroutine
-                    StopCoroutine(_randomPoinCoroutine);
-                    _randomPoinCoroutine = null;
-                    _isMovmentLocked = false;
-                }
-                if (_navMeshAgent) _navMeshAgent.stoppingDistance = _behaviourData._actionRange;
+            if (_goStraightToPlayer) {
                 _isFollowingPlayer = true;
                 _isWandering = false;
                 _currentTarget = PlayerMovement.Instance.transform.position;
             }
-            else if (_canWander) {//if the enemy will move and didnt find the player, and can wander
-                _isFollowingPlayer = false;
-                distanceFromTarget = Vector3.Distance(_currentTarget, transform.position);
-                CheckForNewRandomPoint(distanceFromTarget);
-            }
             else {
-                _currentTarget = Vector3.zero;
-                _isFollowingPlayer = false;
+                if (Vector3.Distance(PlayerMovement.Instance.transform.position, transform.position) <= _detectionRange && Vector3.Angle(transform.forward, (PlayerMovement.Instance.transform.position - transform.position).normalized) <= _viewAngle / 2) {//move to player
+                    if (_randomPoinCoroutine != null) {//stop the wandering coroutine
+                        StopCoroutine(_randomPoinCoroutine);
+                        _randomPoinCoroutine = null;
+                        SetMovmentLock(false);
+                    }
+                    if (_navMeshAgent) _navMeshAgent.stoppingDistance = _behaviourData._actionRange;
+                    _isFollowingPlayer = true;
+                    _isWandering = false;
+                    _currentTarget = PlayerMovement.Instance.transform.position;
+                }
+                else if (_canWander) {//if the enemy will move and didnt find the player, and can wander
+                    _isFollowingPlayer = false;
+                    CheckForNewRandomPoint(Vector3.Distance(_currentTarget, transform.position));
+                }
+                else {
+                    _currentTarget = Vector3.zero;
+                    _isFollowingPlayer = false;
+                }
             }
         }
         else if (_canWander) {
             _isFollowingPlayer = false;
-            distanceFromTarget = Vector3.Distance(_currentTarget, transform.position);
-            CheckForNewRandomPoint(distanceFromTarget);
+            CheckForNewRandomPoint(Vector3.Distance(_currentTarget, transform.position));
         }
     }
 
@@ -125,11 +142,11 @@ public class EnemyMovment : MonoBehaviour {
     }
 
     IEnumerator RandomPointCorotine() {
-        _isMovmentLocked = true;
+        SetMovmentLock(true);
         yield return new WaitForSeconds(_randomNavPointCooldown);
         /*while (_currentTarget == Vector3.zero)*/
         GenerateRandomNavegationPoint();//if dosent want the raycast check, remove the while
-        _isMovmentLocked = false;
+        SetMovmentLock(false);
         _randomPoinCoroutine = null;
     }
 

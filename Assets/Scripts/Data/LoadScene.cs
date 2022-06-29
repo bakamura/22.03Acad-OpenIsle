@@ -5,9 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class LoadScene : MonoBehaviour {
 
-    //[SerializeField] private float distanceCheck = 100;
     [SerializeField] private string SceneToLoad;
     [SerializeField] private LoadTypes _loadType;
+    [SerializeField, Tooltip("when entering a new scene, changes the position of the player to this")] private Vector3 _newPlayerPosition;
     private AsyncOperation _asyncOperation = null;
     private bool _isSceneLoaded = false;
     private enum LoadTypes {
@@ -17,7 +17,6 @@ public class LoadScene : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other) {
         if (other.CompareTag("Player")){
-            Debug.Log("a");
             switch (_loadType) {
                 case LoadTypes.Async:
                     //will only load if ist not currently loading and if not already loaded
@@ -28,6 +27,7 @@ public class LoadScene : MonoBehaviour {
                     break;
                 case LoadTypes.ChangeCompletely:
                     SceneManager.LoadScene(SceneToLoad, LoadSceneMode.Single);
+                    other.transform.position = _newPlayerPosition;
                     break;
             }
         }
@@ -39,28 +39,4 @@ public class LoadScene : MonoBehaviour {
             _isSceneLoaded = false;
         }
     }
-
-    //void Update() {
-    //    float distance = Vector3.Distance(transform.position, PlayerData.Instance.transform.position);
-    //    if (distance < distanceCheck && _asyncOperation == null && !_isSceneLoaded) _asyncOperation = SceneManager.LoadSceneAsync(SceneToLoad, LoadSceneMode.Additive);        
-    //    else if (distance > distanceCheck && _isSceneLoaded) {
-    //        SceneManager.UnloadSceneAsync(SceneToLoad);
-    //        _isSceneLoaded = false;
-    //    }
-
-
-    //    if (_asyncOperation != null) {
-    //        //LoadingSimbol.instance.FillImage(_asyncOperation.progress+0.1f);
-    //        if (_asyncOperation.isDone) {
-    //            //LoadingSimbol.instance.FillImage(0);
-    //            _asyncOperation = null;
-    //            _isSceneLoaded = true;
-    //        }
-    //    }
-    //}
-
-    //private void OnDrawGizmosSelected() {
-    //    Gizmos.color = Color.green;
-    //    Gizmos.DrawWireSphere(transform.position, distanceCheck);
-    //}
 }

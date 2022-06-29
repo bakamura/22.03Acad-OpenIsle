@@ -48,7 +48,7 @@ public class EnemyData : MonoBehaviour {
         _currentHealth -= damageAmount;
         _knockbackForce = knockBackAmount;
         if (_currentHealth <= 0) {
-            OnEnemyDefeat.Invoke();
+            if(OnEnemyDefeat != null) OnEnemyDefeat.Invoke();
             Activate(false);
             return;
         }
@@ -65,7 +65,7 @@ public class EnemyData : MonoBehaviour {
     private void Knockback() {
         _kncockbackDirection = (transform.position - PlayerData.Instance.transform.position).normalized;
         if (!_enemyMovment._isFlying) _enemyMovment._navMeshAgent.isStopped = true;
-        _enemyMovment._isMovmentLocked = true;
+        _enemyMovment.SetMovmentLock(true);
         InvokeRepeating(nameof(KnockBackMovment), 0, Time.fixedDeltaTime);
     }
 
@@ -78,7 +78,7 @@ public class EnemyData : MonoBehaviour {
         if (_enemyMovment) {
             CancelInvoke(nameof(KnockBackMovment));
             if (!_enemyMovment._isFlying) _enemyMovment._navMeshAgent.isStopped = false;
-            _enemyMovment._isMovmentLocked = false;
+            _enemyMovment.SetMovmentLock(false);
         }
     }
 }
