@@ -120,6 +120,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6748233600544459203}
     m_Modifications:
+    - target: {fileID: 497996295201198864, guid: b539d97f7c668e2469ca3464e5b8dfcd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 1247414786213158338, guid: b539d97f7c668e2469ca3464e5b8dfcd, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.25
@@ -140,13 +144,29 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 1323163601565723971, guid: b539d97f7c668e2469ca3464e5b8dfcd, type: 3}
+      propertyPath: m_Intensity
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1323163601565723971, guid: b539d97f7c668e2469ca3464e5b8dfcd, type: 3}
+      propertyPath: m_SpotAngle
+      value: 43.095573
+      objectReference: {fileID: 0}
+    - target: {fileID: 1323163601565723971, guid: b539d97f7c668e2469ca3464e5b8dfcd, type: 3}
+      propertyPath: m_Lightmapping
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1323163601565723971, guid: b539d97f7c668e2469ca3464e5b8dfcd, type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 43.095573
+      objectReference: {fileID: 0}
     - target: {fileID: 1328116914447128360, guid: b539d97f7c668e2469ca3464e5b8dfcd, type: 3}
       propertyPath: m_Name
       value: FireParticle
       objectReference: {fileID: 0}
     - target: {fileID: 1328116914447128360, guid: b539d97f7c668e2469ca3464e5b8dfcd, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1999355298084242267, guid: b539d97f7c668e2469ca3464e5b8dfcd, type: 3}
       propertyPath: m_Range

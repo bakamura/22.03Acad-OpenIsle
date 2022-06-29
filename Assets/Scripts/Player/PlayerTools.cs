@@ -53,7 +53,7 @@ public class PlayerTools : MonoBehaviour {
     [Tooltip("In % amount from max")]
     [SerializeField] private float _amuletHealthCost;
 
-    public static float amuletDistance = 7;
+    public static float amuletDistance = 20;
     public static UnityAction onActivateAmulet;
 
     private void Awake() {
