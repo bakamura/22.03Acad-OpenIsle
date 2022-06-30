@@ -5,9 +5,9 @@ using UnityEngine;
 public class PuzzleLightMirror : MonoBehaviour {
 
     public bool isRotated = false;
-    [HideInInspector] public LightHit[] lightHits = new LightHit[4];
+    [HideInInspector] public LightHit[] lightHits = new LightHit[2];
     [SerializeField] private GameObject rayPrefab;
-    private GameObject[] rayInstance = new GameObject[4];
+    private GameObject[] rayInstance = new GameObject[2];
 
     private void Start() {
         for (int i = 0; i < rayInstance.Length; i++) rayInstance[i] = Instantiate(rayPrefab);
@@ -18,7 +18,7 @@ public class PuzzleLightMirror : MonoBehaviour {
     private void FixedUpdate() {
         // Casts a ray if is being hit from a specific direction, from 'PuzzleLightSource' or 'PuzzleLightMirror', simulating a 90° reflection with an object, based on the reflector's angle
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < rayInstance.Length; i++) {
             if (lightHits[i] != null) {
                 lightHits[i].lit -= Time.fixedDeltaTime;
                 if (lightHits[i].lit > 0) {
@@ -59,7 +59,7 @@ public class PuzzleLightMirror : MonoBehaviour {
     }
 
     private void OnDrawGizmos() {
-        for (int i = 0; i < 4; i++) if (lightHits[i] != null) {
+        for (int i = 0; i < 2; i++) if (lightHits[i] != null) {
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawLine(transform.position, CorrelateDirections(lightHits[i].angleReceived) * Mathf.Rad2Deg);
             }
@@ -89,8 +89,10 @@ public class PuzzleLightMirror : MonoBehaviour {
 
     // Changes the angle of the object, affecting the direction the deflection goes
     public void ChangeRotation() {
-        isRotated = !isRotated;
-        transform.eulerAngles += new Vector3(0, 180, 0);
+        if (Vector3.Distance(PlayerData.Instance.transform.position, transform.position) < 2) {
+            isRotated = !isRotated;
+            transform.eulerAngles += new Vector3(0, 90, 0);
+        }
     }
 }
 
