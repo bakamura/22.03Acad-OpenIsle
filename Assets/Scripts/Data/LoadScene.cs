@@ -14,9 +14,19 @@ public class LoadScene : MonoBehaviour {
         Async,
         ChangeCompletely
     };
+    
+    [Header("LockedDoor")]
+
+    [SerializeField] private PuzzleLightReceptor lightReceptor;
+    private bool _isLocked = false;
+
+    private void Start() {
+        _isLocked = lightReceptor != null;
+        if (_isLocked) lightReceptor.onActivate += OpenDoor;
+    }
 
     private void OnTriggerEnter(Collider other) {
-        if (other.CompareTag("Player")){
+        if (other.CompareTag("Player") && !_isLocked){
             switch (_loadType) {
                 case LoadTypes.Async:
                     //will only load if ist not currently loading and if not already loaded
@@ -38,5 +48,8 @@ public class LoadScene : MonoBehaviour {
             SceneManager.UnloadSceneAsync(SceneToLoad);
             _isSceneLoaded = false;
         }
+    }
+    private void OpenDoor() {
+        _isLocked = false;
     }
 }
