@@ -89,7 +89,7 @@ public class PuzzleLightMirror : MonoBehaviour {
 
     // Changes the angle of the object, affecting the direction the deflection goes
     public void ChangeRotation() {
-        if (Vector3.Distance(PlayerData.Instance.transform.position, transform.position) < 2) {
+        if (Vector3.Distance(PlayerData.Instance.transform.position, transform.position) < 4) {
             isRotated = !isRotated;
             transform.eulerAngles += new Vector3(0, 90, 0);
         }

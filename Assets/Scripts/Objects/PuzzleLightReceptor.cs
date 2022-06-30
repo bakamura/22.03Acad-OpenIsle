@@ -6,14 +6,14 @@ using UnityEngine.Events;
 public class PuzzleLightReceptor : MonoBehaviour {
 
     [HideInInspector] public UnityAction onActivate;
-    private Vector3 baseScale;
+    //private Vector3 baseScale;
 
     
-    private void Start() {
+    //private void Start() {
         // Debug
-        baseScale = transform.localScale;
-        onActivate += DebugMethod;
-    }
+        //baseScale = transform.localScale;
+        //onActivate += DebugMethod;
+    //}
 
     // Calls a method when is hit by a ray from 'PuzzleLightMirror'
     public void Activate() {
@@ -21,7 +21,7 @@ public class PuzzleLightReceptor : MonoBehaviour {
     }
 
     // Debug
-    private void DebugMethod() {
-        transform.localScale = 2 * baseScale;
-    }
+    //private void DebugMethod() {
+        //transform.localScale = 2 * baseScale;
+    //}
 }

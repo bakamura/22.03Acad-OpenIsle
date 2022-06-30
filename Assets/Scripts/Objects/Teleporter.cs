@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Teleporter : MonoBehaviour {
+
     [SerializeField] private Vector3 _pointToTeleport;
     [SerializeField, Range(0, 360)] private int _lookAngle;
     [SerializeField, Tooltip("the totakl amount of time that the fade out/in effect will take")] private float _transitionDuration;
@@ -13,6 +14,16 @@ public class Teleporter : MonoBehaviour {
         FadeIn
     };
     private TransitionState _currentTransitionState = TransitionState.FadeIn;
+
+    [Header("LockedDoor")]
+
+    [SerializeField] private PuzzleLightReceptor lightReceptor;
+    private bool _isLocked = false;
+
+    private void Start() {
+        _isLocked = lightReceptor != null;
+        if(_isLocked) lightReceptor.onActivate += OpenDoor;
+    }
 
     private void Update() {
         //start teleport sequence
@@ -36,7 +47,7 @@ public class Teleporter : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-        if (other.CompareTag("Player")) {
+        if (other.CompareTag("Player") && !_isLocked) {
             _isTeleporting = true;
             _objToTeleport = other.transform;
             other.GetComponent<PlayerMovement>().movementLock = true;
@@ -52,5 +63,9 @@ public class Teleporter : MonoBehaviour {
         Vector3 finalPoint = new Vector3(Mathf.Cos(_lookAngle * Mathf.PI / 180), 0, Mathf.Sin(_lookAngle * Mathf.PI / 180)) + pos;
         //Debug.Log(new Vector3(Mathf.Round(Mathf.Sin(_lookAngle) + pos.x), pos.y, Mathf.Round(Mathf.Cos(_lookAngle) + pos.z)));
         Gizmos.DrawLine(pos, finalPoint);//new Vector3(Mathf.Sin(_lookAngle), pos.y, Mathf.Cos(_lookAngle))*2
+    }
+
+    private void OpenDoor() {
+        _isLocked = false;
     }
 }
