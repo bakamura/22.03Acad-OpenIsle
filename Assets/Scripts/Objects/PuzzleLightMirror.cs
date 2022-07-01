@@ -5,9 +5,9 @@ using UnityEngine;
 public class PuzzleLightMirror : MonoBehaviour {
 
     public bool isRotated = false;
-    [HideInInspector] public LightHit[] lightHits = new LightHit[2];
+    [HideInInspector] public LightHit[] lightHits = new LightHit[5];
     [SerializeField] private GameObject rayPrefab;
-    private GameObject[] rayInstance = new GameObject[2];
+    private GameObject[] rayInstance = new GameObject[5];
 
     private void Start() {
         for (int i = 0; i < rayInstance.Length; i++) rayInstance[i] = Instantiate(rayPrefab);
@@ -37,7 +37,7 @@ public class PuzzleLightMirror : MonoBehaviour {
                     }
                     PuzzleLightMirror mirrorComponent = hit.transform.GetComponent<PuzzleLightMirror>();
                     if (mirrorComponent != null) {
-                        for (int j = 0; j < 4; i++) {
+                        for (int j = 0; j < 5; j++) {
                             if (mirrorComponent.lightHits[j] == null) {
                                 mirrorComponent.lightHits[j] = new LightHit(CorrelateDirections(lightHits[j].angleReceived));
                                 break;
