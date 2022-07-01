@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0404313, g: 0.05318109, b: 0.07702131, a: 1}
+  m_IndirectSpecularColor: {r: 0.04043102, g: 0.053180955, b: 0.0770211, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5328,7 +5328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b5eeac32b1319a4b98cfcd8e70fbbb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SceneToLoad: CenaParkourTeste
+  SceneToLoad: GeneralScene
   _loadType: 1
   _newPlayerPosition: {x: 1093.5, y: 501.668, z: 1304.39}
   lightReceptor: {fileID: 0}

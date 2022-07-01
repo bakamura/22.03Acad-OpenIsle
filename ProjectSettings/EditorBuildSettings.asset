@@ -23,4 +23,25 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BuildScenes/CenaCentroTeste.unity
     guid: 4eacda883fb920c4ebf97d6d0a379d73
+  - enabled: 1
+    path: Assets/Scenes/InsideScenes/ShrineCombat1.unity
+    guid: d23efd3483e61784b95dcd0800cbbc7b
+  - enabled: 1
+    path: Assets/Scenes/InsideScenes/ShrineCombat2.unity
+    guid: 30ae03026ba92e547a0387786497f4a5
+  - enabled: 1
+    path: Assets/Scenes/InsideScenes/ShrinePlatform1.unity
+    guid: ed2f5368cd3d5b149b7e2ab84fb37557
+  - enabled: 1
+    path: Assets/Scenes/BuildScenes/TrasitionScene.unity
+    guid: e7f7bcff890079743b4c9d1715afbd6b
+  - enabled: 1
+    path: Assets/Scenes/InsideScenes/ShrinePlatform2.unity
+    guid: 309ab59a6eeed9f45b9c3ca7f0414825
+  - enabled: 1
+    path: Assets/Scenes/InsideScenes/ShrinePuzzle1.unity
+    guid: b567256bc4844214b81a2a2bce50d8ba
+  - enabled: 1
+    path: Assets/Scenes/InsideScenes/ShrinePuzzle2.unity
+    guid: b14396b712ed9fd4f80c79d43d529408
   m_configObjects: {}

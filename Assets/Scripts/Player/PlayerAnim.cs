@@ -21,10 +21,10 @@ public class PlayerAnim : MonoBehaviour
         _animator.SetTrigger("Damaged");
     }
     public void SpeedXZ(float velocity) {
-        _animator.SetFloat("SpeedXZ",velocity);
+        _animator.SetFloat("SpeedXZ",velocity/3f);
     }
     public void SpeedY(float velocity) {
-        _animator.SetFloat("SpeedXZ", velocity);
+        _animator.SetFloat("SpeedY", velocity);
     }
     public void Hook(bool isHooked) {
         _animator.SetBool("Hook", isHooked);

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.04227177, g: 0.05568456, b: 0.08075895, a: 1}
+  m_IndirectSpecularColor: {r: 0.04227168, g: 0.055684596, b: 0.08075894, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -910,7 +910,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b5eeac32b1319a4b98cfcd8e70fbbb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SceneToLoad: CenaPuzzleTeste
+  SceneToLoad: GeneralScene
   _loadType: 1
   _newPlayerPosition: {x: 1221.849, y: 508.23322, z: 895.689}
   lightReceptor: {fileID: 0}

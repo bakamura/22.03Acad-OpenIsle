@@ -49,7 +49,7 @@ public class BulletEnemy : MonoBehaviour {
 
     private void OnDrawGizmos() {
         Gizmos.color = Color.green;
-        if (!UnityEditor.EditorApplication.isPlaying) Gizmos.DrawWireSphere(transform.position, _bulletSizeDebug);
-        else Gizmos.DrawWireSphere(transform.position, _bulletSize);
+        //if (!UnityEditor.EditorApplication.isPlaying) Gizmos.DrawWireSphere(transform.position, _bulletSizeDebug);
+        //else Gizmos.DrawWireSphere(transform.position, _bulletSize);
     }
 }

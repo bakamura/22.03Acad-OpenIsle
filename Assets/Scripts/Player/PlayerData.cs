@@ -67,6 +67,10 @@ public class PlayerData : MonoBehaviour {
                 _currentHealth = maxHealth;
 
                 rb.useGravity = false;
+                hasAmulet = true;
+                hasHook = true;
+                hasSword = true;
+                PlayerMovement.Instance._movementAcceleration += 50f;
             }
             else {
                 print("Cheats OFF");
@@ -74,6 +78,10 @@ public class PlayerData : MonoBehaviour {
                 _currentHealth = maxHealth;
 
                 rb.useGravity = true;
+                hasAmulet = false;
+                hasHook = false;
+                hasSword = false;
+                PlayerMovement.Instance._movementAcceleration -= 50f;
             }
         }
         if (_cheatsOn) {

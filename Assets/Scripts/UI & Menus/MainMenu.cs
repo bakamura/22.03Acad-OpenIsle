@@ -24,6 +24,7 @@ public class MainMenu : MonoBehaviour {
         UserInterface.FadeCanvas(save.canvas, save.alpha, canvasFadeDuration / 2);
         UserInterface.FadeCanvas(settings.canvas, settings.alpha, canvasFadeDuration / 2);
         UserInterface.FadeCanvas(quit.canvas, quit.alpha, canvasFadeDuration / 2);
+        UserInterface.FadeCanvas(credits.canvas, credits.alpha, canvasFadeDuration / 2);
     }
 
     // Sets every canvas alpha to 0, then Invokes 'FadeIn'
@@ -32,6 +33,7 @@ public class MainMenu : MonoBehaviour {
         save.alpha = UserInterface.ActivateCanvas(save.canvas, false);
         settings.alpha = UserInterface.ActivateCanvas(settings.canvas, false);
         quit.alpha = UserInterface.ActivateCanvas(quit.canvas, false);
+        credits.alpha = UserInterface.ActivateCanvas(credits.canvas, false);
         Invoke(nameof(FadeIn), canvasFadeDuration / 2);
         currentMenu = canvasID;
     }
@@ -59,7 +61,8 @@ public class MainMenu : MonoBehaviour {
 
     public void PlaySaveBtn(int saveFileID) {
         GameManager.currentSaveFile = saveFileID;
-        SceneManager.LoadScene(SaveSystem.LoadProgress(saveFileID).currentScene);
+        SceneManager.LoadScene("TrasitionScene");
+        //SceneManager.LoadScene(SaveSystem.LoadProgress(saveFileID).currentScene);
     }
 
     public void QuitGameBtn() {

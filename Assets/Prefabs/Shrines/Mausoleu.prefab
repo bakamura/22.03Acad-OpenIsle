@@ -126,8 +126,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 10.000002, y: 0.0000025897025, z: 10.000005}
-  m_Center: {x: 0, y: 0.00024414062, z: 0.00012207031}
+  m_Size: {x: 10.000002, y: -3.88, z: 10.000004}
+  m_Center: {x: 2.015811e-18, y: 0.00024543548, z: 0.00012187925}
 --- !u!114 &6018595401723096939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,6 +142,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SceneToLoad: 
   _loadType: 1
+  _newPlayerPosition: {x: 0, y: 0, z: 0}
+  lightReceptor: {fileID: 0}
 --- !u!1 &7172282416596018504
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,11 +8,11 @@ public class EnemySpawner : MonoBehaviour {
     //[SerializeField] private Vector3[] _spawnPoints;//standard spawn points
     [SerializeField] private BoxCollider[] _doorsToOpen;
     [SerializeField] private UnityEvent _OnEndWavesEvents;
-#if UNITY_EDITOR
-    [SerializeField, Min(0)] private int _currentWaveDebug; //used to see the spawn points of the wave index
-    //[SerializeField] private bool _seeStandardSpawnPoints;
-    [SerializeField] private bool _seeWaveSpawnPoints;
-#endif
+//#if UNITY_EDITOR
+//    [SerializeField, Min(0)] private int _currentWaveDebug; //used to see the spawn points of the wave index
+//    //[SerializeField] private bool _seeStandardSpawnPoints;
+//    [SerializeField] private bool _seeWaveSpawnPoints;
+//#endif
     private int _currentWave;
     private int _currentSpawnedEnemies;
     private int _defeatedEnemiesInCurrentWave;//counts how many enemies died in the current wave, used to start a new wave if possible
@@ -80,14 +80,14 @@ public class EnemySpawner : MonoBehaviour {
         }
     }
 
-    private void OnDrawGizmosSelected() {
-        if (_seeWaveSpawnPoints) {
-            if (_waves[_currentWaveDebug].spawnPoint.Length > 0 && _currentWaveDebug < _waves.Length) {
-                Gizmos.color = Color.blue;
-                foreach (Vector3 point in _waves[_currentWaveDebug].spawnPoint) Gizmos.DrawSphere(transform.position + point, .3f);
-            }
-        }
-    }
+    //private void OnDrawGizmosSelected() {
+    //    if (_seeWaveSpawnPoints) {
+    //        if (_waves[_currentWaveDebug].spawnPoint.Length > 0 && _currentWaveDebug < _waves.Length) {
+    //            Gizmos.color = Color.blue;
+    //            foreach (Vector3 point in _waves[_currentWaveDebug].spawnPoint) Gizmos.DrawSphere(transform.position + point, .3f);
+    //        }
+    //    }
+    //}
 }
 [System.Serializable]
 public class EnemyWave {
