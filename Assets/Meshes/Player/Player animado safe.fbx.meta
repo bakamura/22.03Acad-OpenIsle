@@ -1,29 +1,58 @@
 fileFormatVersion: 2
-guid: fff33b5bc5ed05c44843c9b7904a40cf
+guid: 0fb745881e7e0454c9173f7ad075d0b1
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable:
   - first:
-      74: -3623793901018013957
-    second: Armature|Attack_Expl
+      74: -2393146887552213248
+    second: Attack_Ply
   - first:
-      74: 7642985268821410678
-    second: Armature|Damage_Expl
+      74: 885944232402757753
+    second: Armature|Action
   - first:
-      74: -3395177669631565012
-    second: Armature|Death_Expl
+      74: 2237025041378405252
+    second: Armature|Amulet_Ply
   - first:
-      74: -8055228186614987203
-    second: Armature|Idle_Expl
+      74: -4852990408301100504
+    second: Armature|Attack_Ply
   - first:
-      74: 8230656316005352999
-    second: Armature|Run_Expl
+      74: 6757502362771858409
+    second: Armature|Climb2_Ply
+  - first:
+      74: 5768663863724334280
+    second: Armature|Damage_Ply
+  - first:
+      74: 2846224732221478248
+    second: Armature|Dash_Ply
+  - first:
+      74: -3159238239467437329
+    second: Armature|Fall_Ply
+  - first:
+      74: 4132154051550656229
+    second: Armature|Hook_Ply
+  - first:
+      74: 8129302944312373670
+    second: Armature|Idle_Ply
+  - first:
+      74: -5271767679796114733
+    second: Armature|Jump_Ply
+  - first:
+      74: 6535967970578075286
+    second: Armature|StepUp_Ply
+  - first:
+      74: 1488107617568270613
+    second: Armature|Walk_Ply
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Explode
-    second: {fileID: 2100000, guid: bb4c338b8e5730f4aa30221d1b79988d, type: 2}
+      name: Capa
+    second: {fileID: 2100000, guid: 3a891ae0c58a5ea4db92606542075f81, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Player
+    second: {fileID: 2100000, guid: 488ea186d0599334caeab610a32cd28a, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
