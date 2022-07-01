@@ -55,9 +55,13 @@ public class PlayerTools : MonoBehaviour {
 
     public static float amuletDistance = 20;
     public static UnityAction onActivateAmulet;
+    private PlayerAnim _animScript;
 
     private void Awake() {
-        if (instance == null) instance = this;
+        if (instance == null) {
+            instance = this;
+            _animScript = GetComponent<PlayerAnim>();
+        }
         else if (instance != this) Destroy(gameObject);
     }
 
@@ -70,7 +74,7 @@ public class PlayerTools : MonoBehaviour {
             ChangeMesh(_swordMesh, _swordMaterial, _swordActionDuration);
             isAiming = false;
             ChangeCameraFollow(transform);
-
+            _animScript.Sword();
             Invoke(nameof(SwordStart), 0.1f);
             Invoke(nameof(SwordEnd), 0.4f);
         }
@@ -81,6 +85,7 @@ public class PlayerTools : MonoBehaviour {
             //ChangeCameraFollow(_toolMeshFilter.transform);
             ChangeCameraFollow(_hookCameraPoint);
             ChangeMesh(_hookMesh, _hookMaterial, 0);
+            _animScript.Hook(true);
         }
         // Amulet
         else if (PlayerData.Instance.hasAmulet && _currentActionCoolDown <= 0 && PlayerInputs.amuletKeyPressed > 0) {
@@ -91,6 +96,7 @@ public class PlayerTools : MonoBehaviour {
 
             PlayerData.Instance.TakeDamage(_amuletHealthCost * PlayerData.Instance.maxHealth);
             onActivateAmulet.Invoke(); //
+            _animScript.Amulet();
         }
         // Shoots Hook
         if (isAiming) {

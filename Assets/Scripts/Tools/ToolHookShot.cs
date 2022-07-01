@@ -24,9 +24,11 @@ public class ToolHookShot : MonoBehaviour {
     private Material[] _chainMaterials = new Material[2];
     private float _baseTilingOffset;//stores the offset of the chain texture to be used when the hook is streching
     private bool _enemyStunned = false;
+    private PlayerAnim _animScript;
 
     private void Awake() {
         _audio = GetComponent<AudioSource>();
+        _animScript = GetComponent<PlayerAnim>();
         int index = 0;
         foreach (MeshRenderer material in _hookTransform.gameObject.GetComponentsInChildren<MeshRenderer>()) {
             _chainMaterials[index] = material.material;
@@ -188,6 +190,7 @@ public class ToolHookShot : MonoBehaviour {
             PlayerData.rb.useGravity = true;
             if (_hitinfo.rigidbody != null) _hitinfo.rigidbody.velocity = Vector3.zero;
             PlayerMovement.Instance.movementLock = false;
+            _animScript.Hook(false);
         }
     }
 

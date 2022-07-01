@@ -17,6 +17,7 @@ public class Ladder : MonoBehaviour {
         if (other.GetComponent<PlayerData>() != null) {
             _canClimb = true;
             PlayerData.rb.useGravity = false;
+            PlayerData._animScript.Laddered(true);
         }
     }
 
@@ -24,6 +25,7 @@ public class Ladder : MonoBehaviour {
         if (other.GetComponent<PlayerData>() != null) {
             _canClimb = false;
             PlayerData.rb.useGravity = true;
+            PlayerData._animScript.Laddered(false);
         }
     }
 

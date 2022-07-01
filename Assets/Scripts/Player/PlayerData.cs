@@ -12,6 +12,7 @@ public class PlayerData : MonoBehaviour {
     public GameObject activeToolPoint;
     public static Rigidbody rb { get; private set; }
     public static CapsuleCollider col { get; private set; } // 
+    public static PlayerAnim _animScript { get; private set; }
 
     [Header("Stats")]
 
@@ -29,7 +30,10 @@ public class PlayerData : MonoBehaviour {
     private bool _cheatsOn = false;
 
     private void Awake() {
-        if (Instance == null) Instance = this;
+        if (Instance == null) { 
+            Instance = this;
+            _animScript = GetComponent<PlayerAnim>();
+        }
         else if (Instance != this) Destroy(gameObject);
 
         DontDestroyOnLoad(gameObject);
@@ -81,6 +85,7 @@ public class PlayerData : MonoBehaviour {
     public void TakeDamage(float amount) {
         _currentHealth -= amount;
         UserInterface.Instance.ChangeHealthBar(_currentHealth);
+        _animScript.Damaged();
         if (_currentHealth <= 0) {
             // reset etc
         }

@@ -30,9 +30,13 @@ public class PlayerMovement : MonoBehaviour {
     private bool _isDashing = false;
     [SerializeField] private float _dashInernalCooldown;
     private float _dashCurrentCooldown = 0;
+    private PlayerAnim _animScript;
 
     private void Awake() {
-        if (Instance == null) Instance = this;
+        if (Instance == null) { 
+        Instance = this;
+            _animScript = GetComponent<PlayerAnim>();
+        } 
         else if (Instance != this) Destroy(gameObject);
     }
 
@@ -59,6 +63,7 @@ public class PlayerMovement : MonoBehaviour {
                 transform.rotation = Quaternion.Euler(0, targetLookAngle, 0);
                 PlayerData.rb.velocity += Quaternion.Euler(0, targetLookAngle, 0) * Vector3.forward * _dashSpeed;
                 _isDashing = true;
+                _animScript.Dash();
                 Invoke(nameof(StopDash), _dashInteractionDuration);
             }
         }
@@ -70,7 +75,9 @@ public class PlayerMovement : MonoBehaviour {
             Vector3 hMovement = HorizontalMovementAndRotation() * Time.fixedDeltaTime;
             //float expectedMag = (PlayerData.rb.velocity + hMovement).magnitude;
             PlayerData.rb.velocity += hMovement;
+            _animScript.SpeedXZ(new Vector3(PlayerData.rb.velocity.x, 0, PlayerData.rb.velocity.z).magnitude);
         }
+            _animScript.SpeedY(PlayerData.rb.velocity.y);
     }
 
     //updates the rotation and movment of the player
