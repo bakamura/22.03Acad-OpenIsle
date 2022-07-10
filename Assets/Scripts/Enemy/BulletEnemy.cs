@@ -14,9 +14,6 @@ public class BulletEnemy : MonoBehaviour {
     private float _interpolateAmount;
 
     //private Collider _hitBox;
-    //private void Awake() {
-    //    _hitBox = GetComponent<Collider>();
-    //}
     //private void OnCollisionEnter(Collision collision) {
     //    if (collision.gameObject.tag == targetPosition.gameObject.tag) {
     //        PlayerData.Instance.TakeDamage(_damage);

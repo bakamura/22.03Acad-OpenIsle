@@ -76,7 +76,7 @@ public class PlayerTools : MonoBehaviour {
             ChangeCameraFollow(transform);
             _animScript.Sword();
             Invoke(nameof(SwordStart), 0.1f);
-            Invoke(nameof(SwordEnd), 0.4f);
+            Invoke(nameof(SwordEnd), 1f);
         }
         // Enter aiming (Hook)
         else if (PlayerData.Instance.hasHook && _currentActionCoolDown <= 0 && PlayerInputs.hookKeyPressed > 0 /*&& !AlternateToolHookShot.Instance.active*/) {
@@ -95,7 +95,7 @@ public class PlayerTools : MonoBehaviour {
             ChangeCameraFollow(transform);
 
             PlayerData.Instance.TakeDamage(_amuletHealthCost * PlayerData.Instance.maxHealth);
-            onActivateAmulet.Invoke(); //
+            if (onActivateAmulet != null) onActivateAmulet.Invoke(); //
             _animScript.Amulet();
         }
         // Shoots Hook

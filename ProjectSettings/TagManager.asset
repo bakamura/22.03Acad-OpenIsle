@@ -21,7 +21,7 @@ TagManager:
   - HookPoint
   - Enemy
   - MovableObj
-  - HookObj
+  - GraplingHook
   - 
   - 
   - 

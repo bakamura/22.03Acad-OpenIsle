@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class EnemyBehaviour : MonoBehaviour {
     //[Header("Components")]
-    //[SerializeField] private BoxCollider _attackHitBox;
     [SerializeField] private SphereCollider _actionArea;
-    //[SerializeField] private Transform _attackPoint;
     [SerializeField] private GameObject _bulletPrefab;
     [SerializeField] private Transform _bulletStartPoint;
     [SerializeField] private LayerMask _player;
@@ -29,7 +27,6 @@ public class EnemyBehaviour : MonoBehaviour {
     public bool _isKamikaze;
 
     [HideInInspector] public bool isAgressive;
-    //private bool _isActionInCooldown;
     private bool _isTargetInRange;
     public float _actionRange { get; private set; }
 
@@ -38,11 +35,6 @@ public class EnemyBehaviour : MonoBehaviour {
     [SerializeField] private float _bulletSpeed;
     [SerializeField] private int _bulletAmount;
     [SerializeField] private float _bulletMaxHeighOffset;
-
-//#if UNITY_EDITOR
-//    //[Header("Debug")]
-//    [SerializeField] private bool _showAttackArea;
-//#endif
 
     [HideInInspector] public Vector3 pointAroundPlayer { get; private set; }
     private List<BulletEnemy> _bullets;
@@ -56,7 +48,6 @@ public class EnemyBehaviour : MonoBehaviour {
         if (_enemyType == EnemyTypes.shoot) _bullets = new List<BulletEnemy>();
         float totalDistance = Vector3.Distance(_actionArea.transform.position, transform.position) + _actionArea.radius;
         _actionRange = totalDistance;
-        //_data.cancelAttack += DisableDetection; if with collider
     }
 
     private void Start() {
@@ -97,7 +88,6 @@ public class EnemyBehaviour : MonoBehaviour {
         else if (_isKamikaze) KamikazeAttack();
         else if (Physics.CheckSphere(_actionArea.transform.position, _actionArea.radius, _player) /*&& !_isActionInCooldown && !_isKamikaze && _enemyType != EnemyTypes.shoot*/) {
             PlayerData.Instance.TakeDamage(_damage);
-            //_isActionInCooldown = true;
         }
     }
 
@@ -126,7 +116,6 @@ public class EnemyBehaviour : MonoBehaviour {
             }
             _visualScript.AttackAnim(0);
         }
-        //if (_isKamikaze) KamikazeAttack();
     }
 
     private void Shoot() {
@@ -147,21 +136,14 @@ public class EnemyBehaviour : MonoBehaviour {
         if (Physics.CheckSphere(transform.position, _actionArea.radius, _player)) PlayerData.Instance.TakeDamage(_damage);
         _movmentScript.SetMovmentLock(false);
         if (_movmentScript._navMeshAgent) _movmentScript._navMeshAgent.isStopped = false;
-        //_isActionInCooldown = false;
-        _data.Activate(false);
+        _data.Activate(0);
     }
 
     private void ActionInterupt() {
-        //_isActionInCooldown = false;
         if (isAgressive) _visualScript.AttackAnim(0);
     }
 
-#if UNITY_EDITOR
     private void OnDrawGizmosSelected() {
-        //if (_showAttackArea) {
-        //    Gizmos.color = Color.black;
-        //    Gizmos.DrawWireSphere(_attackPoint.position, _actionArea);
-        //}
         if (UnityEditor.EditorApplication.isPlaying) {
             //Gizmos.color = Color.red;
             //Gizmos.DrawSphere(PlayerMovement.Instance.transform.position, _actionRange);
@@ -169,5 +151,4 @@ public class EnemyBehaviour : MonoBehaviour {
             Gizmos.DrawCube(PlayerMovement.Instance.transform.position + pointAroundPlayer, new Vector3(.1f, .1f, .1f));
         }
     }
-#endif
 }

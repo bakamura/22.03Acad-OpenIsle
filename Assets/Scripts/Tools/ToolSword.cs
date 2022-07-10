@@ -10,7 +10,7 @@ public class ToolSword : MonoBehaviour {
     [SerializeField] private HitAudio[] _audios;
     private Dictionary<int, HitAudio> _audioDictionary = new Dictionary<int, HitAudio>();
     private float[] _soundCurrentCooldowns = new float[2];
-    private HitAudio.soundTypes _currentSoundPlaying;
+    private HitAudio.SoundTypes _currentSoundPlaying;
 
     // If the collision is not in this "Swing"'s already hit list,
     // Enemy: deals damage
@@ -35,7 +35,7 @@ public class ToolSword : MonoBehaviour {
         }
     }
 
-    public void PlaySoundEffect(HitAudio.soundTypes sound, float soundDelay) {
+    public void PlaySoundEffect(HitAudio.SoundTypes sound, float soundDelay) {
         if (_audioComponent.isPlaying && !_audioDictionary[(int)_currentSoundPlaying]._audioData.canLoop) return;
         if (_soundCurrentCooldowns[(int)sound] <= 0) {
             //Debug.Log(sound.ToString());
@@ -44,7 +44,7 @@ public class ToolSword : MonoBehaviour {
             //_audio.PlayDelayed(soundDelay);
         }
     }
-    private void AudioSetup(HitAudio.soundTypes sound) {
+    private void AudioSetup(HitAudio.SoundTypes sound) {
         _audioComponent.clip = _audioDictionary[(int)sound]._audioData.audioClips[Random.Range(0, _audioDictionary[(int)sound]._audioData.audioClips.Length)];
         _audioComponent.outputAudioMixerGroup = _audioDictionary[(int)sound]._audioData.audioMixerGroup;
         _audioComponent.volume = _audioDictionary[(int)sound]._audioData.volume;
@@ -56,11 +56,11 @@ public class ToolSword : MonoBehaviour {
 
     [System.Serializable]
     public class HitAudio {
-        public enum soundTypes {
+        public enum SoundTypes {
             HitEnemy,
             HitObject
         };
-        public soundTypes soundType;
+        public SoundTypes soundType;
         public AudioData _audioData;
     }
 }

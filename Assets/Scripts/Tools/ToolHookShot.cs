@@ -47,7 +47,6 @@ public class ToolHookShot : MonoBehaviour {
 
     public void SendHitDetection() {
         Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out _hitinfo, _hookDistance);
-        //_hookTransform.rotation = Quaternion.Euler(Camera.main.transform.eulerAngles.x, Camera.main.transform.eulerAngles.y, Camera.main.transform.eulerAngles.z);
         if (_hitinfo.collider != null) transform.LookAt(_hitinfo.point);
         else transform.LookAt(Camera.main.transform.position + (Camera.main.transform.forward * _hookDistance));
         UpdateTargetDistance();
@@ -67,17 +66,6 @@ public class ToolHookShot : MonoBehaviour {
         else _targetDistance = _hookDistance;;
     }
 
-    //public float Duration() {
-    //    float result;
-    //    if (_targetDistance != _hookDistance) {
-    //        if (_hitinfo.rigidbody != null)
-    //            result = ObjectvelocityCalc().magnitude / _targetDistance;
-    //        else result = PlayerVelocityCalc().magnitude * _targetDistance;
-    //    }
-    //    else result = _targetDistance / _hookShotSizeIncrease;
-    //    return  (_targetDistance / _hookShotSizeIncrease + result) * Time.fixedDeltaTime;
-    //}
-
     public void StartHook() {
         isHookActive = true;
         PlayerMovement.Instance.movementLock = true;
@@ -87,7 +75,6 @@ public class ToolHookShot : MonoBehaviour {
 
     //strechs and shrinks the hook
     private void HookMeshLine() {
-        //UpdateTargetDistance();
         if (_hookTransform.localScale.z < _targetDistance / 2f && !_canStartPulling) {//increases the hook size
             _hookTransform.localScale += new Vector3(0, 0, _hookShotSizeIncrease);            
         }
@@ -184,7 +171,6 @@ public class ToolHookShot : MonoBehaviour {
             isHookActive = false;
             _willHapenMovment = false;
             _enemyStunned = false;
-            //_hookTransform.localRotation = Quaternion.identity;
             transform.localRotation = Quaternion.identity;
             PlayerData.rb.useGravity = true;
             if (_hitinfo.rigidbody != null) _hitinfo.rigidbody.velocity = Vector3.zero;

@@ -20,7 +20,7 @@ public class EnemyData : MonoBehaviour {
     [SerializeField] private float _knockBackDuration;
     [SerializeField] private float _knockBackInvencibilityTime;
     private float _currentKnockBackInvencibility;
-    [HideInInspector] public UnityAction cancelAttack;
+    [HideInInspector] public Action cancelAttack;
     [HideInInspector] public Action OnEnemyDefeat;
     private Vector3 _kncockbackDirection;
     private float _knockbackForce;
@@ -36,12 +36,13 @@ public class EnemyData : MonoBehaviour {
         _currentKnockBackInvencibility -= Time.deltaTime;
     }
 
-    public void Activate(bool isActivating) {
+    public void Activate(int isActivating) {//0 = false, 1 = true. needs to be int because its being used in animation events
+        bool active = isActivating > 1;
         _currentHealth = _maxHealth;
         _currentKnockBackInvencibility = 0;
         cancelAttack.Invoke();
         if (_enemyBehaviour._enemyType == EnemyBehaviour.EnemyTypes.neutral) _enemyBehaviour.isAgressive = false;
-        gameObject.SetActive(isActivating);
+        gameObject.SetActive(active);
     }
 
     public void TakeDamage(float damageAmount, float knockBackAmount, float hitStunDuration) {
@@ -49,7 +50,7 @@ public class EnemyData : MonoBehaviour {
         _knockbackForce = knockBackAmount;
         if (_currentHealth <= 0) {
             if(OnEnemyDefeat != null) OnEnemyDefeat.Invoke();
-            Activate(false);
+            _visualScript.DeathAnim();
             return;
         }
         if (_enemyBehaviour._enemyType == EnemyBehaviour.EnemyTypes.neutral) _enemyBehaviour.isAgressive = true;

@@ -41,7 +41,7 @@ public class EnemySpawner : MonoBehaviour {
                 //Debug.Log("pooling");
                 if (_waves[_currentWave].selectRandomSpawnPoint) lookingForEnemy.enemy.transform.position = transform.position + _waves[_currentWave].spawnPoint[Random.Range(0, _waves[_currentWave].spawnPoint.Length)];
                 else lookingForEnemy.enemy.transform.position = transform.position + _waves[_currentWave].spawnPoint[_currentSpawnedEnemies];
-                lookingForEnemy.enemy.GetComponent<EnemyData>().Activate(true);
+                lookingForEnemy.enemy.GetComponent<EnemyData>().Activate(1);
             }
             else CreateEnemy();//enemy not found so i will be created
             _currentSpawnedEnemies++;

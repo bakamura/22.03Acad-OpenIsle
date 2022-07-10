@@ -27,6 +27,10 @@ public class EnemyAnimAndVFX : MonoBehaviour {
         //PlaySoundEffect(EnemyAudio.soundTypes.Attack, _animator.GetCurrentAnimatorStateInfo(0).length / 2f);
     }
 
+    public void DeathAnim() {
+        _animator.SetTrigger("DEATH");
+    }
+
     public void StunAnim() {
         _animator.SetTrigger("STUN");
         //PlaySoundEffect(EnemyAudio.soundTypes.Stun, 0f);

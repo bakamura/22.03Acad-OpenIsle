@@ -52,25 +52,23 @@ public class EnemyMovment : MonoBehaviour {
         _visualData = GetComponent<EnemyAnimAndVFX>();
         _behaviourData = GetComponent<EnemyBehaviour>();
         _startPoint = transform.position;
-        //_currentTarget = transform.position;
-        if (_navMeshAgent) {
-            //_navMeshAgent.speed = _movmentSpeed;
-            _navMeshAgent.stoppingDistance = _minDistanceFromWanderingPoint;
-            //_navMeshAgent.angularSpeed *= _rotationSpeed;
-        }
+        if (_navMeshAgent) _navMeshAgent.stoppingDistance = _minDistanceFromWanderingPoint;        
     }
 
     private void Update() {
         MovmentLogic();
         if (!_isFlying && _navMeshAgent) GroundMovment();
         else FlyingMovment();
-        //if (!isMovmentLocked) _visualData.MovmentAnim(1f);
-        //else _visualData.MovmentAnim(0f);
     }
 
-    public void SetMovmentLock(bool canMove) {
-        isMovmentLocked = canMove;
-        _visualData.MovmentAnim(canMove ? 0f : 1f);
+    public void SetMovmentLock(bool isMovLock) {
+        isMovmentLocked = isMovLock;
+        _visualData.MovmentAnim(isMovLock ? 0f : 1f);
+    }
+
+    private void SetTarget(Vector3 targetPosition) {
+        _currentTarget = targetPosition;
+        _visualData.MovmentAnim(targetPosition != Vector3.zero ? 1f : 0f);
     }
 
     private void GroundMovment() {
@@ -99,7 +97,7 @@ public class EnemyMovment : MonoBehaviour {
             if (_goStraightToPlayer) {
                 _isFollowingPlayer = true;
                 _isWandering = false;
-                _currentTarget = PlayerMovement.Instance.transform.position;
+                SetTarget(PlayerMovement.Instance.transform.position);
             }
             else {
                 if (Vector3.Distance(PlayerMovement.Instance.transform.position, transform.position) <= _detectionRange && Vector3.Angle(transform.forward, (PlayerMovement.Instance.transform.position - transform.position).normalized) <= _viewAngle / 2) {//move to player
@@ -111,14 +109,14 @@ public class EnemyMovment : MonoBehaviour {
                     if (_navMeshAgent) _navMeshAgent.stoppingDistance = _behaviourData._actionRange;
                     _isFollowingPlayer = true;
                     _isWandering = false;
-                    _currentTarget = PlayerMovement.Instance.transform.position;
+                    SetTarget(PlayerMovement.Instance.transform.position);
                 }
                 else if (_canWander) {//if the enemy will move and didnt find the player, and can wander
                     _isFollowingPlayer = false;
                     CheckForNewRandomPoint(Vector3.Distance(_currentTarget, transform.position));
                 }
                 else {
-                    _currentTarget = Vector3.zero;
+                    SetTarget(Vector3.zero);
                     _isFollowingPlayer = false;
                 }
             }
@@ -135,7 +133,7 @@ public class EnemyMovment : MonoBehaviour {
             if (distanceFromTarget <= _minDistanceFromWanderingPoint) _isWandering = false;
             if (!_isWandering) {
                 _isWandering = true;
-                _currentTarget = Vector3.zero;
+                SetTarget(Vector3.zero);
                 _randomPoinCoroutine = StartCoroutine(RandomPointCorotine());
             }
         }
@@ -151,11 +149,10 @@ public class EnemyMovment : MonoBehaviour {
     }
 
     private void GenerateRandomNavegationPoint() {
-        _currentTarget = _startPoint + new Vector3(Random.Range(-_randomNavegationArea, _randomNavegationArea), _isFlying ? Random.Range(-_randomNavegationArea, _randomNavegationArea) : 0, Random.Range(-_randomNavegationArea, _randomNavegationArea));
+        SetTarget(_startPoint + new Vector3(Random.Range(-_randomNavegationArea, _randomNavegationArea), _isFlying ? Random.Range(-_randomNavegationArea, _randomNavegationArea) : 0, Random.Range(-_randomNavegationArea, _randomNavegationArea)));
         //if (Physics.Raycast(transform.position, (_currentTarget - transform.position).normalized, Vector3.Distance(transform.position, _currentTarget), _obstacleLayer)) _currentTarget = Vector3.zero;
     }
 
-#if UNITY_EDITOR
     private void OnDrawGizmosSelected() {
         // detection area
         if (_followPlayer && _showConeView) {
@@ -276,5 +273,4 @@ public class EnemyMovment : MonoBehaviour {
 
         return pyramid;
     }
-#endif
 }
